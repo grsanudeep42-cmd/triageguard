@@ -8,6 +8,8 @@ HOST="${HOST:-0.0.0.0}"
 # Find virtualenv python and uvicorn
 if [ -n "$VIRTUAL_ENV" ] && [ -f "$VIRTUAL_ENV/bin/uvicorn" ]; then
     UVICORN="$VIRTUAL_ENV/bin/uvicorn"
+elif [ -f "/app/.venv/bin/uvicorn" ]; then
+    UVICORN="/app/.venv/bin/uvicorn"
 elif [ -f ".venv/bin/uvicorn" ]; then
     UVICORN=".venv/bin/uvicorn"
 elif [ -f "/home/anudeep/projects/ap hackathon/.venv/bin/uvicorn" ]; then
@@ -15,16 +17,18 @@ elif [ -f "/home/anudeep/projects/ap hackathon/.venv/bin/uvicorn" ]; then
 elif command -v uvicorn >/dev/null 2>&1; then
     UVICORN="uvicorn"
 else
-    echo "Error: uvicorn not found in virtualenv or system PATH."
-    echo "Please activate your virtualenv or run: pip install uvicorn fastapi"
-    exit 1
+    UVICORN="python3 -m uvicorn"
 fi
 
 # Build web frontend if present and not prebuilt
 if [ -d "web" ] && [ -f "web/package.json" ]; then
-    if [ ! -d "web/dist" ] || [ "${FORCE_REBUILD_FRONTEND:-0}" = "1" ]; then
-        echo "=== 1. Building frontend ==="
-        (cd web && npm run build)
+    if [ ! -d "web/dist" ]; then
+        if command -v npm >/dev/null 2>&1; then
+            echo "=== 1. Building frontend ==="
+            (cd web && npm run build)
+        else
+            echo "=== 1. Warning: npm not found, skipping frontend build ==="
+        fi
     else
         echo "=== 1. Frontend dist already built (web/dist) ==="
     fi
