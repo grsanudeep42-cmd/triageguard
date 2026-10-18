@@ -1,0 +1,11 @@
+lightgbm
+pyyaml
+scikit-learn
+numpy
+pandas
+matplotlib
+tabulate
+uvicorn[standard]
+fastapi
+python-multipart
+aiofiles
