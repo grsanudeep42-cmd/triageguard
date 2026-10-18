@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+*.pyc
+.git/
+video/
+web/node_modules/
