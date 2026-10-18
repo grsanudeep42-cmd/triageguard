@@ -2,7 +2,7 @@
 
 [![Python 3.12](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests Passing](https://img.shields.io/badge/Tests-44%2F44%20Passing-brightgreen.svg)]()
+[![Tests Passing](https://img.shields.io/badge/Tests-178%2F178%20Passing-brightgreen.svg)]()
 [![Inference Latency](https://img.shields.io/badge/Inference%20Latency-12.77%20ms%20(p95%2016.2%20ms)-success.svg)]()
 [![Safety Invariants](https://img.shields.io/badge/Safety%20Invariants-Verified%20Monotonic-blueviolet.svg)]()
 
@@ -93,7 +93,7 @@ All performance statistics below reflect verified, programmatically reproducible
 | **Conformal Coverage (Non-Emergency)** | **95.2%** coverage on $N=4,320$ (target $\ge 90\%$) | Statistically valid finite-sample prediction sets bounding clinical uncertainty. |
 | **Gaming Defense Rate ($N=500$)** | **81.8%** defended at non-emergency (only $0.6\%$ gross escalations to L1-L2) | Resists queue jumping from non-emergency patients appending dramatic text. |
 | **Sensor Corruption Resilience (20% noise)** | Emergency recall preserved at **92.2%** (abstentions scale from $17.0\% \to 37.1\%$) | Fails safely to human nurse remeasurement rather than guessing on corrupt vitals. |
-| **Expected Clinical Decision Cost** | Total Cost: **3,007** (Mean: **0.668**) vs Rules Baseline: **9,089** (Mean: **2.02**) | **67% reduction in clinical cost penalty** under $20\times$ under-triage weighting. |
+| **Expected Clinical Decision Cost** | Total Cost: **3,007** (Mean: **1.859**) vs Rules Baseline: **9,089** (Mean: **2.02**) | **67% reduction in clinical cost penalty** under $20\times$ under-triage weighting. |
 | **Department Routing Accuracy** | **88.5%** primary specialty, **95.0%** specialty-or-emergency ($100\%$ on Level 1) | Directs patients to the correct clinical specialty (Cardiology, OB/GYN, ENT, etc.). |
 | **End-to-End Inference Latency** | Mean: **12.77 ms**, p50: **12.62 ms**, p95: **16.20 ms**, p99: **18.59 ms** | Real-time intake response ($< 20\text{ ms}$), far surpassing the $< 100\text{ ms}$ clinical requirement. |
 
@@ -374,7 +374,7 @@ The automated `Makefile` orchestrates reproduction from raw data generation to f
 ```bash
 make data   # Phase 0: Generate 30,000 synthetic patient encounters with error injection
 make train  # Phases 4-6: Train LightGBM vitals model, text Ridge classifier, department router, and calibrator
-make test   # Run full test suite (44 unit and acceptance tests passing)
+make test   # Run full test suite (178 unit and acceptance tests passing)
 make eval   # Phase 8: Evaluate pipeline on test split & generate results artifacts
 make all    # Execute all stages end-to-end
 ```
@@ -444,7 +444,7 @@ else:
 │   ├── demo_cases.json      # 6 verified walkthrough test encounters
 │   ├── figures/             # Confusion matrices, cost curves, and calibration plots
 │   └── ui_screens/          # Full-resolution desktop & mobile UI audit screenshots
-└── tests/                   # 44 unit and acceptance tests (pytest)
+└── tests/                   # 178 unit and acceptance tests (pytest)
 ```
 
 ---
