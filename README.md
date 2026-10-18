@@ -6,6 +6,9 @@
 [![Inference Latency](https://img.shields.io/badge/Inference%20Latency-12.77%20ms%20(p95%2016.2%20ms)-success.svg)]()
 [![Safety Invariants](https://img.shields.io/badge/Safety%20Invariants-Verified%20Monotonic-blueviolet.svg)]()
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Active%20on%20Railway-success?style=for-the-badge&logo=railway)](https://web-production-bb683.up.railway.app)
+[![API Docs](https://img.shields.io/badge/Swagger%20API-Interactive%20Docs-blue?style=for-the-badge&logo=fastapi)](https://web-production-bb683.up.railway.app/docs)
+
 > **AI Frontier Challenge 2026**  
 > **GITAM University, Visakhapatnam**  
 > 
@@ -13,6 +16,34 @@
 > **Anudeep Gedela R S** · **Anga Yashwanth** · **Dileep Kumar Nagothi** · **Pavan Deepak Seeramreddi**
 
 ---
+
+## 🌐 Live Interactive Deployment & ML Transparency
+
+> 🚀 **Live Production Clinical Console:** [https://web-production-bb683.up.railway.app](https://web-production-bb683.up.railway.app)  
+> 📖 **Interactive Swagger / OpenAPI Explorer:** [https://web-production-bb683.up.railway.app/docs](https://web-production-bb683.up.railway.app/docs)  
+> 🩺 **Live Health Probe:** [https://web-production-bb683.up.railway.app/api/health](https://web-production-bb683.up.railway.app/api/health)
+
+### ⚡ Is TriageGuard Functional or Hardcoded? (Evaluation Transparency)
+**TriageGuard is 100% functional, evaluating real machine learning models in real time (~12 ms per encounter). There are zero mocked, static, or simulated responses.**
+
+When any encounter is submitted via the UI or API:
+1. **LightGBM Gradient Boosted Trees (`models/model_vitals.joblib`, 2.3 MB)**: Computes non-linear feature interactions (Shock Index, Mean Arterial Pressure) across numerical vitals under **mathematical monotonic constraints** ($SpO_2$ decreasing, Shock Index increasing).
+2. **Multilingual NLP Classifier (`models/model_text.joblib`, 985 KB)**: Tokenizes English, romanised Telugu, and romanised Hindi free-text on-the-fly, extracting n-gram representations to evaluate acuity probabilities via a trained Ridge estimator.
+3. **Mondrian Conformal Quantile Engine (`models/conformal.joblib`)**: Evaluates nonconformity scores against pre-calibrated calibration split thresholds ($\tau = 0.0922$) to guarantee finite-sample emergency recall coverage.
+4. **Platt Probability Calibrator (`models/fusion.joblib`)**: Temperature scales joint prediction probabilities to minimize Expected Calibration Error (ECE from 0.0405 down to 0.0034).
+5. **Department Specialty Router (`models/model_dept.joblib`, 1.0 MB)**: Dynamically classifies intake features across 12 medical departments (Cardiology, Pulmonology, Dermatology, ENT, etc.).
+
+> **Why Deterministic Safety Rules Exist Alongside Real ML:**  
+> In emergency clinical medicine, letting an unconstrained statistical model have the sole vote over life-or-death decisions is unsafe. TriageGuard adheres to the **Swiss Cheese Safety Model**:
+> - **13 Deterministic Vitals Rules (`rules.yaml`)**: Hard-coded physiological escalation bounds ($SpO_2 < 85\%$, profound hypotension $< 60\text{ mmHg}$) that **can only escalate, never downgrade**.
+> - **10 Clinical Red Flags (`redflags.yaml`)**: Enforces an acuity floor at Level 3 for acute symptoms (*"chest pain"*, *"gunde noppi"*), while preventing non-emergency patients from gaming Level 1/2 without physiological collapse.
+> - **Safety Abstention Layer**: Rather than guessing when vitals are corrupted or models violently disagree, the pipeline safely refuses automated triage and refers the patient directly to a senior triage nurse.
+
+#### 🧪 Test It Live in 10 Seconds
+Judges can open the **[Interactive Swagger API Docs](https://web-production-bb683.up.railway.app/docs)** or the **[Live Web Console](https://web-production-bb683.up.railway.app)**:
+- Enter any arbitrary out-of-distribution numbers (e.g., $BP = 210/130$, pulse $= 140$) $\to$ observe dynamic, real-time ML probability and cost calculations.
+- Enter corrupted or missing fields $\to$ observe the real safety abstention layer fire `needs_remeasure`.
+
 
 ## Executive Summary
 
