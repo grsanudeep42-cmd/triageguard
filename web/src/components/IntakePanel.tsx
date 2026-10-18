@@ -113,9 +113,9 @@ export const IntakePanel: React.FC<IntakePanelProps> = ({
   return (
     <div
       onKeyDown={handleKeyDown}
-      className="bg-surface rounded-panel border border-line p-6 shadow-raised flex flex-col w-full max-w-full"
+      className="bg-surface rounded-panel border border-line shadow-raised flex flex-col w-full max-w-full max-h-[calc(100vh-100px)] overflow-hidden"
     >
-      <div className="flex items-center justify-between pb-4 border-b border-line">
+      <div className="flex items-center justify-between px-5 py-3 border-b border-line shrink-0">
         <h2 className="text-h2 font-semibold text-ink">New patient</h2>
         {hasResult && (
           <button
@@ -127,12 +127,12 @@ export const IntakePanel: React.FC<IntakePanelProps> = ({
         )}
       </div>
 
-      <div className="divide-y divide-line">
+      <div className="px-5 py-2 overflow-y-auto flex-1 divide-y divide-line space-y-0">
         {/* Section 1: Patient info */}
-        <div className="py-5 space-y-4">
+        <div className="py-3.5 space-y-2">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label htmlFor="patient-age" className="block text-caption font-medium text-ink-2 mb-1.5">
+              <label htmlFor="patient-age" className="block text-caption font-medium text-ink-2 mb-1">
                 Age
               </label>
               <input
@@ -142,15 +142,15 @@ export const IntakePanel: React.FC<IntakePanelProps> = ({
                 max="125"
                 value={intake.age ?? ""}
                 onChange={(e) => handleNumericChange("age", e.target.value)}
-                placeholder="e.g. 45"
-                className="w-full h-11 px-3 rounded-input border border-line-strong bg-surface text-ink tabular-nums text-[15px]"
+                placeholder="-"
+                className="w-full h-10 px-3 rounded-input border border-line-strong bg-surface text-ink tabular-nums text-[15px]"
               />
             </div>
             <div>
-              <label className="block text-caption font-medium text-ink-2 mb-1.5">
+              <label className="block text-caption font-medium text-ink-2 mb-1">
                 Sex
               </label>
-              <div className="grid grid-cols-3 h-11 bg-paper p-1 rounded-input border border-line">
+              <div className="grid grid-cols-3 h-10 bg-paper p-1 rounded-input border border-line">
                 {["M", "F", "O"].map((opt) => (
                   <button
                     key={opt}
@@ -171,14 +171,14 @@ export const IntakePanel: React.FC<IntakePanelProps> = ({
         </div>
 
         {/* Section 2: Vitals */}
-        <div className="py-5 space-y-3">
-          <div className="text-caption font-semibold text-ink uppercase tracking-wider mb-2">
+        <div className="py-3.5 space-y-2">
+          <div className="text-caption font-semibold text-ink tracking-wide mb-1">
             Vitals
           </div>
           <div className="grid grid-cols-2 gap-3">
             {/* BP Systolic */}
             <div>
-              <label htmlFor="bp-sys" className="block text-caption font-medium text-ink-2 mb-1.5">
+              <label htmlFor="bp-sys" className="block text-caption font-medium text-ink-2 mb-1">
                 BP systolic
               </label>
               <div className="relative">
@@ -187,10 +187,10 @@ export const IntakePanel: React.FC<IntakePanelProps> = ({
                   type="number"
                   value={intake.bp_sys ?? ""}
                   onChange={(e) => handleNumericChange("bp_sys", e.target.value)}
-                  placeholder="120"
-                  className="w-full h-11 pl-3 pr-14 rounded-input border border-line-strong bg-surface text-ink tabular-nums text-[15px]"
+                  placeholder="-"
+                  className="w-full h-10 pl-3 pr-14 rounded-input border border-line-strong bg-surface text-ink tabular-nums text-[15px]"
                 />
-                <span className="absolute right-3 top-3 text-[13px] text-ink-3 pointer-events-none tabular-nums">
+                <span className="absolute right-3 top-2.5 text-[13px] text-ink-3 pointer-events-none tabular-nums">
                   mmHg
                 </span>
               </div>
@@ -204,7 +204,7 @@ export const IntakePanel: React.FC<IntakePanelProps> = ({
 
             {/* BP Diastolic */}
             <div>
-              <label htmlFor="bp-dia" className="block text-caption font-medium text-ink-2 mb-1.5">
+              <label htmlFor="bp-dia" className="block text-caption font-medium text-ink-2 mb-1">
                 BP diastolic
               </label>
               <div className="relative">
@@ -213,10 +213,10 @@ export const IntakePanel: React.FC<IntakePanelProps> = ({
                   type="number"
                   value={intake.bp_dia ?? ""}
                   onChange={(e) => handleNumericChange("bp_dia", e.target.value)}
-                  placeholder="80"
-                  className="w-full h-11 pl-3 pr-14 rounded-input border border-line-strong bg-surface text-ink tabular-nums text-[15px]"
+                  placeholder="-"
+                  className="w-full h-10 pl-3 pr-14 rounded-input border border-line-strong bg-surface text-ink tabular-nums text-[15px]"
                 />
-                <span className="absolute right-3 top-3 text-[13px] text-ink-3 pointer-events-none tabular-nums">
+                <span className="absolute right-3 top-2.5 text-[13px] text-ink-3 pointer-events-none tabular-nums">
                   mmHg
                 </span>
               </div>
@@ -230,7 +230,7 @@ export const IntakePanel: React.FC<IntakePanelProps> = ({
 
             {/* Pulse */}
             <div>
-              <label htmlFor="pulse" className="block text-caption font-medium text-ink-2 mb-1.5">
+              <label htmlFor="pulse" className="block text-caption font-medium text-ink-2 mb-1">
                 Pulse
               </label>
               <div className="relative">
@@ -239,10 +239,10 @@ export const IntakePanel: React.FC<IntakePanelProps> = ({
                   type="number"
                   value={intake.pulse ?? ""}
                   onChange={(e) => handleNumericChange("pulse", e.target.value)}
-                  placeholder="72"
-                  className="w-full h-11 pl-3 pr-12 rounded-input border border-line-strong bg-surface text-ink tabular-nums text-[15px]"
+                  placeholder="-"
+                  className="w-full h-10 pl-3 pr-12 rounded-input border border-line-strong bg-surface text-ink tabular-nums text-[15px]"
                 />
-                <span className="absolute right-3 top-3 text-[13px] text-ink-3 pointer-events-none tabular-nums">
+                <span className="absolute right-3 top-2.5 text-[13px] text-ink-3 pointer-events-none tabular-nums">
                   bpm
                 </span>
               </div>
@@ -256,7 +256,7 @@ export const IntakePanel: React.FC<IntakePanelProps> = ({
 
             {/* Temperature */}
             <div>
-              <label htmlFor="temp-c" className="block text-caption font-medium text-ink-2 mb-1.5">
+              <label htmlFor="temp-c" className="block text-caption font-medium text-ink-2 mb-1">
                 Temperature
               </label>
               <div className="relative">
@@ -266,10 +266,10 @@ export const IntakePanel: React.FC<IntakePanelProps> = ({
                   step="0.1"
                   value={intake.temp_c ?? ""}
                   onChange={(e) => handleNumericChange("temp_c", e.target.value)}
-                  placeholder="37.0"
-                  className="w-full h-11 pl-3 pr-10 rounded-input border border-line-strong bg-surface text-ink tabular-nums text-[15px]"
+                  placeholder="-"
+                  className="w-full h-10 pl-3 pr-10 rounded-input border border-line-strong bg-surface text-ink tabular-nums text-[15px]"
                 />
-                <span className="absolute right-3 top-3 text-[13px] text-ink-3 pointer-events-none tabular-nums">
+                <span className="absolute right-3 top-2.5 text-[13px] text-ink-3 pointer-events-none tabular-nums">
                   °C
                 </span>
               </div>
@@ -283,7 +283,7 @@ export const IntakePanel: React.FC<IntakePanelProps> = ({
 
             {/* SpO2 */}
             <div>
-              <label htmlFor="spo2" className="block text-caption font-medium text-ink-2 mb-1.5">
+              <label htmlFor="spo2" className="block text-caption font-medium text-ink-2 mb-1">
                 SpO₂
               </label>
               <div className="relative">
@@ -293,13 +293,19 @@ export const IntakePanel: React.FC<IntakePanelProps> = ({
                   step="0.1"
                   value={intake.spo2 ?? ""}
                   onChange={(e) => handleNumericChange("spo2", e.target.value)}
-                  placeholder="98"
-                  disabled={intake.spo2 === null && false}
-                  className="w-full h-11 pl-3 pr-10 rounded-input border border-line-strong bg-surface text-ink tabular-nums text-[15px]"
+                  placeholder={intake.spo2 === null ? "Not measured" : "-"}
+                  disabled={intake.spo2 === null}
+                  className={`w-full h-10 pl-3 pr-10 rounded-input border text-[15px] tabular-nums ${
+                    intake.spo2 === null
+                      ? "bg-paper text-ink-3 border-line italic"
+                      : "bg-surface border-line-strong text-ink"
+                  }`}
                 />
-                <span className="absolute right-3 top-3 text-[13px] text-ink-3 pointer-events-none tabular-nums">
-                  %
-                </span>
+                {intake.spo2 !== null && (
+                  <span className="absolute right-3 top-2.5 text-[13px] text-ink-3 pointer-events-none tabular-nums">
+                    %
+                  </span>
+                )}
               </div>
               {isImplausible("spo2", intake.spo2) && (
                 <div className="flex items-center gap-1 mt-1 text-[12px] text-vital-abnormal leading-tight">
@@ -314,7 +320,7 @@ export const IntakePanel: React.FC<IntakePanelProps> = ({
               <button
                 type="button"
                 onClick={() => onChange({ ...intake, spo2: intake.spo2 === null ? 98 : null })}
-                className={`h-11 px-3 rounded-input text-[13px] font-medium border text-center transition-colors ${
+                className={`h-10 px-3 rounded-input text-[13px] font-medium border text-center transition-colors ${
                   intake.spo2 === null
                     ? "bg-nurse-tint border-nurse-border text-nurse-text"
                     : "bg-paper border-line text-ink-2 hover:text-ink"
@@ -327,29 +333,29 @@ export const IntakePanel: React.FC<IntakePanelProps> = ({
         </div>
 
         {/* Section 3: Complaint */}
-        <div className="py-5 space-y-2">
+        <div className="py-3.5 space-y-1.5">
           <label htmlFor="complaint-text" className="block text-caption font-medium text-ink-2">
             Chief complaint
           </label>
           <textarea
             id="complaint-text"
             ref={complaintRef}
-            rows={4}
+            rows={3}
             value={intake.complaint_text}
             onChange={(e) => onChange({ ...intake, complaint_text: e.target.value })}
             placeholder="Describe it in the patient's own words. English, Telugu, Hindi, any script."
-            className="w-full min-h-[112px] p-3 rounded-input border border-line-strong bg-surface text-ink text-[15px] resize-y leading-relaxed"
+            className="w-full min-h-[80px] p-2.5 rounded-input border border-line-strong bg-surface text-ink text-[14px] resize-y leading-relaxed"
           />
         </div>
 
         {/* Section 4: History */}
-        <div className="py-5 space-y-4">
+        <div className="py-3.5 space-y-3">
           {/* Conditions */}
           <div>
-            <label className="block text-caption font-medium text-ink-2 mb-1.5">
+            <label className="block text-caption font-medium text-ink-2 mb-1">
               Known conditions
             </label>
-            <div className="flex gap-2 mb-2">
+            <div className="flex gap-2 mb-1.5">
               <input
                 type="text"
                 value={newCondition}
@@ -361,23 +367,23 @@ export const IntakePanel: React.FC<IntakePanelProps> = ({
                   }
                 }}
                 placeholder="e.g. Type 2 Diabetes"
-                className="flex-1 h-9 px-3 rounded-input border border-line text-[13px] bg-surface text-ink"
+                className="flex-1 h-8 px-2.5 rounded-input border border-line text-[13px] bg-surface text-ink"
               />
               <button
                 type="button"
                 onClick={addCondition}
-                className="h-9 px-3 rounded-input border border-line bg-paper hover:bg-line text-ink text-[13px] font-medium flex items-center gap-1"
+                className="h-8 px-3 rounded-input border border-line bg-paper hover:bg-line text-ink text-[13px] font-medium flex items-center gap-1"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Add</span>
               </button>
             </div>
             {intake.conditions.length > 0 && (
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex flex-wrap gap-1">
                 {intake.conditions.map((c) => (
                   <span
                     key={c}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 bg-paper border border-line rounded-pill text-[12px] text-ink"
+                    className="inline-flex items-center gap-1 px-2 py-0.5 bg-paper border border-line rounded-pill text-[12px] text-ink"
                   >
                     {c}
                     <button
@@ -395,10 +401,10 @@ export const IntakePanel: React.FC<IntakePanelProps> = ({
 
           {/* Current medicines */}
           <div>
-            <label className="block text-caption font-medium text-ink-2 mb-1.5">
+            <label className="block text-caption font-medium text-ink-2 mb-1">
               Current medicines
             </label>
-            <div className="flex gap-2 mb-2">
+            <div className="flex gap-2 mb-1.5">
               <input
                 type="text"
                 value={newMedication}
@@ -410,23 +416,23 @@ export const IntakePanel: React.FC<IntakePanelProps> = ({
                   }
                 }}
                 placeholder="e.g. Metformin 500mg"
-                className="flex-1 h-9 px-3 rounded-input border border-line text-[13px] bg-surface text-ink"
+                className="flex-1 h-8 px-2.5 rounded-input border border-line text-[13px] bg-surface text-ink"
               />
               <button
                 type="button"
                 onClick={addMedication}
-                className="h-9 px-3 rounded-input border border-line bg-paper hover:bg-line text-ink text-[13px] font-medium flex items-center gap-1"
+                className="h-8 px-3 rounded-input border border-line bg-paper hover:bg-line text-ink text-[13px] font-medium flex items-center gap-1"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Add</span>
               </button>
             </div>
             {intake.medications.length > 0 && (
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex flex-wrap gap-1">
                 {intake.medications.map((m) => (
                   <span
                     key={m}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 bg-paper border border-line rounded-pill text-[12px] text-ink"
+                    className="inline-flex items-center gap-1 px-2 py-0.5 bg-paper border border-line rounded-pill text-[12px] text-ink"
                   >
                     {m}
                     <button
@@ -444,13 +450,13 @@ export const IntakePanel: React.FC<IntakePanelProps> = ({
         </div>
       </div>
 
-      {/* Footer controls inside panel */}
-      <div className="pt-5 mt-2 border-t border-line space-y-2">
+      {/* Sticky footer controls inside panel */}
+      <div className="p-4 border-t border-line bg-surface sticky bottom-0 shrink-0 space-y-1.5 z-10 shadow-sm">
         <button
           type="button"
           onClick={onSubmit}
           disabled={loading}
-          className="w-full h-12 bg-brand hover:bg-brand-hover active:bg-brand-hover text-surface text-[15px] font-semibold rounded-btn transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+          className="w-full h-11 bg-brand hover:bg-brand-hover active:bg-brand-hover text-surface text-[15px] font-semibold rounded-btn transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
         >
           {loading ? (
             <span>Assessing...</span>
@@ -467,7 +473,7 @@ export const IntakePanel: React.FC<IntakePanelProps> = ({
         <button
           type="button"
           onClick={onClear}
-          className="w-full py-2 text-[14px] text-ink-3 hover:text-ink font-medium text-center transition-colors"
+          className="w-full py-1.5 text-[13px] text-ink-3 hover:text-ink font-medium text-center transition-colors"
         >
           Clear
         </button>

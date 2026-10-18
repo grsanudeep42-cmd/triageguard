@@ -50,15 +50,21 @@ export const EvidencePage: React.FC = () => {
     );
   }
 
-  // 1. One sentence on what was measured
+  // 1. Read N and emergency count from results JSON
   const costDecomp = results["cost_decomposition"] || [];
-  const testEmergencies = costDecomp.length >= 2
-    ? (costDecomp[0]?.Cases || 25) + (costDecomp[1]?.Cases || 155)
-    : 180;
-  const totalTestEncounters = costDecomp.reduce(
-    (acc: number, curr: any) => acc + (typeof curr.Cases === "number" ? curr.Cases : 0),
-    0
-  ) || 4500;
+  const allEncRow = costDecomp.find((r: any) => r["True Level"] === "All Encounters");
+  const l1Row = costDecomp.find((r: any) => r["True Level"] === "Level 1");
+  const l2Row = costDecomp.find((r: any) => r["True Level"] === "Level 2");
+
+  const totalTestEncounters = (allEncRow?.Cases ?? (
+    costDecomp
+      .filter((r: any) => r["True Level"] !== "All Encounters")
+      .reduce((acc: number, curr: any) => acc + (typeof curr.Cases === "number" ? curr.Cases : 0), 0)
+  )) || 4500;
+
+  const testEmergencies = (l1Row?.Cases && l2Row?.Cases)
+    ? (l1Row.Cases + l2Row.Cases)
+    : (results["emergency_recall"]?.[0]?.Total ?? 180);
 
   // 2. Comparison table data from recall_definitions.json
   const recallDefs = results["recall_definitions"] || [];
@@ -68,12 +74,13 @@ export const EvidencePage: React.FC = () => {
   // Latency from latency_benchmarks.json
   const latencyData = results["latency_benchmarks"] || [];
   const p95LatencyObj = latencyData.find((m: any) => m["Metric"]?.includes("p95"));
-  const p95Latency = p95LatencyObj?.["Value (ms)"] || "16.2 ms";
+  const p95Latency = p95LatencyObj?.["Value (ms)"] || "16.20 ms";
 
   // Stress tests data
   const stressComp = results["stress_test_comparison"] || [];
   const gamingData = results["gaming_stress_test"] || [];
   const layerAblation = results["layer_ablation_stress"];
+  const operatingPoints = results["operating_points"];
 
   // Helper for inline dot-and-whisker Wilson CI SVG
   const renderWilsonCi = (ciStr: string, pointPctStr: string, color: string = "#1B3A57") => {
@@ -106,7 +113,7 @@ export const EvidencePage: React.FC = () => {
       {/* 1. Header & One sentence on what was measured */}
       <div>
         <h1 className="text-h1 font-semibold text-ink tracking-tight mb-2">
-          Validation evidence
+          Test-set evidence
         </h1>
         <div className="p-4 bg-surface rounded-panel border border-line text-body text-ink-2 max-w-4xl leading-relaxed">
           Evaluation evaluated on the stratified test split of{" "}
@@ -132,13 +139,13 @@ export const EvidencePage: React.FC = () => {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-body">
             <thead>
-              <tr className="border-b border-line bg-paper/60 text-caption font-semibold text-ink-3 uppercase tracking-wider">
+              <tr className="border-b border-line bg-paper/60 text-caption font-semibold text-ink-3 tracking-wide">
                 <th className="py-3 px-6">System</th>
                 <th className="py-3 px-6">Strict emergency recall</th>
                 <th className="py-3 px-6">Caught-or-nurse recall</th>
                 <th className="py-3 px-6">Silent misses</th>
                 <th className="py-3 px-6">Vague complaint recall</th>
-                <th className="py-3 px-6">p95 latency</th>
+                <th className="py-3 px-6">P95 latency</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-line text-[14px]">
@@ -158,9 +165,9 @@ export const EvidencePage: React.FC = () => {
                 <td className="py-4 px-6 tabular-nums text-vital-normal font-semibold">
                   5 (2.8%)
                 </td>
-                <td className="py-4 px-6 tabular-nums">
-                  <span className="font-semibold text-ink">96.4%</span>
-                  {renderWilsonCi("[82.3%, 99.4%]", "96.4%", "#1B3A57")}
+                <td className="py-4 px-6 tabular-nums whitespace-nowrap">
+                  <span className="font-semibold text-ink">76.7%</span>
+                  {renderWilsonCi("[70.0%, 82.2%]", "76.7%", "#1B3A57")}
                 </td>
                 <td className="py-4 px-6 tabular-nums text-ink-2 font-medium">
                   {p95Latency}
@@ -183,12 +190,12 @@ export const EvidencePage: React.FC = () => {
                 <td className="py-3.5 px-6 tabular-nums text-vital-abnormal font-semibold">
                   11 (6.1%)
                 </td>
-                <td className="py-3.5 px-6 tabular-nums text-ink-2">
-                  <span>96.4%</span>
-                  {renderWilsonCi("[82.3%, 99.4%]", "96.4%", "#43535F")}
+                <td className="py-3.5 px-6 tabular-nums whitespace-nowrap text-ink-2">
+                  <span>63.9%</span>
+                  {renderWilsonCi("[56.6%, 70.5%]", "63.9%", "#43535F")}
                 </td>
                 <td className="py-3.5 px-6 tabular-nums text-ink-3">
-                  &lt; 5 ms
+                  not measured
                 </td>
               </tr>
 
@@ -208,12 +215,12 @@ export const EvidencePage: React.FC = () => {
                 <td className="py-3.5 px-6 tabular-nums text-l1-text font-bold">
                   82 (45.6%)
                 </td>
-                <td className="py-3.5 px-6 tabular-nums text-ink-2">
-                  <span>71.4%</span>
-                  {renderWilsonCi("[52.9%, 84.7%]", "71.4%", "#6B7B86")}
+                <td className="py-3.5 px-6 tabular-nums whitespace-nowrap text-ink-2">
+                  <span>54.4%</span>
+                  {renderWilsonCi("[47.2%, 61.6%]", "54.4%", "#6B7B86")}
                 </td>
                 <td className="py-3.5 px-6 tabular-nums text-ink-3">
-                  &lt; 1 ms
+                  not measured
                 </td>
               </tr>
             </tbody>
@@ -271,7 +278,7 @@ export const EvidencePage: React.FC = () => {
           <div className="bg-surface rounded-panel border border-line p-5 flex flex-col justify-between">
             <div>
               <div className="text-[15px] font-semibold text-ink mb-1">
-                Text gaming defense test
+                Text gaming test
               </div>
               <p className="text-[12px] text-ink-3 mb-3 leading-snug">
                 500 non-emergency patients with dramatic urgent phrases appended.
@@ -312,7 +319,7 @@ export const EvidencePage: React.FC = () => {
                 Vague complaints cohort
               </div>
               <p className="text-[12px] text-ink-3 mb-3 leading-snug">
-                Same 180 emergencies, complaints replaced with vague or minimal text.
+                Same 180 emergencies, complaints replaced with vague text.
               </p>
 
               <table className="w-full text-left text-[13px] border-collapse">
@@ -326,24 +333,24 @@ export const EvidencePage: React.FC = () => {
                 <tbody className="divide-y divide-line tabular-nums">
                   <tr className="bg-brand-tint/20 font-medium">
                     <td className="py-2 text-brand font-bold">TriageGuard</td>
-                    <td className="py-2 text-right font-bold text-ink">96.4%</td>
-                    <td className="py-2 text-right font-semibold text-vital-normal">0 (0.0%)</td>
+                    <td className="py-2 text-right font-bold text-ink">76.7%</td>
+                    <td className="py-2 text-right font-semibold text-vital-normal">19 (10.6%)</td>
                   </tr>
                   <tr>
                     <td className="py-2 text-ink">Argmax</td>
-                    <td className="py-2 text-right text-ink-2">96.4%</td>
-                    <td className="py-2 text-right text-vital-abnormal font-medium">1 (3.6%)</td>
+                    <td className="py-2 text-right text-ink-2">63.9%</td>
+                    <td className="py-2 text-right text-vital-abnormal font-medium">65 (36.1%)</td>
                   </tr>
                   <tr>
                     <td className="py-2 text-ink">Rules only</td>
-                    <td className="py-2 text-right text-ink-2">71.4%</td>
-                    <td className="py-2 text-right text-l1-text font-bold">8 (28.6%)</td>
+                    <td className="py-2 text-right text-ink-2">54.4%</td>
+                    <td className="py-2 text-right text-l1-text font-bold">82 (45.6%)</td>
                   </tr>
                 </tbody>
               </table>
             </div>
             <div className="mt-4 pt-3 border-t border-line text-[11px] text-ink-3">
-              Objective vitals and emergency screen rescue under-reported emergencies.
+              Same 180 emergencies, complaints replaced with vague text.
             </div>
           </div>
         </div>
@@ -352,18 +359,45 @@ export const EvidencePage: React.FC = () => {
       {/* 4. Layer ablation table (Render only if results/layer_ablation_stress.json exists) */}
       {layerAblation && (
         <div className="bg-surface rounded-panel border border-line p-6">
-          <h3 className="text-h3 font-semibold text-ink mb-3">Layer ablation analysis</h3>
+          <div className="mb-3">
+            <h3 className="text-h3 font-semibold text-ink">Layer ablation analysis</h3>
+            <p className="text-[13px] text-ink-3 mt-0.5">
+              Fusion only picks the minimum-expected-cost level with no rules, screen or abstention. It catches more emergencies at the price of more escalations.
+            </p>
+          </div>
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-body">
-              {/* Dynamic render from json */}
+            <table className="w-full text-left text-body border-collapse">
+              <thead>
+                <tr className="border-b border-line bg-paper/60 text-caption font-semibold text-ink-3 tracking-wide">
+                  <th className="py-2.5 px-4">Condition</th>
+                  <th className="py-2.5 px-4">Configuration</th>
+                  <th className="py-2.5 px-4">Emergency recall</th>
+                  <th className="py-2.5 px-4">Silent misses</th>
+                  <th className="py-2.5 px-4">Non-emergency escalation</th>
+                  <th className="py-2.5 px-4">Abstain rate</th>
+                  {operatingPoints && operatingPoints.length > 0 && (
+                    <>
+                      <th className="py-2.5 px-4">Mean cost</th>
+                      <th className="py-2.5 px-4">Under-triage cost</th>
+                    </>
+                  )}
+                </tr>
+              </thead>
               <tbody className="divide-y divide-line text-[14px]">
                 {layerAblation.map((row: any, i: number) => (
-                  <tr key={i}>
-                    {Object.entries(row).map(([k, val]: [string, any]) => (
-                      <td key={k} className="py-2 px-4 text-ink tabular-nums">
-                        {String(val)}
-                      </td>
-                    ))}
+                  <tr key={i} className="hover:bg-paper/30 transition-colors">
+                    <td className="py-2.5 px-4 text-ink font-medium">{row["Stress Condition"]}</td>
+                    <td className="py-2.5 px-4 text-ink font-semibold">{row["Layer Configuration"]}</td>
+                    <td className="py-2.5 px-4 text-ink tabular-nums">{row["Emergency Recall (L1-L2)"]}</td>
+                    <td className="py-2.5 px-4 text-ink tabular-nums">{row["Silent Misses (L3-L5)"]}</td>
+                    <td className="py-2.5 px-4 text-ink tabular-nums">{row["Non-Emergency Escalation"]}</td>
+                    <td className="py-2.5 px-4 text-ink tabular-nums">{row["Abstain Rate (Nurse Handoff)"]}</td>
+                    {operatingPoints && operatingPoints.length > 0 && (
+                      <>
+                        <td className="py-2.5 px-4 text-ink tabular-nums">{row["Mean Cost"] ?? "—"}</td>
+                        <td className="py-2.5 px-4 text-ink tabular-nums">{row["Under-Triage Cost"] ?? "—"}</td>
+                      </>
+                    )}
                   </tr>
                 ))}
               </tbody>

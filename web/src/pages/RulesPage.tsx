@@ -96,7 +96,7 @@ export const RulesPage: React.FC = () => {
 
         <div className="flex items-center gap-6">
           <div className="text-right">
-            <div className="text-caption text-ink-3">Total rules fired</div>
+            <div className="text-caption text-ink-3">Encounters with a rule fired</div>
             <div className="text-[22px] font-bold text-ink tabular-nums leading-none mt-0.5">
               {totalRulesFiredOverall}
             </div>
@@ -128,7 +128,7 @@ export const RulesPage: React.FC = () => {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-body">
             <thead>
-              <tr className="border-b border-line bg-paper/60 text-caption font-semibold text-ink-3 uppercase tracking-wider">
+              <tr className="border-b border-line bg-paper/60 text-caption font-semibold text-ink-3 tracking-wide">
                 <th className="py-3 px-6">ID</th>
                 <th className="py-3 px-6">Clinical trigger</th>
                 <th className="py-3 px-6">Threshold</th>
@@ -196,7 +196,7 @@ export const RulesPage: React.FC = () => {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-body">
             <thead>
-              <tr className="border-b border-line bg-paper/60 text-caption font-semibold text-ink-3 uppercase tracking-wider">
+              <tr className="border-b border-line bg-paper/60 text-caption font-semibold text-ink-3 tracking-wide">
                 <th className="py-3 px-6">ID</th>
                 <th className="py-3 px-6">Clinical entity</th>
                 <th className="py-3 px-6">English triggers</th>

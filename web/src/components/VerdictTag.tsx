@@ -109,12 +109,21 @@ export const VerdictTag: React.FC<VerdictTagProps> = ({
             </div>
 
             {result.conformal_set.length > 0 && !isAbstain && (
-              <div className="inline-flex items-center gap-1 px-3 py-1 bg-paper border border-line rounded-pill text-[13px] text-ink-2 font-medium">
-                <span>Plausible levels:</span>
-                <span className="font-semibold text-ink tabular-nums">
-                  {result.conformal_set.join(", ")}
-                </span>
-              </div>
+              result.source_layer === "rule" ? (
+                <div className="inline-flex items-center gap-1 px-3 py-1 bg-paper border border-line rounded-pill text-[13px] text-ink-2 font-medium">
+                  <span>Models alone:</span>
+                  <span className="font-semibold text-ink tabular-nums">
+                    L{result.views?.vitals_level ?? result.views?.text_level ?? result.conformal_set[0] ?? 3}
+                  </span>
+                </div>
+              ) : (
+                <div className="inline-flex items-center gap-1 px-3 py-1 bg-paper border border-line rounded-pill text-[13px] text-ink-2 font-medium">
+                  <span>Plausible levels:</span>
+                  <span className="font-semibold text-ink tabular-nums">
+                    {result.conformal_set.join(", ")}
+                  </span>
+                </div>
+              )
             )}
 
             <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-paper border border-line rounded-pill text-[13px] text-ink-2 font-medium">

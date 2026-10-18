@@ -65,12 +65,12 @@ export const VitalsAndRules: React.FC<VitalsAndRulesProps> = ({ result }) => {
       >
         <div className="text-[13px] text-ink-3 font-medium">{label}</div>
 
-        <div className="flex items-baseline gap-1 my-1">
-          <span className="text-[28px] font-semibold text-ink tabular-nums leading-none">
+        <div className="flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5 my-1">
+          <span className="text-[22px] sm:text-[26px] min-[1600px]:text-[28px] font-semibold text-ink tabular-nums leading-none">
             {displayVal}
           </span>
           {displayVal !== "—" && (
-            <span className="text-[13px] text-ink-3 font-normal">{unit}</span>
+            <span className="text-[12px] sm:text-[13px] text-ink-3 font-normal">{unit}</span>
           )}
         </div>
 
@@ -105,7 +105,7 @@ export const VitalsAndRules: React.FC<VitalsAndRulesProps> = ({ result }) => {
 
           {/* Red Flag Chips */}
           <div className="mb-4">
-            <div className="text-[12px] font-medium text-ink-3 uppercase tracking-wider mb-2">
+            <div className="text-[12px] font-medium text-ink-3 tracking-wide mb-2">
               Clinical red flags
             </div>
             {validRedFlags.length > 0 ? (
@@ -130,7 +130,7 @@ export const VitalsAndRules: React.FC<VitalsAndRulesProps> = ({ result }) => {
 
           {/* Fired Rules Rows */}
           <div>
-            <div className="text-[12px] font-medium text-ink-3 uppercase tracking-wider mb-2">
+            <div className="text-[12px] font-medium text-ink-3 tracking-wide mb-2">
               Safety escalation rules
             </div>
             {rules_fired.length > 0 ? (

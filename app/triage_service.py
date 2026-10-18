@@ -271,11 +271,15 @@ class TriageService:
 
         disagree = abs(vit_level - txt_level) >= 2
         s3_status = "fired" if disagree else "passed"
-        s3_result = (
-            f"Vitals view L{vit_level}, text view L{txt_level}, disagree"
-            if disagree
-            else f"Vitals view L{vit_level}, text view L{txt_level}, agree"
-        )
+        if disagree:
+            if pred.source_layer == "rule":
+                s3_result = f"Vitals view L{vit_level}, text view L{txt_level}, disagree (Overridden by the safety rule)"
+            elif pred.source_layer == "screen":
+                s3_result = f"Vitals view L{vit_level}, text view L{txt_level}, disagree (Overridden by the emergency screen)"
+            else:
+                s3_result = f"Vitals view L{vit_level}, text view L{txt_level}, disagree"
+        else:
+            s3_result = f"Vitals view L{vit_level}, text view L{txt_level}, agree"
 
         screen_fired = pred.p_emergency >= tau
         s4_status = "fired" if screen_fired else "passed"

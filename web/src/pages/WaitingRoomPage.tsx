@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { QueuePatient } from "../types";
 import { getTriageColor, NURSE_COLOR } from "../utils/triageStyles";
-import { Users, Clock, RefreshCw, ArrowUpRight } from "lucide-react";
+import { Users, Clock, RefreshCw, ArrowUpRight, Trash2 } from "lucide-react";
 
 interface WaitingRoomPageProps {
   queue: QueuePatient[];
   onLoadSeedQueue: () => void;
+  onClearQueue: () => void;
   onSelectPatient: (patient: QueuePatient) => void;
 }
 
 export const WaitingRoomPage: React.FC<WaitingRoomPageProps> = ({
   queue,
   onLoadSeedQueue,
+  onClearQueue,
   onSelectPatient,
 }) => {
   // Ticking timer for elapsed wait seconds
@@ -30,6 +32,16 @@ export const WaitingRoomPage: React.FC<WaitingRoomPageProps> = ({
     const mins = Math.floor(total / 60);
     const secs = total % 60;
     return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  const getWaitingRoomLevelLabel = (lvl: number | null): string => {
+    if (lvl === null) return "Nurse now";
+    if (lvl === 1) return "L1 Resuscitation";
+    if (lvl === 2) return "L2 Emergent";
+    if (lvl === 3) return "L3 Urgent";
+    if (lvl === 4) return "L4 Less urgent";
+    if (lvl === 5) return "L5 Non-urgent";
+    return `L${lvl}`;
   };
 
   // Acuity sorting rank: L1 (1) -> L2 (2) -> Nurse now (3) -> L3 (4) -> L4 (5) -> L5 (6)
@@ -81,13 +93,24 @@ export const WaitingRoomPage: React.FC<WaitingRoomPageProps> = ({
           </p>
         </div>
 
-        <button
-          onClick={onLoadSeedQueue}
-          className="flex items-center gap-2 px-4 py-2 bg-surface hover:bg-paper border border-line text-ink font-semibold text-[13px] rounded-btn shadow-sm transition-colors self-start sm:self-auto"
-        >
-          <RefreshCw className="w-4 h-4 text-brand" strokeWidth={1.75} />
-          <span>Load 12 waiting patients</span>
-        </button>
+        <div className="flex items-center gap-2.5 self-start sm:self-auto">
+          {queue.length > 0 && (
+            <button
+              onClick={onClearQueue}
+              className="flex items-center gap-1.5 px-3.5 py-2 bg-surface hover:bg-paper border border-line text-ink-2 hover:text-ink font-medium text-[13px] rounded-btn shadow-sm transition-colors"
+            >
+              <Trash2 className="w-4 h-4 text-ink-3" strokeWidth={1.75} />
+              <span>Clear queue</span>
+            </button>
+          )}
+          <button
+            onClick={onLoadSeedQueue}
+            className="flex items-center gap-2 px-4 py-2 bg-surface hover:bg-paper border border-line text-ink font-semibold text-[13px] rounded-btn shadow-sm transition-colors"
+          >
+            <RefreshCw className="w-4 h-4 text-brand" strokeWidth={1.75} />
+            <span>Load 12 waiting patients</span>
+          </button>
+        </div>
       </div>
 
       {/* Stacked Horizontal Bar (Count by level, no donuts) */}
@@ -223,7 +246,7 @@ export const WaitingRoomPage: React.FC<WaitingRoomPageProps> = ({
                   </div>
 
                   {/* Level pill: 24px tall, tint bg, solid dot, 'L2 Emergent' */}
-                  <div className="min-w-[140px] flex justify-start">
+                  <div className="min-w-[150px] flex justify-start">
                     <span
                       className="h-6 px-2.5 rounded-pill flex items-center gap-1.5 text-[12px] font-semibold border whitespace-nowrap"
                       style={{
@@ -236,7 +259,7 @@ export const WaitingRoomPage: React.FC<WaitingRoomPageProps> = ({
                         className="w-2 h-2 rounded-full shrink-0"
                         style={{ backgroundColor: colors.solid }}
                       />
-                      <span>{patient.level_label}</span>
+                      <span>{getWaitingRoomLevelLabel(patient.triage_level)}</span>
                     </span>
                   </div>
 

@@ -9,13 +9,13 @@ import { PatientIntake, TriageResponse, DemoCase, QueuePatient } from "./types";
 
 const DEFAULT_INTAKE: PatientIntake = {
   patient_id: "",
-  age: 45,
-  sex: "M",
-  bp_sys: 120,
-  bp_dia: 80,
-  pulse: 72,
-  temp_c: 36.8,
-  spo2: 98,
+  age: null,
+  sex: "",
+  bp_sys: null,
+  bp_dia: null,
+  pulse: null,
+  temp_c: null,
+  spo2: null,
   complaint_text: "",
   conditions: [],
   medications: [],
@@ -176,6 +176,7 @@ export const App: React.FC = () => {
           <WaitingRoomPage
             queue={waitingQueue}
             onLoadSeedQueue={handleLoadSeedQueue}
+            onClearQueue={() => setWaitingQueue([])}
             onSelectPatient={(p) => {
               setIntake(p.input);
               setCurrentTab("console");

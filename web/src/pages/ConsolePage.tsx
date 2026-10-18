@@ -65,7 +65,7 @@ export const ConsolePage: React.FC<ConsolePageProps> = ({
       {/* Two columns layout */}
       <div className="flex flex-col lg:flex-row items-start gap-8">
         {/* Left column: Intake panel (sticky on desktop) */}
-        <aside className="w-full lg:w-[380px] xl:w-[420px] shrink-0 lg:sticky lg:top-[92px] max-h-[calc(100vh-110px)] overflow-y-auto">
+        <aside className="w-full lg:w-[380px] xl:w-[420px] shrink-0 lg:sticky lg:top-[84px] max-h-[calc(100vh-96px)] flex flex-col">
           <IntakePanel
             intake={intake}
             onChange={onChangeIntake}

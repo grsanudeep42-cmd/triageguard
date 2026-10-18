@@ -112,7 +112,7 @@ export const PipelineStages: React.FC<PipelineStagesProps> = ({ result }) => {
 
                   {isDecided && (
                     <span
-                      className="px-2 py-0.5 text-[11px] font-bold rounded-pill text-surface tabular-nums uppercase tracking-wide"
+                      className="px-2 py-0.5 text-[11px] font-bold rounded-pill text-surface tabular-nums tracking-wide"
                       style={{ backgroundColor: levelColors.solid }}
                     >
                       Decided here
@@ -125,6 +125,19 @@ export const PipelineStages: React.FC<PipelineStagesProps> = ({ result }) => {
                 </div>
                 <div className="text-[13px] text-ink-2 leading-relaxed">
                   {st.result}
+                  {st.stage_number === 3 &&
+                    result.views &&
+                    result.views.vitals_level !== result.views.text_level &&
+                    Math.abs(result.views.vitals_level - result.views.text_level) >= 2 &&
+                    !st.result.includes("Overridden") && (
+                      <span className="block mt-1 text-[12px] text-vital-abnormal font-medium">
+                        {result.source_layer === "rule"
+                          ? "Overridden by the safety rule"
+                          : result.source_layer === "screen"
+                          ? "Overridden by the emergency screen"
+                          : null}
+                      </span>
+                    )}
                 </div>
               </div>
             </div>
