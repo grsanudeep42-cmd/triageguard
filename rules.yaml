@@ -1,0 +1,176 @@
+# rules.yaml
+# ─────────────────────────────────────────────────────────────────────────────
+# Phase 3 – Hard-coded escalation rules for TriageGuard.
+#
+# ESCALATION CONTRACT
+# --------------------
+# Rules can ONLY assign a more-urgent level (lower number).
+# They NEVER downgrade.  The fusion layer takes min(model_level, forced_level).
+#
+# CONDITION SCHEMA
+# -----------------
+# Each key in 'conditions' is  <vital>_<op>: <threshold>
+#   Vitals: bp_sys, bp_dia, pulse, temp_c, spo2
+#   Ops:    lt (<), le (≤), gt (>), ge (≥)
+# All conditions must be TRUE (AND logic) for the rule to fire.
+# A condition with a vital that is None (missing/invalid) is NOT evaluated —
+# the rule does NOT fire on missing vitals.
+#
+# Age filter (optional)
+# ----------------------
+#   age_min, age_max — rule applies only if age ∈ [age_min, age_max]
+#
+# SOURCE
+# -------
+# All thresholds are  # PLACEHOLDER pending official triage primer.
+# ─────────────────────────────────────────────────────────────────────────────
+
+rules:
+
+  # ── SpO2 ─────────────────────────────────────────────────────────────────
+
+  - id: R001
+    description: >
+      Critical hypoxia — SpO₂ < 85 %: likely resuscitation needed.
+    conditions:
+      spo2_lt: 85.0          # PLACEHOLDER
+    forced_max_level: 1
+    source: "PLACEHOLDER pending official triage primer"
+    applies_age_band: all
+
+  - id: R002
+    description: >
+      Severe hypoxia — SpO₂ 85–89 %: immediate oxygen and escalation.
+    conditions:
+      spo2_lt: 90.0          # PLACEHOLDER
+    forced_max_level: 2
+    source: "PLACEHOLDER pending official triage primer"
+    applies_age_band: all
+
+  # ── Blood pressure – adult ────────────────────────────────────────────────
+
+  - id: R003
+    description: >
+      Profound hypotension — systolic BP < 60 mmHg (adult):
+      possible cardiovascular collapse.
+    conditions:
+      bp_sys_lt: 60.0        # PLACEHOLDER
+    forced_max_level: 1
+    age_min: 13
+    source: "PLACEHOLDER pending official triage primer"
+    applies_age_band: adult
+
+  - id: R004
+    description: >
+      Hypotension — systolic BP < 90 mmHg (adult): emergency.
+    conditions:
+      bp_sys_lt: 90.0        # PLACEHOLDER
+    forced_max_level: 2
+    age_min: 13
+    source: "PLACEHOLDER pending official triage primer"
+    applies_age_band: adult
+
+  # ── Pulse – adult ────────────────────────────────────────────────────────
+
+  - id: R005
+    description: >
+      Extreme tachycardia > 180 bpm (adult): emergency.
+    conditions:
+      pulse_gt: 180.0        # PLACEHOLDER
+    forced_max_level: 2
+    age_min: 13
+    source: "PLACEHOLDER pending official triage primer"
+    applies_age_band: adult
+
+  - id: R006
+    description: >
+      Severe bradycardia < 40 bpm: emergency (all ages).
+    conditions:
+      pulse_lt: 40.0         # PLACEHOLDER
+    forced_max_level: 2
+    source: "PLACEHOLDER pending official triage primer"
+    applies_age_band: all
+
+  # ── Temperature – adult ──────────────────────────────────────────────────
+
+  - id: R007
+    description: >
+      Hyperpyrexia ≥ 41.0 °C (adult): emergency.
+    conditions:
+      temp_c_ge: 41.0        # PLACEHOLDER
+    forced_max_level: 2
+    age_min: 13
+    source: "PLACEHOLDER pending official triage primer"
+    applies_age_band: adult
+
+  # ── Paediatric – infant (age ≤ 2) ────────────────────────────────────────
+
+  - id: R008
+    description: >
+      High fever ≥ 39.5 °C in infant (age ≤ 2): emergency.
+    conditions:
+      temp_c_ge: 39.5        # PLACEHOLDER
+    forced_max_level: 2
+    age_max: 2
+    source: "PLACEHOLDER pending official triage primer"
+    applies_age_band: paediatric_infant
+
+  - id: R009
+    description: >
+      Tachycardia > 200 bpm in infant (age ≤ 2): emergency.
+    conditions:
+      pulse_gt: 200.0        # PLACEHOLDER
+    forced_max_level: 2
+    age_max: 2
+    source: "PLACEHOLDER pending official triage primer"
+    applies_age_band: paediatric_infant
+
+  # ── Paediatric – child (age 2–12) ────────────────────────────────────────
+
+  - id: R010
+    description: >
+      Extreme tachycardia > 160 bpm in child (age 2–12): emergency.
+    conditions:
+      pulse_gt: 160.0        # PLACEHOLDER
+    forced_max_level: 2
+    age_min: 2
+    age_max: 12
+    source: "PLACEHOLDER pending official triage primer"
+    applies_age_band: paediatric_child
+
+  - id: R011
+    description: >
+      Hypotension — systolic BP < 70 mmHg in child (age 2–12): emergency.
+    conditions:
+      bp_sys_lt: 70.0        # PLACEHOLDER
+    forced_max_level: 2
+    age_min: 2
+    age_max: 12
+    source: "PLACEHOLDER pending official triage primer"
+    applies_age_band: paediatric_child
+
+  # ── Combination – adult ──────────────────────────────────────────────────
+
+  - id: R012
+    description: >
+      Shock pattern — systolic BP < 90 mmHg AND pulse > 110 bpm (adult):
+      emergency.
+    conditions:
+      bp_sys_lt: 90.0        # PLACEHOLDER
+      pulse_gt: 110.0        # PLACEHOLDER
+    forced_max_level: 2
+    age_min: 13
+    source: "PLACEHOLDER pending official triage primer"
+    applies_age_band: adult
+
+  - id: R013
+    description: >
+      Septic shock pattern — fever ≥ 38.5 °C AND systolic BP < 90 mmHg
+      (adult): emergency.
+    conditions:
+      temp_c_ge: 38.5        # PLACEHOLDER
+      bp_sys_lt: 90.0        # PLACEHOLDER
+    forced_max_level: 2
+    age_min: 13
+    source: "PLACEHOLDER pending official triage primer"
+    applies_age_band: adult

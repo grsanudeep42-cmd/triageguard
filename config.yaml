@@ -1,0 +1,114 @@
+seed: 42
+n_total: 30000  # PLACEHOLDER
+
+# ── Level mix targets (fractions, each ± 0.5%) ────────────────────────────
+# PLACEHOLDER pending official triage primer
+level_mix:
+  1: 0.005
+  2: 0.035
+  3: 0.250
+  4: 0.400
+  5: 0.310
+
+# Exact row counts derived from level_mix × n_total (must sum to n_total)
+# PLACEHOLDER
+level_counts:
+  1: 150
+  2: 1050
+  3: 7500
+  4: 12000
+  5: 9300
+
+# ── Vital error injection rates ────────────────────────────────────────────
+# PLACEHOLDER pending official triage primer
+error_rates:
+  bp_zero:         0.015   # BP sys or dia = 0
+  bp_swapped:      0.007   # sys and dia swapped
+  temp_fahrenheit: 0.020   # Celsius field contains a Fahrenheit value (e.g. 96, 101)
+  spo2_invalid:    0.008   # SpO2 > 100 or = 0
+  pulse_zero:      0.005   # pulse = 0
+  decimal_slip:    0.005   # e.g. 120 → 12.0
+  vitals_missing:  0.040   # 1–2 vital fields set to NaN
+
+# ── Reporting bias rates ───────────────────────────────────────────────────
+# PLACEHOLDER pending official triage primer
+bias_rates:
+  emergency_under_report: 0.12   # fraction of true emergencies that get a vague complaint
+  mild_over_report:       0.06   # fraction of L4/L5 cases that get a dramatic complaint
+
+# ── Label noise ───────────────────────────────────────────────────────────
+# PLACEHOLDER pending official triage primer
+label_noise:
+  rate: 0.08   # 8 % of NON-emergency cases get ±1 level shift
+               # Non-emergency noisy level is clamped to ≥ 3 to prevent
+               # L3→L2 bleed that would push the noisy L2 fraction above
+               # the ±0.5 % tolerance band.
+
+# ── Split fractions ────────────────────────────────────────────────────────
+# PLACEHOLDER
+splits:
+  train: 0.60
+  calib: 0.15
+  val:   0.10
+  test:  0.15
+
+min_calib_emergencies: 150   # hard floor; stratified split guarantees this
+
+# ── Arrival time model ────────────────────────────────────────────────────
+# PLACEHOLDER pending validated OPD arrival data
+arrival:
+  n_per_day:      800       # approximate daily footfall
+  start_date:     "2025-01-06"   # Monday (PLACEHOLDER)
+  peak1_hour:     10.5      # 10:30 AM peak
+  peak1_sd:       1.5
+  peak1_weight:   0.50
+  peak2_hour:     18.0      # 6:00 PM secondary peak
+  peak2_sd:       1.0
+  peak2_weight:   0.30
+  uniform_weight: 0.20      # background (remaining)
+  open_hour:      6.0       # hospital opens
+  close_hour:     22.0      # hospital closes
+
+# ── Data paths & schema adapter ──────────────────────────────────────────────
+data_paths:
+  intake: "data/synthetic_intake.csv"
+  labels: "data/hidden_labels.csv"
+  splits: "data/splits.csv"
+
+# ── Cost weights (used in fusion & decision layer) ─────────────────────────
+# PLACEHOLDER pending clinical review
+cost_weights:
+  over_triage: 1.0              # cost per level of over-triage
+  under_triage_non_emergency: 1.0 # cost per level of non-emergency under-triage
+  under_triage_multiplier: 20   # under-triaging a true emergency costs 20× more
+  abstain_cost: 3.0             # cost of nurse remeasure / triage intervention (PLACEHOLDER)
+
+# ── Conformal calibration settings ────────────────────────────────────────
+conformal:
+  candidate_alphas: [0.005, 0.01, 0.02, 0.05]
+  level_set_alpha: 0.10
+  recall_floor_on_val: 0.95
+
+# ── Input cleaning (Phase 1) ─────────────────────────────────────────────────
+# PLACEHOLDER pending official triage primer
+
+# Plausibility bounds per vital.  Values outside [lo, hi] are set to None.
+vital_ranges:
+  bp_sys:  {lo:  50,  hi: 240}    # mmHg systolic   # PLACEHOLDER
+  bp_dia:  {lo:  20,  hi: 150}    # mmHg diastolic  # PLACEHOLDER
+  pulse:   {lo:  25,  hi: 250}    # beats per minute # PLACEHOLDER
+  temp_c:  {lo: 34.0, hi: 42.5}  # degrees Celsius  # PLACEHOLDER
+  spo2:    {lo: 50.0, hi: 100.0} # percent SpO2     # PLACEHOLDER
+
+# Values in this range in the temp_c field are treated as Fahrenheit  # PLACEHOLDER
+fahrenheit_range:
+  lo: 88.0    # °F lower bound for detection  # PLACEHOLDER
+  hi: 110.0   # °F upper bound for detection  # PLACEHOLDER
+
+# Decimal slip: flag if value < lo AND value × factor is in [lo, hi]  # PLACEHOLDER
+decimal_slip_detection:
+  factor: 10   # PLACEHOLDER
+
+# Text normalisation  # PLACEHOLDER
+text_cleaning:
+  max_repeated_chars: 2   # collapse runs of >N identical chars to N  # PLACEHOLDER

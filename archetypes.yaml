@@ -1,0 +1,837 @@
+# archetypes.yaml
+# 35 OPD patient archetypes for TriageGuard synthetic data generation.
+# All numeric thresholds (mean, sd, prior) are marked PLACEHOLDER.
+# A clinical domain expert must review every value before any real deployment.
+#
+# Fields per archetype:
+#   name                  : snake_case identifier (used as key in lexicon.yaml)
+#   description           : plain-English summary
+#   triage_level          : 1–5 (1 = most urgent)  PLACEHOLDER
+#   department            : one of the 12 listed departments
+#   age_min / age_max     : inclusive range in years (0 = infant < 1 yr)
+#   sex                   : "any" | "M" | "F"
+#   within_level_prior    : relative sampling weight within the level group
+#                           (normalised in code; PLACEHOLDER)
+#   vitals                : Gaussian mean/sd for bp_sys, bp_dia, pulse,
+#                           temp_c (°C), spo2 (%).  All PLACEHOLDER.
+#   complaint_templates_en: 5–8 English free-text complaint templates
+#   confusable_with       : (optional) name of archetype with similar complaint
+#   note                  : clinical comment on the key differentiator
+
+archetypes:
+
+  # ══════════════════════════════════════════════════════════════════════════
+  # LEVEL 1  –  Resuscitation  (target ~0.5 % of all rows)
+  # ══════════════════════════════════════════════════════════════════════════
+
+  - name: unconscious_unresponsive
+    description: Patient completely unresponsive, unable to maintain airway
+    triage_level: 1
+    department: Emergency/Casualty
+    age_min: 1
+    age_max: 85
+    sex: any
+    within_level_prior: 0.50  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean:  80, sd: 20}   # PLACEHOLDER
+      bp_dia:  {mean:  50, sd: 15}   # PLACEHOLDER
+      pulse:   {mean: 115, sd: 30}   # PLACEHOLDER
+      temp_c:  {mean: 37.0, sd: 1.0} # PLACEHOLDER
+      spo2:    {mean:  82, sd: 10}   # PLACEHOLDER
+    complaint_templates_en:
+      - "patient unconscious not responding at all"
+      - "suddenly fell unconscious at home cannot wake up"
+      - "found unresponsive on street no reaction"
+      - "collapsed suddenly no response to calling"
+      - "patient not waking up since one hour"
+      - "fainted not regaining consciousness"
+
+  - name: cardiac_arrest_imminent
+    description: Signs of imminent cardiac arrest or just resuscitated
+    triage_level: 1
+    department: Emergency/Casualty
+    age_min: 30
+    age_max: 85
+    sex: any
+    within_level_prior: 0.50  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean:  70, sd: 15}   # PLACEHOLDER
+      bp_dia:  {mean:  42, sd: 12}   # PLACEHOLDER
+      pulse:   {mean: 130, sd: 40}   # PLACEHOLDER
+      temp_c:  {mean: 36.5, sd: 0.5} # PLACEHOLDER
+      spo2:    {mean:  78, sd: 15}   # PLACEHOLDER
+    complaint_templates_en:
+      - "severe chest pain not breathing properly no pulse"
+      - "extreme chest pressure sweating heavily lips turning blue"
+      - "sudden crushing chest pain arms numb not breathing"
+      - "cyanosis lips blue not responding to anything"
+      - "chest pain very severe stopped breathing briefly"
+
+  # ══════════════════════════════════════════════════════════════════════════
+  # LEVEL 2  –  Emergency  (target ~3.5 % of all rows)
+  # ══════════════════════════════════════════════════════════════════════════
+
+  - name: acs_stemi
+    description: >
+      Suspected STEMI or acute coronary syndrome with haemodynamic compromise.
+      KEY DIFFERENTIATOR from chest_pain_acidity: low BP, tachycardia, low SpO2,
+      older age, radiation to arm/jaw.
+    triage_level: 2
+    department: Cardiology
+    age_min: 40
+    age_max: 85
+    sex: any
+    within_level_prior: 0.20  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean: 100, sd: 25}   # PLACEHOLDER – may be low from cardiogenic shock
+      bp_dia:  {mean:  65, sd: 20}   # PLACEHOLDER
+      pulse:   {mean: 105, sd: 25}   # PLACEHOLDER – tachycardia
+      temp_c:  {mean: 37.0, sd: 0.4} # PLACEHOLDER
+      spo2:    {mean:  93, sd:  5}   # PLACEHOLDER – reduced
+    complaint_templates_en:
+      - "chest pain radiating to left arm sweating"
+      - "severe chest pain with nausea and sweating"
+      - "crushing chest pain since one hour jaw pain"
+      - "chest tightness shortness of breath arm pain"
+      - "heavy pressure on chest cannot lie flat"
+      - "heart pain vomiting and cold sweat"
+    confusable_with: chest_pain_acidity
+    note: "Text similar to acidity; low BP + tachycardia + low SpO2 + age are differentiators"
+
+  - name: stroke_major
+    description: >
+      Major ischaemic or haemorrhagic stroke with neurological deficits.
+      KEY DIFFERENTIATOR from migraine: very high BP, older age,
+      unilateral weakness or facial droop.
+    triage_level: 2
+    department: Emergency/Casualty
+    age_min: 50
+    age_max: 85
+    sex: any
+    within_level_prior: 0.15  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean: 172, sd: 22}   # PLACEHOLDER – markedly elevated
+      bp_dia:  {mean: 102, sd: 18}   # PLACEHOLDER
+      pulse:   {mean:  85, sd: 20}   # PLACEHOLDER
+      temp_c:  {mean: 37.0, sd: 0.5} # PLACEHOLDER
+      spo2:    {mean:  95, sd:  3}   # PLACEHOLDER
+    complaint_templates_en:
+      - "sudden headache face drooping speech unclear"
+      - "cannot speak arm not moving one side"
+      - "sudden confusion weakness on left side of body"
+      - "severe headache vomiting neck stiff"
+      - "face twisted and speech not coming"
+      - "arm and leg weakness on right side suddenly"
+    confusable_with: migraine
+    note: "Text overlaps migraine; very high BP + age 50-85 + focal neuro deficit"
+
+  - name: severe_asthma_attack
+    description: >
+      Severe acute asthma exacerbation with significant hypoxia.
+      KEY DIFFERENTIATOR from breathlessness_anxiety: SpO2 < 93, cannot
+      speak in full sentences, inhaler not helping, audible wheeze.
+    triage_level: 2
+    department: Pulmonology
+    age_min: 8
+    age_max: 70
+    sex: any
+    within_level_prior: 0.15  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean: 122, sd: 15}   # PLACEHOLDER
+      bp_dia:  {mean:  78, sd: 12}   # PLACEHOLDER
+      pulse:   {mean: 118, sd: 20}   # PLACEHOLDER – tachycardia from hypoxia
+      temp_c:  {mean: 37.2, sd: 0.5} # PLACEHOLDER
+      spo2:    {mean:  87, sd:  6}   # PLACEHOLDER – low SpO2 is key
+    complaint_templates_en:
+      - "cannot breathe gasping for air inhaler not working"
+      - "severe breathlessness cannot speak in full sentences"
+      - "asthma attack very bad wheezing worsening"
+      - "breathing very difficult chest very tight oxygen low"
+      - "shortness of breath extreme cannot lie flat"
+      - "asthma attack inhaler used twice no relief"
+    confusable_with: breathlessness_anxiety
+    note: "Text nearly identical to anxiety; SpO2 < 93 + wheeze + inhaler failure are differentiators"
+
+  - name: sepsis_severe
+    description: >
+      Sepsis with hypotension, high fever, and tachycardia.
+      KEY DIFFERENTIATOR from fever_adult_mild: BP < 90 systolic,
+      pulse > 110, and often altered sensorium.
+    triage_level: 2
+    department: Emergency/Casualty
+    age_min: 25
+    age_max: 85
+    sex: any
+    within_level_prior: 0.15  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean:  85, sd: 18}   # PLACEHOLDER – hypotension is key
+      bp_dia:  {mean:  55, sd: 14}   # PLACEHOLDER
+      pulse:   {mean: 122, sd: 25}   # PLACEHOLDER – tachycardia
+      temp_c:  {mean: 39.5, sd: 1.0} # PLACEHOLDER – high fever
+      spo2:    {mean:  93, sd:  5}   # PLACEHOLDER
+    complaint_templates_en:
+      - "high fever shivering extreme weakness cannot stand"
+      - "fever vomiting very weak passing no urine"
+      - "fever since 3 days today much worse dizzy"
+      - "high fever body ache breathing difficulty"
+      - "burning fever whole body shaking altered"
+    confusable_with: fever_adult_mild
+    note: "Same complaint as mild fever; low BP + HR > 110 + possible confusion are differentiators"
+
+  - name: major_trauma_bleeding
+    description: Major trauma with significant blood loss and haemodynamic instability
+    triage_level: 2
+    department: Emergency/Casualty
+    age_min: 10
+    age_max: 80
+    sex: any
+    within_level_prior: 0.12  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean:  90, sd: 20}   # PLACEHOLDER – haemorrhagic shock
+      bp_dia:  {mean:  58, sd: 14}   # PLACEHOLDER
+      pulse:   {mean: 128, sd: 25}   # PLACEHOLDER
+      temp_c:  {mean: 36.8, sd: 0.5} # PLACEHOLDER
+      spo2:    {mean:  94, sd:  5}   # PLACEHOLDER
+    complaint_templates_en:
+      - "road accident heavy bleeding from head"
+      - "fell from height severe injury leg bleeding"
+      - "knife wound abdomen bleeding heavily"
+      - "vehicle accident crushed multiple injuries"
+      - "crush injury arm bleeding not stopping"
+
+  - name: active_seizure
+    description: Active generalised seizure or immediately post-ictal with no recovery
+    triage_level: 2
+    department: Emergency/Casualty
+    age_min: 2
+    age_max: 70
+    sex: any
+    within_level_prior: 0.10  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean: 142, sd: 25}   # PLACEHOLDER – post-ictal elevation
+      bp_dia:  {mean:  90, sd: 20}   # PLACEHOLDER
+      pulse:   {mean: 112, sd: 30}   # PLACEHOLDER
+      temp_c:  {mean: 37.5, sd: 0.8} # PLACEHOLDER
+      spo2:    {mean:  91, sd:  8}   # PLACEHOLDER
+    complaint_templates_en:
+      - "had fits just now still shaking cannot respond"
+      - "epilepsy attack happened body jerking"
+      - "convulsions started suddenly foaming at mouth"
+      - "seizure episode fell and body shaking"
+      - "fits came sudden jerking and passed urine"
+
+  - name: eclampsia_obstetric
+    description: Eclampsia or severe pre-eclampsia in pregnancy with very high BP
+    triage_level: 2
+    department: Obstetrics & Gynecology
+    age_min: 18
+    age_max: 42
+    sex: F
+    within_level_prior: 0.07  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean: 168, sd: 18}   # PLACEHOLDER – severely elevated
+      bp_dia:  {mean: 108, sd: 14}   # PLACEHOLDER
+      pulse:   {mean: 100, sd: 20}   # PLACEHOLDER
+      temp_c:  {mean: 37.0, sd: 0.5} # PLACEHOLDER
+      spo2:    {mean:  95, sd:  4}   # PLACEHOLDER
+    complaint_templates_en:
+      - "pregnant severe headache fits and leg swelling"
+      - "9 months pregnant high BP blurred vision"
+      - "labour pain with convulsions suddenly"
+      - "pregnancy face and legs very swollen high BP fits"
+      - "pregnant having fits baby still inside"
+
+  - name: fever_infant_critical
+    description: Critical fever in infant under 2 years with sepsis risk
+    triage_level: 2
+    department: Pediatrics
+    age_min: 0
+    age_max: 2
+    sex: any
+    within_level_prior: 0.06  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean:  75, sd: 14}   # PLACEHOLDER – infant norms differ
+      bp_dia:  {mean:  48, sd: 10}   # PLACEHOLDER
+      pulse:   {mean: 162, sd: 28}   # PLACEHOLDER – infant tachycardia
+      temp_c:  {mean: 40.5, sd: 0.8} # PLACEHOLDER
+      spo2:    {mean:  91, sd:  6}   # PLACEHOLDER
+    complaint_templates_en:
+      - "baby very high fever not drinking milk"
+      - "infant 8 months 104 degree fever not responding normally"
+      - "child 1 year very sick high temperature"
+      - "baby not eating crying continuously burning hot"
+      - "small baby high temperature won't feed"
+
+  # ══════════════════════════════════════════════════════════════════════════
+  # LEVEL 3  –  Urgent  (target ~25 % of all rows)
+  # ══════════════════════════════════════════════════════════════════════════
+
+  - name: acute_abdomen
+    description: >
+      Acute abdomen – possible appendicitis or peritonitis.
+      KEY DIFFERENTIATOR from gastritis_gerd: fever, tachycardia,
+      localised rigidity, RIF tenderness.
+    triage_level: 3
+    department: Surgery
+    age_min: 10
+    age_max: 65
+    sex: any
+    within_level_prior: 0.14  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean: 122, sd: 15}   # PLACEHOLDER
+      bp_dia:  {mean:  78, sd: 12}   # PLACEHOLDER
+      pulse:   {mean: 108, sd: 20}   # PLACEHOLDER – tachycardia
+      temp_c:  {mean: 38.5, sd: 0.7} # PLACEHOLDER – fever
+      spo2:    {mean:  97, sd:  2}   # PLACEHOLDER
+    complaint_templates_en:
+      - "severe stomach pain right lower side getting worse"
+      - "abdomen very painful since morning hard on touch"
+      - "right side belly pain worsening with vomiting and fever"
+      - "stomach very hard and tender cannot lie straight"
+      - "belly pain right side started last night now severe"
+    confusable_with: gastritis_gerd
+    note: "Text overlaps gastritis; fever + tachycardia + focal RIF rigidity are differentiators"
+
+  - name: dehydration_child_moderate
+    description: Moderate dehydration in child under 12 with sunken eyes and reduced urine
+    triage_level: 3
+    department: Pediatrics
+    age_min: 0
+    age_max: 12
+    sex: any
+    within_level_prior: 0.12  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean:  90, sd: 15}   # PLACEHOLDER
+      bp_dia:  {mean:  58, sd: 10}   # PLACEHOLDER
+      pulse:   {mean: 132, sd: 20}   # PLACEHOLDER
+      temp_c:  {mean: 38.5, sd: 1.0} # PLACEHOLDER
+      spo2:    {mean:  97, sd:  2}   # PLACEHOLDER
+    complaint_templates_en:
+      - "child loose motions vomiting all day not drinking water"
+      - "baby diarrhoea and vomiting sunken eyes very weak"
+      - "10 year old diarrhoea fever not eating no urine"
+      - "child dehydrated eyes sunken crying no tears"
+      - "kid loose motions 10 times today fever weak"
+
+  - name: fracture_displaced
+    description: Displaced long-bone fracture requiring urgent orthopaedic intervention
+    triage_level: 3
+    department: Orthopedics
+    age_min: 10
+    age_max: 80
+    sex: any
+    within_level_prior: 0.14  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean: 126, sd: 15}   # PLACEHOLDER – pain-elevated
+      bp_dia:  {mean:  80, sd: 12}   # PLACEHOLDER
+      pulse:   {mean: 102, sd: 20}   # PLACEHOLDER
+      temp_c:  {mean: 37.0, sd: 0.4} # PLACEHOLDER
+      spo2:    {mean:  98, sd:  1}   # PLACEHOLDER
+    complaint_templates_en:
+      - "fell bone visible leg cannot move at all"
+      - "arm broken after fall wrong angle severe pain"
+      - "road accident leg swollen cannot walk bone crunch felt"
+      - "wrist fracture from fall pain very bad swelling"
+      - "limb at wrong angle after fall cannot bear weight"
+
+  - name: hypertensive_urgency
+    description: Very high BP without acute organ damage but requiring prompt treatment
+    triage_level: 3
+    department: General Medicine
+    age_min: 40
+    age_max: 80
+    sex: any
+    within_level_prior: 0.14  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean: 188, sd: 20}   # PLACEHOLDER – BP > 180  # PLACEHOLDER threshold
+      bp_dia:  {mean: 112, sd: 15}   # PLACEHOLDER
+      pulse:   {mean:  88, sd: 18}   # PLACEHOLDER
+      temp_c:  {mean: 37.0, sd: 0.4} # PLACEHOLDER
+      spo2:    {mean:  97, sd:  2}   # PLACEHOLDER
+    complaint_templates_en:
+      - "BP very high today severe headache and dizziness"
+      - "blood pressure 200 plus headache back of neck"
+      - "forgot medicine BP now very high nosebleed"
+      - "headache neck stiffness BP checked very high"
+      - "hypertension patient BP machine showing 200"
+
+  - name: hyperglycemia_moderate
+    description: Moderate hyperglycaemia in known diabetic with weakness and polyuria
+    triage_level: 3
+    department: General Medicine
+    age_min: 35
+    age_max: 75
+    sex: any
+    within_level_prior: 0.12  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean: 130, sd: 20}   # PLACEHOLDER
+      bp_dia:  {mean:  82, sd: 14}   # PLACEHOLDER
+      pulse:   {mean:  98, sd: 20}   # PLACEHOLDER
+      temp_c:  {mean: 37.5, sd: 0.5} # PLACEHOLDER
+      spo2:    {mean:  97, sd:  2}   # PLACEHOLDER
+    complaint_templates_en:
+      - "sugar very high diabetic feeling very weak"
+      - "blood sugar 400 plus weakness blurred vision"
+      - "diabetes lost consciousness briefly sugar very high"
+      - "excessive thirst urinating too much sugar high"
+      - "diabetic not taken insulin 2 days now very weak"
+
+  - name: head_injury_moderate
+    description: Moderate head injury with loss of consciousness or post-traumatic vomiting
+    triage_level: 3
+    department: Emergency/Casualty
+    age_min: 5
+    age_max: 75
+    sex: any
+    within_level_prior: 0.12  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean: 132, sd: 20}   # PLACEHOLDER
+      bp_dia:  {mean:  84, sd: 15}   # PLACEHOLDER
+      pulse:   {mean:  80, sd: 20}   # PLACEHOLDER
+      temp_c:  {mean: 37.0, sd: 0.5} # PLACEHOLDER
+      spo2:    {mean:  97, sd:  2}   # PLACEHOLDER
+    complaint_templates_en:
+      - "fell and hit head was unconscious for a few minutes"
+      - "head injury accident vomiting now dazed"
+      - "head trauma with brief loss of consciousness"
+      - "hit head in accident now headache and nausea"
+      - "banged head on ground confused and vomiting"
+
+  - name: renal_colic
+    description: Severe renal colic from kidney stone – loin-to-groin pain
+    triage_level: 3
+    department: Surgery
+    age_min: 20
+    age_max: 65
+    sex: any
+    within_level_prior: 0.12  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean: 138, sd: 18}   # PLACEHOLDER – pain-elevated
+      bp_dia:  {mean:  86, sd: 14}   # PLACEHOLDER
+      pulse:   {mean: 108, sd: 20}   # PLACEHOLDER
+      temp_c:  {mean: 37.2, sd: 0.5} # PLACEHOLDER
+      spo2:    {mean:  98, sd:  2}   # PLACEHOLDER
+    complaint_templates_en:
+      - "severe pain in back radiating to groin unbearable"
+      - "flank pain shooting to lower abdomen cannot sit still"
+      - "kidney stone extreme pain rolling cannot stay still"
+      - "loin to groin pain severe with nausea"
+      - "terrible back pain going to groin side"
+
+  - name: pneumonia_moderate
+    description: Moderate community-acquired pneumonia with low SpO2 and fever
+    triage_level: 3
+    department: Pulmonology
+    age_min: 15
+    age_max: 80
+    sex: any
+    within_level_prior: 0.10  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean: 118, sd: 15}   # PLACEHOLDER
+      bp_dia:  {mean:  76, sd: 12}   # PLACEHOLDER
+      pulse:   {mean: 112, sd: 20}   # PLACEHOLDER
+      temp_c:  {mean: 39.0, sd: 0.8} # PLACEHOLDER
+      spo2:    {mean:  91, sd:  4}   # PLACEHOLDER – low
+    complaint_templates_en:
+      - "cough fever 5 days now difficulty breathing"
+      - "chest infection high fever breathlessness getting worse"
+      - "persistent cough yellow sputum now cannot walk far"
+      - "cough for one week fever now breathing difficulty"
+      - "chest heaviness fever SpO2 low on check"
+
+  # ══════════════════════════════════════════════════════════════════════════
+  # LEVEL 4  –  Semi-urgent  (target ~40 % of all rows)
+  # ══════════════════════════════════════════════════════════════════════════
+
+  - name: chest_pain_acidity
+    description: >
+      Chest pain from GERD or muscle strain. CONFUSABLE with acs_stemi.
+      KEY DIFFERENTIATOR: all vitals normal, younger age, pain after food,
+      relieved by antacids.
+    triage_level: 4
+    department: General Medicine
+    age_min: 18
+    age_max: 60
+    sex: any
+    within_level_prior: 0.10  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean: 122, sd: 12}   # PLACEHOLDER – NORMAL
+      bp_dia:  {mean:  78, sd: 10}   # PLACEHOLDER
+      pulse:   {mean:  82, sd: 14}   # PLACEHOLDER – NORMAL
+      temp_c:  {mean: 37.0, sd: 0.4} # PLACEHOLDER
+      spo2:    {mean:  98, sd:  1}   # PLACEHOLDER – NORMAL
+    complaint_templates_en:
+      - "chest pain after eating spicy food burning"
+      - "burning in chest like acidity since morning"
+      - "chest pain may be gas problem since yesterday"
+      - "chest discomfort after biryani last night heartburn"
+      - "burning sensation in chest and throat after meal"
+      - "chest pain and burping mild since yesterday"
+    confusable_with: acs_stemi
+    note: "Same complaint as ACS; normal BP + normal pulse + normal SpO2 + younger age + post-meal onset"
+
+  - name: breathlessness_anxiety
+    description: >
+      Breathlessness from anxiety or panic attack. CONFUSABLE with severe_asthma_attack.
+      KEY DIFFERENTIATOR: SpO2 ≥ 97 %, no wheeze, triggered by stress,
+      no known asthma.
+    triage_level: 4
+    department: Psychiatry
+    age_min: 18
+    age_max: 55
+    sex: any
+    within_level_prior: 0.07  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean: 126, sd: 12}   # PLACEHOLDER
+      bp_dia:  {mean:  80, sd: 10}   # PLACEHOLDER
+      pulse:   {mean:  96, sd: 18}   # PLACEHOLDER – mildly elevated
+      temp_c:  {mean: 37.0, sd: 0.3} # PLACEHOLDER
+      spo2:    {mean:  98, sd:  1}   # PLACEHOLDER – NORMAL (key differentiator)
+    complaint_templates_en:
+      - "cannot breathe feels like suffocating very scared"
+      - "breathing problem feeling anxious chest tight"
+      - "sudden shortness of breath palpitations stress"
+      - "feels like not getting enough air very panicky"
+      - "breathlessness chest tightness after family problem"
+      - "saans nahi aa rahi feeling panicky hands shaking"
+    confusable_with: severe_asthma_attack
+    note: "SpO2 normal is the single most important differentiator from true asthma"
+
+  - name: migraine
+    description: >
+      Migraine headache. CONFUSABLE with stroke_major.
+      KEY DIFFERENTIATOR: younger age (18–55), BP normal or mildly elevated,
+      no focal neurological deficit, prior similar attacks.
+    triage_level: 4
+    department: General Medicine
+    age_min: 18
+    age_max: 55
+    sex: any
+    within_level_prior: 0.10  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean: 128, sd: 14}   # PLACEHOLDER – mildly elevated at most
+      bp_dia:  {mean:  82, sd: 12}   # PLACEHOLDER
+      pulse:   {mean:  78, sd: 15}   # PLACEHOLDER
+      temp_c:  {mean: 37.0, sd: 0.3} # PLACEHOLDER
+      spo2:    {mean:  98, sd:  1}   # PLACEHOLDER
+    complaint_templates_en:
+      - "severe headache one side throbbing previous migraine"
+      - "migraine attack vomiting light sensitive same as before"
+      - "very bad headache only on left side since morning"
+      - "terrible headache behind one eye nausea vomiting"
+      - "head pain one side cannot tolerate light or sound"
+      - "headache very bad like my usual migraine"
+    confusable_with: stroke_major
+    note: "Complaint overlaps stroke; normal/mildly elevated BP + younger age + no focal deficit"
+
+  - name: gastritis_gerd
+    description: >
+      Gastritis or GERD. CONFUSABLE with acute_abdomen.
+      KEY DIFFERENTIATOR: no fever, normal pulse, no peritoneal signs.
+    triage_level: 4
+    department: General Medicine
+    age_min: 18
+    age_max: 65
+    sex: any
+    within_level_prior: 0.12  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean: 118, sd: 12}   # PLACEHOLDER – NORMAL
+      bp_dia:  {mean:  76, sd: 10}   # PLACEHOLDER
+      pulse:   {mean:  80, sd: 14}   # PLACEHOLDER – NORMAL
+      temp_c:  {mean: 37.0, sd: 0.4} # PLACEHOLDER – AFEBRILE
+      spo2:    {mean:  98, sd:  1}   # PLACEHOLDER
+    complaint_templates_en:
+      - "stomach pain and acidity since yesterday"
+      - "gas problem stomach pain after eating"
+      - "abdomen pain mild since morning nausea once"
+      - "stomach ache and vomiting mild"
+      - "belly pain bloating 2 days"
+      - "kadupu noppi and gas problem"
+    confusable_with: acute_abdomen
+    note: "Normal vitals + afebrile + no focal tenderness vs acute abdomen's fever + tachycardia"
+
+  - name: fever_adult_mild
+    description: >
+      Simple viral fever in adult. CONFUSABLE with sepsis_severe.
+      KEY DIFFERENTIATOR: BP normal (systolic ≥ 100), pulse < 110,
+      no altered sensorium.
+    triage_level: 4
+    department: General Medicine
+    age_min: 18
+    age_max: 65
+    sex: any
+    within_level_prior: 0.14  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean: 118, sd: 12}   # PLACEHOLDER – NORMAL (sepsis is < 90)
+      bp_dia:  {mean:  76, sd: 10}   # PLACEHOLDER
+      pulse:   {mean:  95, sd: 18}   # PLACEHOLDER – mildly elevated
+      temp_c:  {mean: 38.5, sd: 0.7} # PLACEHOLDER – similar to sepsis
+      spo2:    {mean:  97, sd:  2}   # PLACEHOLDER
+    complaint_templates_en:
+      - "fever since 2 days body ache"
+      - "high temperature headache since yesterday"
+      - "fever and running nose cold since 2 days"
+      - "temperature and weakness since this morning"
+      - "bukhar 2 din se body dard"
+      - "jwaram 2 rojulu nundi body pain"
+    confusable_with: sepsis_severe
+    note: "Same complaint as sepsis; BP normal + pulse < 110 + no confusion are differentiators"
+
+  - name: uti
+    description: Urinary tract infection with dysuria and frequency
+    triage_level: 4
+    department: General Medicine
+    age_min: 15
+    age_max: 70
+    sex: F
+    within_level_prior: 0.10  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean: 118, sd: 12}   # PLACEHOLDER
+      bp_dia:  {mean:  76, sd: 10}   # PLACEHOLDER
+      pulse:   {mean:  85, sd: 15}   # PLACEHOLDER
+      temp_c:  {mean: 38.0, sd: 0.8} # PLACEHOLDER
+      spo2:    {mean:  98, sd:  1}   # PLACEHOLDER
+    complaint_templates_en:
+      - "burning urination lower abdomen pain since yesterday"
+      - "frequent urination burning sensation"
+      - "urine infection pain while passing urine"
+      - "lower belly pain and burning urine since 2 days"
+      - "urine problem burning and going often"
+
+  - name: sprain_minor
+    description: Minor sprain or soft tissue injury without neurovascular compromise
+    triage_level: 4
+    department: Orthopedics
+    age_min: 8
+    age_max: 65
+    sex: any
+    within_level_prior: 0.08  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean: 120, sd: 12}   # PLACEHOLDER
+      bp_dia:  {mean:  78, sd: 10}   # PLACEHOLDER
+      pulse:   {mean:  80, sd: 12}   # PLACEHOLDER
+      temp_c:  {mean: 37.0, sd: 0.3} # PLACEHOLDER
+      spo2:    {mean:  98, sd:  1}   # PLACEHOLDER
+    complaint_templates_en:
+      - "twisted ankle while walking pain and swelling"
+      - "sprain in wrist after fall mild"
+      - "sports injury knee swollen cannot run properly"
+      - "fell and twisted ankle some swelling"
+      - "muscle pain from gym yesterday"
+
+  - name: ear_complaint
+    description: Ear pain, otitis media or discharge
+    triage_level: 4
+    department: ENT
+    age_min: 1
+    age_max: 65
+    sex: any
+    within_level_prior: 0.08  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean: 118, sd: 12}   # PLACEHOLDER
+      bp_dia:  {mean:  76, sd: 10}   # PLACEHOLDER
+      pulse:   {mean:  80, sd: 12}   # PLACEHOLDER
+      temp_c:  {mean: 37.5, sd: 0.7} # PLACEHOLDER
+      spo2:    {mean:  98, sd:  1}   # PLACEHOLDER
+    complaint_templates_en:
+      - "ear pain since yesterday with discharge"
+      - "child ear pain fever and crying all night"
+      - "pain in right ear and hearing reduced"
+      - "ear discharge and pain since 2 days"
+      - "kannulo noppi and fluid coming out"
+
+  - name: eye_complaint
+    description: Eye redness, discharge or pain without trauma
+    triage_level: 4
+    department: Ophthalmology
+    age_min: 1
+    age_max: 75
+    sex: any
+    within_level_prior: 0.07  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean: 118, sd: 12}   # PLACEHOLDER
+      bp_dia:  {mean:  76, sd: 10}   # PLACEHOLDER
+      pulse:   {mean:  78, sd: 12}   # PLACEHOLDER
+      temp_c:  {mean: 37.0, sd: 0.4} # PLACEHOLDER
+      spo2:    {mean:  99, sd:  1}   # PLACEHOLDER
+    complaint_templates_en:
+      - "red eye discharge since yesterday itchy"
+      - "eye pain redness and watering"
+      - "conjunctivitis both eyes red sticky"
+      - "eye swelling and pain since morning"
+      - "kalupu lalo noppi and redness watering"
+
+  - name: skin_rash
+    description: Skin rash, allergy or dermatitis
+    triage_level: 4
+    department: Dermatology
+    age_min: 5
+    age_max: 65
+    sex: any
+    within_level_prior: 0.07  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean: 118, sd: 12}   # PLACEHOLDER
+      bp_dia:  {mean:  76, sd: 10}   # PLACEHOLDER
+      pulse:   {mean:  78, sd: 12}   # PLACEHOLDER
+      temp_c:  {mean: 37.0, sd: 0.4} # PLACEHOLDER
+      spo2:    {mean:  99, sd:  1}   # PLACEHOLDER
+    complaint_templates_en:
+      - "skin rash all over body itching since yesterday"
+      - "allergic rash red bumps after eating something"
+      - "rash on face and neck itchy and burning"
+      - "hives and itching spreading from morning"
+      - "skin eruption and itching"
+
+  - name: anxiety_panic
+    description: Anxiety disorder or panic attack
+    triage_level: 4
+    department: Psychiatry
+    age_min: 15
+    age_max: 55
+    sex: any
+    within_level_prior: 0.07  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean: 130, sd: 15}   # PLACEHOLDER
+      bp_dia:  {mean:  85, sd: 12}   # PLACEHOLDER
+      pulse:   {mean: 102, sd: 20}   # PLACEHOLDER – elevated from anxiety
+      temp_c:  {mean: 37.0, sd: 0.3} # PLACEHOLDER
+      spo2:    {mean:  98, sd:  1}   # PLACEHOLDER
+    complaint_templates_en:
+      - "sudden fear chest tightness and shaking"
+      - "anxiety attack heart racing cannot calm"
+      - "panic attack trembling scared of dying"
+      - "stress palpitations unable to sleep since 2 days"
+      - "fear palpitations since last night nothing helps"
+
+  - name: diarrhea_vomiting_adult
+    description: Acute gastroenteritis with vomiting and diarrhoea in adult
+    triage_level: 4
+    department: General Medicine
+    age_min: 15
+    age_max: 65
+    sex: any
+    within_level_prior: 0.10  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean: 115, sd: 14}   # PLACEHOLDER
+      bp_dia:  {mean:  74, sd: 12}   # PLACEHOLDER
+      pulse:   {mean:  96, sd: 20}   # PLACEHOLDER
+      temp_c:  {mean: 38.0, sd: 0.8} # PLACEHOLDER
+      spo2:    {mean:  97, sd:  2}   # PLACEHOLDER
+    complaint_templates_en:
+      - "loose motions and vomiting since yesterday"
+      - "diarrhoea multiple times today and vomiting twice"
+      - "stomach upset loose stools nausea"
+      - "vomiting 5 times today diarrhoea"
+      - "vaantulu and loose motions since morning"
+      - "ulti aur dast kal se shuru"
+
+  # ══════════════════════════════════════════════════════════════════════════
+  # LEVEL 5  –  Non-urgent  (target ~31 % of all rows)
+  # ══════════════════════════════════════════════════════════════════════════
+
+  - name: mild_fever_cold
+    description: Mild fever with cold, cough and sore throat
+    triage_level: 5
+    department: General Medicine
+    age_min: 5
+    age_max: 75
+    sex: any
+    within_level_prior: 0.25  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean: 118, sd: 10}   # PLACEHOLDER
+      bp_dia:  {mean:  76, sd:  8}   # PLACEHOLDER
+      pulse:   {mean:  82, sd: 12}   # PLACEHOLDER
+      temp_c:  {mean: 37.8, sd: 0.5} # PLACEHOLDER
+      spo2:    {mean:  98, sd:  1}   # PLACEHOLDER
+    complaint_templates_en:
+      - "mild fever and cold running nose since 2 days"
+      - "cough and mild fever sore throat"
+      - "common cold slight fever body ache"
+      - "slight temperature and body pain mild"
+      - "cold cough and mild headache manageable"
+      - "daggu and jwaram mild since 2 days"
+
+  - name: bp_sugar_followup
+    description: Routine follow-up for stable hypertension or diabetes
+    triage_level: 5
+    department: General Medicine
+    age_min: 35
+    age_max: 80
+    sex: any
+    within_level_prior: 0.25  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean: 138, sd: 14}   # PLACEHOLDER – controlled but slightly elevated
+      bp_dia:  {mean:  87, sd: 11}   # PLACEHOLDER
+      pulse:   {mean:  78, sd: 10}   # PLACEHOLDER
+      temp_c:  {mean: 37.0, sd: 0.3} # PLACEHOLDER
+      spo2:    {mean:  98, sd:  1}   # PLACEHOLDER
+    complaint_templates_en:
+      - "BP and sugar checkup routine monthly visit"
+      - "came for blood pressure follow-up no complaints"
+      - "diabetes monitoring regular visit doctor advised"
+      - "sugar and BP check as per advice no new problems"
+      - "BP check monthly no complaints feeling fine"
+      - "routine follow up for hypertension on medicines"
+
+  - name: medicine_refill
+    description: Patient attending only for prescription renewal
+    triage_level: 5
+    department: General Medicine
+    age_min: 25
+    age_max: 80
+    sex: any
+    within_level_prior: 0.20  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean: 124, sd: 12}   # PLACEHOLDER
+      bp_dia:  {mean:  80, sd: 10}   # PLACEHOLDER
+      pulse:   {mean:  76, sd: 10}   # PLACEHOLDER
+      temp_c:  {mean: 37.0, sd: 0.3} # PLACEHOLDER
+      spo2:    {mean:  98, sd:  1}   # PLACEHOLDER
+    complaint_templates_en:
+      - "prescription refill for regular medicines no new complaint"
+      - "tablets finished need new prescription"
+      - "medicine renewal no new complaints"
+      - "came for regular thyroid medicine prescription"
+      - "medication refill metformin and BP tablet"
+
+  - name: wound_dressing
+    description: Minor wound requiring dressing change or suture removal
+    triage_level: 5
+    department: General Medicine
+    age_min: 5
+    age_max: 75
+    sex: any
+    within_level_prior: 0.15  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean: 120, sd: 12}   # PLACEHOLDER
+      bp_dia:  {mean:  78, sd: 10}   # PLACEHOLDER
+      pulse:   {mean:  78, sd: 12}   # PLACEHOLDER
+      temp_c:  {mean: 37.0, sd: 0.4} # PLACEHOLDER
+      spo2:    {mean:  99, sd:  1}   # PLACEHOLDER
+    complaint_templates_en:
+      - "wound dressing change as advised"
+      - "suture removal after surgery"
+      - "small cut wound cleaning dressing"
+      - "wound dressing from previous visit healing"
+      - "came for hand wound dressing"
+
+  - name: routine_checkup
+    description: Routine health check with no active complaints
+    triage_level: 5
+    department: General Medicine
+    age_min: 18
+    age_max: 75
+    sex: any
+    within_level_prior: 0.15  # PLACEHOLDER
+    vitals:
+      bp_sys:  {mean: 118, sd: 10}   # PLACEHOLDER
+      bp_dia:  {mean:  76, sd:  8}   # PLACEHOLDER
+      pulse:   {mean:  72, sd: 10}   # PLACEHOLDER
+      temp_c:  {mean: 36.8, sd: 0.3} # PLACEHOLDER
+      spo2:    {mean:  99, sd:  1}   # PLACEHOLDER
+    complaint_templates_en:
+      - "annual checkup no specific complaints"
+      - "general health checkup employer requirement"
+      - "blood tests and routine examination"
+      - "no complaints just routine checkup"
+      - "wellness visit everything feels fine"

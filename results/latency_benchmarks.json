@@ -1,0 +1,22 @@
+[
+  {
+    "Metric":"Mean Latency",
+    "Value (ms)":"13.88 ms"
+  },
+  {
+    "Metric":"p50 Latency",
+    "Value (ms)":"13.72 ms"
+  },
+  {
+    "Metric":"p95 Latency",
+    "Value (ms)":"18.36 ms"
+  },
+  {
+    "Metric":"p99 Latency",
+    "Value (ms)":"20.56 ms"
+  },
+  {
+    "Metric":"Latency Target (< 100 ms p95)",
+    "Value (ms)":"PASS"
+  }
+]

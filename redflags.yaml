@@ -1,0 +1,214 @@
+# redflags.yaml
+# ─────────────────────────────────────────────────────────────────────────────
+# Phase 3 – Clinical red-flag text patterns for TriageGuard.
+#
+# PURPOSE
+# --------
+# Each red flag is matched against the CLEANED complaint text using fuzzy
+# word-level matching (Levenshtein distance ≤ 2 per token).
+# A matched red flag escalates the patient to AT MOST level 2
+# (never to level 1, which requires confirmed vital signs).
+#
+# INDEPENDENCE
+# ------------
+# These phrase lists are written independently from the data generator's
+# lexicon.yaml.  Do NOT share or copy generator phrase pools into this file.
+#
+# LANGUAGE NOTES
+# ---------------
+# - patterns_en    : English
+# - patterns_tel   : Telugu written in English letters (romanised)
+# - patterns_hin   : Hindi written in English letters (romanised)
+# Phrases are intentionally SHORT (1–3 key words) so the fuzzy matcher
+# can catch common spelling mistakes (e.g. "seziure" → "seizure").
+#
+# SOURCE: PLACEHOLDER pending official triage primer
+# ─────────────────────────────────────────────────────────────────────────────
+
+fuzzy_max_distance: 2   # Levenshtein distance per token  # PLACEHOLDER
+
+red_flags:
+
+  - id: RF001
+    name: chest_pain
+    escalate_to_max_level: 2
+    patterns_en:
+      - "chest pain"
+      - "chest tightness"
+      - "chest pressure"
+      - "chest crushing"
+      - "heart pain"
+    patterns_tel:
+      - "gunde noppi"
+      - "chest noppi"
+      - "gundelo noppi"
+    patterns_hin:
+      - "seene dard"
+      - "chhati dard"
+      - "seene mein dard"
+
+  - id: RF002
+    name: breathlessness
+    escalate_to_max_level: 2
+    patterns_en:
+      - "cannot breathe"
+      - "difficulty breathing"
+      - "breathlessness"
+      - "shortness of breath"
+      - "not breathing"
+      - "unable to breathe"
+    patterns_tel:
+      - "oopiri ledu"
+      - "oopiri tesukovadam ledu"
+      - "breath ledu"
+    patterns_hin:
+      - "saans nahi"
+      - "saans nahi aa"
+      - "dam ghut"
+
+  - id: RF003
+    name: unconscious_unresponsive
+    escalate_to_max_level: 2
+    patterns_en:
+      - "unconscious"
+      - "unresponsive"
+      - "not responding"
+      - "fainted"
+      - "passed out"
+      - "collapsed"
+      - "no response"
+    patterns_tel:
+      - "behosh"
+      - "senses levu"
+      - "consciousness ledu"
+    patterns_hin:
+      - "behosh"
+      - "hosh nahi"
+      - "besharam"
+
+  - id: RF004
+    name: seizure_fit
+    escalate_to_max_level: 2
+    patterns_en:
+      - "seizure"
+      - "convulsion"
+      - "fits"
+      - "jerking"
+      - "shaking uncontrollably"
+      - "epilepsy attack"
+    patterns_tel:
+      - "fits vachai"
+      - "murchha"
+      - "gadara padipoyadu"
+    patterns_hin:
+      - "fits aye"
+      - "mirgi"
+      - "dora pad"
+
+  - id: RF005
+    name: heavy_bleeding
+    escalate_to_max_level: 2
+    patterns_en:
+      - "heavy bleeding"
+      - "profuse bleeding"
+      - "blood loss"
+      - "not stopping bleeding"
+      - "bleeding heavily"
+    patterns_tel:
+      - "chala blood vastondi"
+      - "blood band avadamaledhu"
+    patterns_hin:
+      - "bahut khoon"
+      - "khoon band nahi"
+      - "khoon bahut aa raha"
+
+  - id: RF006
+    name: one_sided_weakness
+    escalate_to_max_level: 2
+    patterns_en:
+      - "one side weak"
+      - "one sided weakness"
+      - "arm not moving"
+      - "leg not moving"
+      - "face drooping"
+      - "facial droop"
+      - "hemiplegia"
+    patterns_tel:
+      - "ooka vaipu nidra"
+      - "ooka vaipu cheyyi pani chesaledhu"
+      - "muka thippi poyindi"
+    patterns_hin:
+      - "ek taraf kamzor"
+      - "mooh tedha"
+      - "ek taraf haath nahi"
+
+  - id: RF007
+    name: slurred_speech
+    escalate_to_max_level: 2
+    patterns_en:
+      - "slurred speech"
+      - "speech unclear"
+      - "cannot speak"
+      - "speech difficulty"
+      - "cannot talk"
+      - "words not coming"
+    patterns_tel:
+      - "matladataledhu"
+      - "nalupu raaledhu"
+      - "speech vasaledhu"
+    patterns_hin:
+      - "baat nahi kar pa raha"
+      - "bol nahi pa raha"
+      - "bolne mein takleef"
+
+  - id: RF008
+    name: severe_pain
+    escalate_to_max_level: 2
+    patterns_en:
+      - "severe pain"
+      - "worst pain"
+      - "unbearable pain"
+      - "excruciating pain"
+      - "10 out of 10 pain"
+    patterns_tel:
+      - "chala theevranga noppi"
+      - "bharinaipoyindi noppi"
+    patterns_hin:
+      - "bahut tej dard"
+      - "bardaasht nahi ho raha"
+      - "bahut bura dard"
+
+  - id: RF009
+    name: vomiting_blood
+    escalate_to_max_level: 2
+    patterns_en:
+      - "vomiting blood"
+      - "blood in vomit"
+      - "hematemesis"
+      - "throwing up blood"
+      - "black vomit"
+    patterns_tel:
+      - "vamtulo blood"
+      - "noru nundi blood"
+    patterns_hin:
+      - "ulti mein khoon"
+      - "khoon ki ulti"
+      - "kala ulti"
+
+  - id: RF010
+    name: pregnancy_bleeding
+    escalate_to_max_level: 2
+    patterns_en:
+      - "pregnancy bleeding"
+      - "bleeding in pregnancy"
+      - "antepartum haemorrhage"
+      - "postpartum bleeding"
+      - "excessive postpartum blood"
+      - "placenta bleeding"
+    patterns_tel:
+      - "pregnancy lo bleeding"
+      - "delivery taruvata blood"
+    patterns_hin:
+      - "pregnancy mein khoon"
+      - "delivery ke baad bahut khoon"
+      - "prasav ke baad khoon"

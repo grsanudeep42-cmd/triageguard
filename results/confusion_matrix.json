@@ -1,0 +1,47 @@
+[
+  {
+    "True Level":"True L1",
+    "Pred L1":18,
+    "Pred L2":7,
+    "Pred L3":0,
+    "Pred L4":0,
+    "Pred L5":0,
+    "Abstain":0
+  },
+  {
+    "True Level":"True L2",
+    "Pred L1":34,
+    "Pred L2":108,
+    "Pred L3":1,
+    "Pred L4":4,
+    "Pred L5":0,
+    "Abstain":8
+  },
+  {
+    "True Level":"True L3",
+    "Pred L1":11,
+    "Pred L2":123,
+    "Pred L3":782,
+    "Pred L4":29,
+    "Pred L5":0,
+    "Abstain":169
+  },
+  {
+    "True Level":"True L4",
+    "Pred L1":1,
+    "Pred L2":55,
+    "Pred L3":58,
+    "Pred L4":1267,
+    "Pred L5":3,
+    "Abstain":443
+  },
+  {
+    "True Level":"True L5",
+    "Pred L1":0,
+    "Pred L2":2,
+    "Pred L3":1,
+    "Pred L4":8,
+    "Pred L5":1225,
+    "Abstain":143
+  }
+]
