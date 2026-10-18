@@ -284,6 +284,10 @@ def _fuzzy_phrase_match(
         for j in range(k):
             p_tok = pattern_tokens[j]
             t_tok = text_words[i + j]
+            # Narrow fix: for tokens <= 5 chars, require first character to match exactly
+            if len(p_tok) <= 5 and (not t_tok or p_tok[0] != t_tok[0]):
+                matched = False
+                break
             if _damerau_levenshtein(p_tok, t_tok) > _max_allowed_dist(p_tok):
                 matched = False
                 break

@@ -1,0 +1,14 @@
+[
+  {
+    "Mechanism":"Mondrian Emergency Screen (alpha=0.05)",
+    "Target Coverage":"95.0%",
+    "Empirical Test Coverage":"92.8%",
+    "Guaranteed Met":false
+  },
+  {
+    "Mechanism":"Non-Emergency Level Sets (alpha=0.1)",
+    "Target Coverage":"90.0%",
+    "Empirical Test Coverage":"95.2%",
+    "Guaranteed Met":true
+  }
+]

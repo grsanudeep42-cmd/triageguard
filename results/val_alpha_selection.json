@@ -1,0 +1,38 @@
+[
+  {
+    "alpha":0.005,
+    "tau":"0.0000",
+    "Val Recall (>= 0.95 Floor)":"100.0%",
+    "Val Escalation Rate":"100.0%",
+    "Total Val Cost (20x Matrix)":"5,996.0",
+    "Mean Val Cost per Patient":"1.9987",
+    "Operating Alpha*":"No"
+  },
+  {
+    "alpha":0.01,
+    "tau":"0.0018",
+    "Val Recall (>= 0.95 Floor)":"100.0%",
+    "Val Escalation Rate":"11.5%",
+    "Total Val Cost (20x Matrix)":"753.0",
+    "Mean Val Cost per Patient":"0.2510",
+    "Operating Alpha*":"No"
+  },
+  {
+    "alpha":0.02,
+    "tau":"0.0039",
+    "Val Recall (>= 0.95 Floor)":"100.0%",
+    "Val Escalation Rate":"7.3%",
+    "Total Val Cost (20x Matrix)":"619.0",
+    "Mean Val Cost per Patient":"0.2063",
+    "Operating Alpha*":"No"
+  },
+  {
+    "alpha":0.05,
+    "tau":"0.0922",
+    "Val Recall (>= 0.95 Floor)":"96.7%",
+    "Val Escalation Rate":"0.8%",
+    "Total Val Cost (20x Matrix)":"589.0",
+    "Mean Val Cost per Patient":"0.1963",
+    "Operating Alpha*":"YES"
+  }
+]

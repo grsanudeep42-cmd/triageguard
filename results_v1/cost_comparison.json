@@ -1,0 +1,23 @@
+[
+  {
+    "System":"Baseline (a): Accuracy-Only Argmax",
+    "Mean Cost (Std, C_abstain=3.0)":"0.144",
+    "Total Cost (Std)":"649.0",
+    "Mean Cost (Safe-Abstain, Em=0)":"0.144",
+    "Total Cost (Safe-Abstain)":"649.0"
+  },
+  {
+    "System":"Baseline (b): Rules Only",
+    "Mean Cost (Std, C_abstain=3.0)":"2.020",
+    "Total Cost (Std)":"9,089.0",
+    "Mean Cost (Safe-Abstain, Em=0)":"2.020",
+    "Total Cost (Safe-Abstain)":"9,089.0"
+  },
+  {
+    "System":"Full TriageGuard System (c)",
+    "Mean Cost (Std, C_abstain=3.0)":"0.668",
+    "Total Cost (Std)":"3,007.0",
+    "Mean Cost (Safe-Abstain, Em=0)":"0.663",
+    "Total Cost (Safe-Abstain)":"2,983.0"
+  }
+]

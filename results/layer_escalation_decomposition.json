@@ -1,0 +1,50 @@
+[
+  {
+    "True Level":"Level 1",
+    "Total Cases":25,
+    "(a) p_em >= tau":"25\/25 (100.0%)",
+    "(b) source == screen":"2\/25 (8.0%)",
+    "(c) rule fired":"23\/25 (92.0%)",
+    "(d) Final L1\/L2 Escalation":"25\/25 (100.0%)"
+  },
+  {
+    "True Level":"Level 2",
+    "Total Cases":155,
+    "(a) p_em >= tau":"142\/155 (91.6%)",
+    "(b) source == screen":"67\/155 (43.2%)",
+    "(c) rule fired":"75\/155 (48.4%)",
+    "(d) Final L1\/L2 Escalation":"142\/155 (91.6%)"
+  },
+  {
+    "True Level":"Level 3",
+    "Total Cases":1114,
+    "(a) p_em >= tau":"8\/1114 (0.7%)",
+    "(b) source == screen":"7\/1114 (0.6%)",
+    "(c) rule fired":"125\/1114 (11.2%)",
+    "(d) Final L1\/L2 Escalation":"134\/1114 (12.0%)"
+  },
+  {
+    "True Level":"Level 4",
+    "Total Cases":1827,
+    "(a) p_em >= tau":"29\/1827 (1.6%)",
+    "(b) source == screen":"28\/1827 (1.5%)",
+    "(c) rule fired":"18\/1827 (1.0%)",
+    "(d) Final L1\/L2 Escalation":"56\/1827 (3.1%)"
+  },
+  {
+    "True Level":"Level 5",
+    "Total Cases":1379,
+    "(a) p_em >= tau":"0\/1379 (0.0%)",
+    "(b) source == screen":"0\/1379 (0.0%)",
+    "(c) rule fired":"2\/1379 (0.1%)",
+    "(d) Final L1\/L2 Escalation":"2\/1379 (0.1%)"
+  },
+  {
+    "True Level":"All Non-Emergencies (L3-L5)",
+    "Total Cases":4320,
+    "(a) p_em >= tau":"37\/4320 (0.9%)",
+    "(b) source == screen":"35\/4320 (0.8%)",
+    "(c) rule fired":"145\/4320 (3.4%)",
+    "(d) Final L1\/L2 Escalation":"192\/4320 (4.4%)"
+  }
+]

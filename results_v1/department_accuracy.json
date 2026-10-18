@@ -1,0 +1,38 @@
+[
+  {
+    "True Triage Level":"Level 1",
+    "Total Cases":25,
+    "Primary-Only Accuracy":"100.0%",
+    "Specialty-or-Emergency Accuracy":"100.0%"
+  },
+  {
+    "True Triage Level":"Level 2",
+    "Total Cases":155,
+    "Primary-Only Accuracy":"45.8%",
+    "Specialty-or-Emergency Accuracy":"96.8%"
+  },
+  {
+    "True Triage Level":"Level 3",
+    "Total Cases":1114,
+    "Primary-Only Accuracy":"84.1%",
+    "Specialty-or-Emergency Accuracy":"95.2%"
+  },
+  {
+    "True Triage Level":"Level 4",
+    "Total Cases":1827,
+    "Primary-Only Accuracy":"84.0%",
+    "Specialty-or-Emergency Accuracy":"86.2%"
+  },
+  {
+    "True Triage Level":"Level 5",
+    "Total Cases":1379,
+    "Primary-Only Accuracy":"96.0%",
+    "Specialty-or-Emergency Accuracy":"96.2%"
+  },
+  {
+    "True Triage Level":"All Answered Cases",
+    "Total Cases":3737,
+    "Primary-Only Accuracy":"88.5%",
+    "Specialty-or-Emergency Accuracy":"95.0%"
+  }
+]

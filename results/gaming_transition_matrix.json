@@ -1,0 +1,152 @@
+[
+  {
+    "System":"Full TriageGuard",
+    "Pre-Injection State":"Escalated (L1-L2)",
+    "N_Pre":7,
+    "Post: Escalated (L1-L2)":"7 (100.0%)",
+    "Post: Abstained":"0 (0.0%)",
+    "Post: Defended L3":"0 (0.0%)",
+    "Post: Defended L4":"0 (0.0%)",
+    "Post: Defended L5":"0 (0.0%)"
+  },
+  {
+    "System":"Full TriageGuard",
+    "Pre-Injection State":"Abstained",
+    "N_Pre":84,
+    "Post: Escalated (L1-L2)":"1 (1.2%)",
+    "Post: Abstained":"64 (76.2%)",
+    "Post: Defended L3":"14 (16.7%)",
+    "Post: Defended L4":"3 (3.6%)",
+    "Post: Defended L5":"2 (2.4%)"
+  },
+  {
+    "System":"Full TriageGuard",
+    "Pre-Injection State":"Defended L3",
+    "N_Pre":9,
+    "Post: Escalated (L1-L2)":"0 (0.0%)",
+    "Post: Abstained":"0 (0.0%)",
+    "Post: Defended L3":"8 (88.9%)",
+    "Post: Defended L4":"1 (11.1%)",
+    "Post: Defended L5":"0 (0.0%)"
+  },
+  {
+    "System":"Full TriageGuard",
+    "Pre-Injection State":"Defended L4",
+    "N_Pre":196,
+    "Post: Escalated (L1-L2)":"2 (1.0%)",
+    "Post: Abstained":"28 (14.3%)",
+    "Post: Defended L3":"86 (43.9%)",
+    "Post: Defended L4":"79 (40.3%)",
+    "Post: Defended L5":"1 (0.5%)"
+  },
+  {
+    "System":"Full TriageGuard",
+    "Pre-Injection State":"Defended L5",
+    "N_Pre":204,
+    "Post: Escalated (L1-L2)":"0 (0.0%)",
+    "Post: Abstained":"0 (0.0%)",
+    "Post: Defended L3":"60 (29.4%)",
+    "Post: Defended L4":"0 (0.0%)",
+    "Post: Defended L5":"144 (70.6%)"
+  },
+  {
+    "System":"Baseline (a) Argmax",
+    "Pre-Injection State":"Escalated (L1-L2)",
+    "N_Pre":6,
+    "Post: Escalated (L1-L2)":"5 (83.3%)",
+    "Post: Abstained":"0 (0.0%)",
+    "Post: Defended L3":"0 (0.0%)",
+    "Post: Defended L4":"1 (16.7%)",
+    "Post: Defended L5":"0 (0.0%)"
+  },
+  {
+    "System":"Baseline (a) Argmax",
+    "Pre-Injection State":"Abstained",
+    "N_Pre":0,
+    "Post: Escalated (L1-L2)":"0 (0.0%)",
+    "Post: Abstained":"0 (0.0%)",
+    "Post: Defended L3":"0 (0.0%)",
+    "Post: Defended L4":"0 (0.0%)",
+    "Post: Defended L5":"0 (0.0%)"
+  },
+  {
+    "System":"Baseline (a) Argmax",
+    "Pre-Injection State":"Defended L3",
+    "N_Pre":9,
+    "Post: Escalated (L1-L2)":"0 (0.0%)",
+    "Post: Abstained":"0 (0.0%)",
+    "Post: Defended L3":"8 (88.9%)",
+    "Post: Defended L4":"1 (11.1%)",
+    "Post: Defended L5":"0 (0.0%)"
+  },
+  {
+    "System":"Baseline (a) Argmax",
+    "Pre-Injection State":"Defended L4",
+    "N_Pre":266,
+    "Post: Escalated (L1-L2)":"4 (1.5%)",
+    "Post: Abstained":"0 (0.0%)",
+    "Post: Defended L3":"50 (18.8%)",
+    "Post: Defended L4":"208 (78.2%)",
+    "Post: Defended L5":"4 (1.5%)"
+  },
+  {
+    "System":"Baseline (a) Argmax",
+    "Pre-Injection State":"Defended L5",
+    "N_Pre":219,
+    "Post: Escalated (L1-L2)":"0 (0.0%)",
+    "Post: Abstained":"0 (0.0%)",
+    "Post: Defended L3":"0 (0.0%)",
+    "Post: Defended L4":"2 (0.9%)",
+    "Post: Defended L5":"217 (99.1%)"
+  },
+  {
+    "System":"Baseline (b) Rules",
+    "Pre-Injection State":"Escalated (L1-L2)",
+    "N_Pre":3,
+    "Post: Escalated (L1-L2)":"3 (100.0%)",
+    "Post: Abstained":"0 (0.0%)",
+    "Post: Defended L3":"0 (0.0%)",
+    "Post: Defended L4":"0 (0.0%)",
+    "Post: Defended L5":"0 (0.0%)"
+  },
+  {
+    "System":"Baseline (b) Rules",
+    "Pre-Injection State":"Abstained",
+    "N_Pre":0,
+    "Post: Escalated (L1-L2)":"0 (0.0%)",
+    "Post: Abstained":"0 (0.0%)",
+    "Post: Defended L3":"0 (0.0%)",
+    "Post: Defended L4":"0 (0.0%)",
+    "Post: Defended L5":"0 (0.0%)"
+  },
+  {
+    "System":"Baseline (b) Rules",
+    "Pre-Injection State":"Defended L3",
+    "N_Pre":0,
+    "Post: Escalated (L1-L2)":"0 (0.0%)",
+    "Post: Abstained":"0 (0.0%)",
+    "Post: Defended L3":"0 (0.0%)",
+    "Post: Defended L4":"0 (0.0%)",
+    "Post: Defended L5":"0 (0.0%)"
+  },
+  {
+    "System":"Baseline (b) Rules",
+    "Pre-Injection State":"Defended L4",
+    "N_Pre":0,
+    "Post: Escalated (L1-L2)":"0 (0.0%)",
+    "Post: Abstained":"0 (0.0%)",
+    "Post: Defended L3":"0 (0.0%)",
+    "Post: Defended L4":"0 (0.0%)",
+    "Post: Defended L5":"0 (0.0%)"
+  },
+  {
+    "System":"Baseline (b) Rules",
+    "Pre-Injection State":"Defended L5",
+    "N_Pre":497,
+    "Post: Escalated (L1-L2)":"0 (0.0%)",
+    "Post: Abstained":"0 (0.0%)",
+    "Post: Defended L3":"0 (0.0%)",
+    "Post: Defended L4":"0 (0.0%)",
+    "Post: Defended L5":"497 (100.0%)"
+  }
+]

@@ -1,0 +1,92 @@
+[
+  {
+    "System":"Full TriageGuard (c)",
+    "Cohort":"All Emergencies (Headline)",
+    "Total":180,
+    "(i) Strict Recall":"92.8%",
+    "Strict 95% CI":"[88.0%, 95.7%]",
+    "(ii) Caught+Abstain Recall":"97.2%",
+    "Caught+Abs 95% CI":"[93.7%, 98.8%]",
+    "(iii) Silent Misses":"5 (2.8%)"
+  },
+  {
+    "System":"Baseline (a): Argmax",
+    "Cohort":"All Emergencies (Headline)",
+    "Total":180,
+    "(i) Strict Recall":"93.9%",
+    "Strict 95% CI":"[89.4%, 96.6%]",
+    "(ii) Caught+Abstain Recall":"93.9%",
+    "Caught+Abs 95% CI":"[89.4%, 96.6%]",
+    "(iii) Silent Misses":"11 (6.1%)"
+  },
+  {
+    "System":"Baseline (b): Rules Only",
+    "Cohort":"All Emergencies (Headline)",
+    "Total":180,
+    "(i) Strict Recall":"54.4%",
+    "Strict 95% CI":"[47.2%, 61.6%]",
+    "(ii) Caught+Abstain Recall":"54.4%",
+    "Caught+Abs 95% CI":"[47.2%, 61.6%]",
+    "(iii) Silent Misses":"82 (45.6%)"
+  },
+  {
+    "System":"Full TriageGuard (c)",
+    "Cohort":"Under-Reported Emergencies",
+    "Total":28,
+    "(i) Strict Recall":"96.4%",
+    "Strict 95% CI":"[82.3%, 99.4%]",
+    "(ii) Caught+Abstain Recall":"100.0%",
+    "Caught+Abs 95% CI":"[87.9%, 100.0%]",
+    "(iii) Silent Misses":"0 (0.0%)"
+  },
+  {
+    "System":"Baseline (a): Argmax",
+    "Cohort":"Under-Reported Emergencies",
+    "Total":28,
+    "(i) Strict Recall":"96.4%",
+    "Strict 95% CI":"[82.3%, 99.4%]",
+    "(ii) Caught+Abstain Recall":"96.4%",
+    "Caught+Abs 95% CI":"[82.3%, 99.4%]",
+    "(iii) Silent Misses":"1 (3.6%)"
+  },
+  {
+    "System":"Baseline (b): Rules Only",
+    "Cohort":"Under-Reported Emergencies",
+    "Total":28,
+    "(i) Strict Recall":"71.4%",
+    "Strict 95% CI":"[52.9%, 84.7%]",
+    "(ii) Caught+Abstain Recall":"71.4%",
+    "Caught+Abs 95% CI":"[52.9%, 84.7%]",
+    "(iii) Silent Misses":"8 (28.6%)"
+  },
+  {
+    "System":"Full TriageGuard (c)",
+    "Cohort":"Standard Emergencies",
+    "Total":152,
+    "(i) Strict Recall":"92.1%",
+    "Strict 95% CI":"[86.7%, 95.4%]",
+    "(ii) Caught+Abstain Recall":"96.7%",
+    "Caught+Abs 95% CI":"[92.5%, 98.6%]",
+    "(iii) Silent Misses":"5 (3.3%)"
+  },
+  {
+    "System":"Baseline (a): Argmax",
+    "Cohort":"Standard Emergencies",
+    "Total":152,
+    "(i) Strict Recall":"93.4%",
+    "Strict 95% CI":"[88.3%, 96.4%]",
+    "(ii) Caught+Abstain Recall":"93.4%",
+    "Caught+Abs 95% CI":"[88.3%, 96.4%]",
+    "(iii) Silent Misses":"10 (6.6%)"
+  },
+  {
+    "System":"Baseline (b): Rules Only",
+    "Cohort":"Standard Emergencies",
+    "Total":152,
+    "(i) Strict Recall":"51.3%",
+    "Strict 95% CI":"[43.4%, 59.1%]",
+    "(ii) Caught+Abstain Recall":"51.3%",
+    "Caught+Abs 95% CI":"[43.4%, 59.1%]",
+    "(iii) Silent Misses":"74 (48.7%)"
+  }
+]

@@ -1,0 +1,62 @@
+[
+  {
+    "True Level":"Level 1",
+    "Cases":25,
+    "Answered":"25 (100.0%)",
+    "Abstained":"0 (0.0%)",
+    "Answered Cost":"140.0",
+    "Abstain Cost":"0.0",
+    "Total Cost":"140.0",
+    "Mean Cost per Patient":"5.600"
+  },
+  {
+    "True Level":"Level 2",
+    "Cases":155,
+    "Answered":"147 (94.8%)",
+    "Abstained":"8 (5.2%)",
+    "Answered Cost":"214.0",
+    "Abstain Cost":"24.0",
+    "Total Cost":"238.0",
+    "Mean Cost per Patient":"1.535"
+  },
+  {
+    "True Level":"Level 3",
+    "Cases":1114,
+    "Answered":"945 (84.8%)",
+    "Abstained":"169 (15.2%)",
+    "Answered Cost":"174.0",
+    "Abstain Cost":"507.0",
+    "Total Cost":"681.0",
+    "Mean Cost per Patient":"0.611"
+  },
+  {
+    "True Level":"Level 4",
+    "Cases":1827,
+    "Answered":"1384 (75.8%)",
+    "Abstained":"443 (24.2%)",
+    "Answered Cost":"174.0",
+    "Abstain Cost":"1,329.0",
+    "Total Cost":"1,503.0",
+    "Mean Cost per Patient":"0.823"
+  },
+  {
+    "True Level":"Level 5",
+    "Cases":1379,
+    "Answered":"1236 (89.6%)",
+    "Abstained":"143 (10.4%)",
+    "Answered Cost":"16.0",
+    "Abstain Cost":"429.0",
+    "Total Cost":"445.0",
+    "Mean Cost per Patient":"0.323"
+  },
+  {
+    "True Level":"All Encounters",
+    "Cases":4500,
+    "Answered":"3737 (83.0%)",
+    "Abstained":"763 (17.0%)",
+    "Answered Cost":"718.0",
+    "Abstain Cost":"2,289.0",
+    "Total Cost":"3,007.0",
+    "Mean Cost per Patient":"0.668"
+  }
+]

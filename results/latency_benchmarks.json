@@ -1,19 +1,19 @@
 [
   {
     "Metric":"Mean Latency",
-    "Value (ms)":"13.88 ms"
+    "Value (ms)":"12.77 ms"
   },
   {
     "Metric":"p50 Latency",
-    "Value (ms)":"13.72 ms"
+    "Value (ms)":"12.62 ms"
   },
   {
     "Metric":"p95 Latency",
-    "Value (ms)":"18.36 ms"
+    "Value (ms)":"16.20 ms"
   },
   {
     "Metric":"p99 Latency",
-    "Value (ms)":"20.56 ms"
+    "Value (ms)":"18.59 ms"
   },
   {
     "Metric":"Latency Target (< 100 ms p95)",

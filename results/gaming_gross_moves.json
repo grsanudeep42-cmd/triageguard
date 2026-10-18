@@ -1,0 +1,29 @@
+[
+  {
+    "System":"Full TriageGuard",
+    "Total Evaluated":500,
+    "Gross State Changes":"198 (39.6%)",
+    "Gross Escalations to L1-L2":"3 (0.6%)",
+    "Gross Abstentions to Nurse":"28 (5.6%)",
+    "Internal Non-Emergency Shifts":"148 (29.6%)",
+    "Unchanged State & Level":"302 (60.4%)"
+  },
+  {
+    "System":"Baseline (a) Argmax",
+    "Total Evaluated":500,
+    "Gross State Changes":"62 (12.4%)",
+    "Gross Escalations to L1-L2":"4 (0.8%)",
+    "Gross Abstentions to Nurse":"0 (0.0%)",
+    "Internal Non-Emergency Shifts":"57 (11.4%)",
+    "Unchanged State & Level":"438 (87.6%)"
+  },
+  {
+    "System":"Baseline (b) Rules",
+    "Total Evaluated":500,
+    "Gross State Changes":"0 (0.0%)",
+    "Gross Escalations to L1-L2":"0 (0.0%)",
+    "Gross Abstentions to Nurse":"0 (0.0%)",
+    "Internal Non-Emergency Shifts":"0 (0.0%)",
+    "Unchanged State & Level":"500 (100.0%)"
+  }
+]

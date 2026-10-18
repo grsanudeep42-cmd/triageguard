@@ -1,4 +1,4 @@
-# Triage Confusion Matrix
+# Full System Confusion Matrix
 
 | True Level   |   Pred L1 |   Pred L2 |   Pred L3 |   Pred L4 |   Pred L5 |   Abstain |
 |:-------------|----------:|----------:|----------:|----------:|----------:|----------:|

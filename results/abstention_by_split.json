@@ -1,0 +1,44 @@
+[
+  {
+    "True Triage Level":"Level 1",
+    "Val Cases":16,
+    "Val Abstain Rate":"0.0%",
+    "Test Cases":25,
+    "Test Abstain Rate":"0.0%"
+  },
+  {
+    "True Triage Level":"Level 2",
+    "Val Cases":104,
+    "Val Abstain Rate":"1.0%",
+    "Test Cases":155,
+    "Test Abstain Rate":"5.2%"
+  },
+  {
+    "True Triage Level":"Level 3",
+    "Val Cases":739,
+    "Val Abstain Rate":"12.6%",
+    "Test Cases":1114,
+    "Test Abstain Rate":"15.2%"
+  },
+  {
+    "True Triage Level":"Level 4",
+    "Val Cases":1191,
+    "Val Abstain Rate":"24.9%",
+    "Test Cases":1827,
+    "Test Abstain Rate":"24.2%"
+  },
+  {
+    "True Triage Level":"Level 5",
+    "Val Cases":950,
+    "Val Abstain Rate":"7.5%",
+    "Test Cases":1379,
+    "Test Abstain Rate":"10.4%"
+  },
+  {
+    "True Triage Level":"Overall",
+    "Val Cases":3000,
+    "Val Abstain Rate":"15.4%",
+    "Test Cases":4500,
+    "Test Abstain Rate":"17.0%"
+  }
+]

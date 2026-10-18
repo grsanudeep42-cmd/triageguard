@@ -1,0 +1,47 @@
+[
+  {
+    "C_abstain":"0.0",
+    "Argmax Total Cost":"649.0",
+    "Argmax Mean Cost":"0.144",
+    "Rules Only Total Cost":"9,089.0",
+    "Rules Only Mean Cost":"2.020",
+    "Full System Total Cost":"718.0",
+    "Full System Mean Cost":"0.160"
+  },
+  {
+    "C_abstain":"0.5",
+    "Argmax Total Cost":"649.0",
+    "Argmax Mean Cost":"0.144",
+    "Rules Only Total Cost":"9,089.0",
+    "Rules Only Mean Cost":"2.020",
+    "Full System Total Cost":"1,099.5",
+    "Full System Mean Cost":"0.244"
+  },
+  {
+    "C_abstain":"1.0",
+    "Argmax Total Cost":"649.0",
+    "Argmax Mean Cost":"0.144",
+    "Rules Only Total Cost":"9,089.0",
+    "Rules Only Mean Cost":"2.020",
+    "Full System Total Cost":"1,481.0",
+    "Full System Mean Cost":"0.329"
+  },
+  {
+    "C_abstain":"2.0",
+    "Argmax Total Cost":"649.0",
+    "Argmax Mean Cost":"0.144",
+    "Rules Only Total Cost":"9,089.0",
+    "Rules Only Mean Cost":"2.020",
+    "Full System Total Cost":"2,244.0",
+    "Full System Mean Cost":"0.499"
+  },
+  {
+    "C_abstain":"3.0",
+    "Argmax Total Cost":"649.0",
+    "Argmax Mean Cost":"0.144",
+    "Rules Only Total Cost":"9,089.0",
+    "Rules Only Mean Cost":"2.020",
+    "Full System Total Cost":"3,007.0",
+    "Full System Mean Cost":"0.668"
+  }
+]

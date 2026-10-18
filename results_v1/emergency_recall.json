@@ -1,0 +1,32 @@
+[
+  {
+    "Cohort":"All Emergencies (Headline)",
+    "Caught":167,
+    "Total":180,
+    "Recall":"92.8%",
+    "Wilson 95% CI":"[88.0%, 95.7%]",
+    "Calib Screen Recall":"95.6%",
+    "Calib Full Recall":"96.7%",
+    "Screen In CI":true
+  },
+  {
+    "Cohort":"Under-Reported Emergencies",
+    "Caught":27,
+    "Total":28,
+    "Recall":"96.4%",
+    "Wilson 95% CI":"[82.3%, 99.4%]",
+    "Calib Screen Recall":"-",
+    "Calib Full Recall":"-",
+    "Screen In CI":true
+  },
+  {
+    "Cohort":"Standard Emergencies",
+    "Caught":140,
+    "Total":152,
+    "Recall":"92.1%",
+    "Wilson 95% CI":"[86.7%, 95.4%]",
+    "Calib Screen Recall":"-",
+    "Calib Full Recall":"-",
+    "Screen In CI":true
+  }
+]

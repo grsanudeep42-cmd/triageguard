@@ -1,0 +1,26 @@
+[
+  {
+    "True Level":"Level 3",
+    "Total Non-Emergencies":1114,
+    "Escalated to L1\/L2":134,
+    "Escalation Rate":"12.0%"
+  },
+  {
+    "True Level":"Level 4",
+    "Total Non-Emergencies":1827,
+    "Escalated to L1\/L2":56,
+    "Escalation Rate":"3.1%"
+  },
+  {
+    "True Level":"Level 5",
+    "Total Non-Emergencies":1379,
+    "Escalated to L1\/L2":2,
+    "Escalation Rate":"0.1%"
+  },
+  {
+    "True Level":"All Non-Emergencies (L3-L5)",
+    "Total Non-Emergencies":4320,
+    "Escalated to L1\/L2":192,
+    "Escalation Rate":"4.4%"
+  }
+]
