@@ -1,5 +1,7 @@
 # TriageGuard: Clinical Decision Support System for Emergency Triage
 
+> **Live, fully functional clinical decision support system for emergency triage with conformal prediction, monotonic LightGBM, multilingual NLP, and deterministic safety rules.**
+
 [![Python 3.12](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Tests Passing](https://img.shields.io/badge/Tests-178%2F178%20Passing-brightgreen.svg)]()
