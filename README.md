@@ -25,6 +25,12 @@
 > 📖 **Interactive Swagger / OpenAPI Explorer:** [https://web-production-bb683.up.railway.app/docs](https://web-production-bb683.up.railway.app/docs)  
 > 🩺 **Live Health Probe:** [https://web-production-bb683.up.railway.app/api/health](https://web-production-bb683.up.railway.app/api/health)
 
+<p align="center">
+  <img src="results/ui_screens/console_empty_1440.png" width="95%" alt="TriageGuard Clinical Intake Console">
+  <br>
+  <em>Figure 1: TriageGuard real-time clinical intake console with multilingual input and 5-tier safety cascade.</em>
+</p>
+
 ### ⚡ Is TriageGuard Functional or Hardcoded? (Evaluation Transparency)
 **TriageGuard is 100% functional, evaluating real machine learning models in real time (~12 ms per encounter). There are zero mocked, static, or simulated responses.**
 
@@ -129,6 +135,24 @@ All performance statistics below reflect verified, programmatically reproducible
 | **Expected Clinical Decision Cost** | Total Cost: **3,007** (Mean: **1.859**) vs Rules Baseline: **9,089** (Mean: **2.02**) | **67% reduction in clinical cost penalty** under $20\times$ under-triage weighting. |
 | **Department Routing Accuracy** | **88.5%** primary specialty, **95.0%** specialty-or-emergency ($100\%$ on Level 1) | Directs patients to the correct clinical specialty (Cardiology, OB/GYN, ENT, etc.). |
 | **End-to-End Inference Latency** | Mean: **12.77 ms**, p50: **12.62 ms**, p95: **16.20 ms**, p99: **18.59 ms** | Real-time intake response ($< 20\text{ ms}$), far surpassing the $< 100\text{ ms}$ clinical requirement. |
+
+### 📊 Benchmark Diagnostics & Empirical Curves
+
+<p align="center">
+  <img src="results/figures/confusion_matrix.png" width="49%" alt="Full System Confusion Matrix">
+  <img src="results/figures/cost_score_barchart.png" width="49%" alt="Clinical Triage Cost Score by System">
+</p>
+<p align="center">
+  <em><strong>Figure 2:</strong> (Left) Confusion matrix across 4,500 test encounters and nurse abstentions. (Right) 67% reduction in expected clinical cost compared to rules-only baseline under 20x under-triage penalty.</em>
+</p>
+
+<p align="center">
+  <img src="results/figures/recall_vs_escalation_curve.png" width="49%" alt="Conformal Operating Curve">
+  <img src="results/figures/corrupted_vitals_curve.png" width="49%" alt="Sensor Corruption Degradation Curves">
+</p>
+<p align="center">
+  <em><strong>Figure 3:</strong> (Left) Mondrian conformal recall floor vs non-emergency escalation. (Right) Safe abstention scaling under sensor corruption (0% to 20%).</em>
+</p>
 
 ---
 
@@ -258,116 +282,141 @@ We subjected the test split ($N=4,500$) to increasing rates of realistic sensor 
 
 *\*Note: Fusion-Only achieves high recall by excessively over-escalating non-emergencies ($9.7\%$ clean, $15.8\%$ under noise), resulting in severe bed saturation and doubled expected clinical cost (3.743).*
 
----
-
-## Six Clinical Walkthrough Cases
-
-The following real test cases from `results/demo_cases.json` illustrate TriageGuard's decision pathways:
-
-````carousel
-```json
-// Case 1: True Emergency Forced by Vitals Rule (R001)
-{
-  "patient_id": "P000172", "age": 5, "sex": "M",
-  "complaint_text": "problem ga feel avutundi",
-  "cleaned_vitals": {"pulse": 156.0, "temp_c": 36.4, "spo2": 84.3},
-  "triageguard_verdict": {
-    "triage_level": 1,
-    "source_layer": "rule",
-    "primary_department": "Emergency/Casualty",
-    "rationale": "Severe hypoxia (SpO2 84.3% < 85%) forces Level 1 resuscitation despite vague complaint."
-  }
-}
-```
-<!-- slide -->
-```json
-// Case 1b: Honest Safe Over-Escalation Documented
-{
-  "patient_id": "P000089", "age": 26, "sex": "M",
-  "complaint_text": "persistent cough yellow sputum now cannot walk far since 2 days",
-  "cleaned_vitals": {"bp_sys": 150.0, "bp_dia": 78.0, "pulse": 97.0, "temp_c": 37.2, "spo2": 83.2},
-  "true_label": 3,
-  "triageguard_verdict": {
-    "triage_level": 1,
-    "source_layer": "rule",
-    "rationale": "True L3 pneumonia patient whose SpO2 dropped to 83.2% was escalated to L1. Honestly recorded as safe over-triage."
-  }
-}
-```
-<!-- slide -->
-```json
-// Case 2: Vague Complaint Rescued by Conformal Screen
-{
-  "patient_id": "P000303", "age": 83, "sex": "F",
-  "complaint_text": "head pain throbbing",
-  "cleaned_vitals": {"bp_sys": 195.0, "bp_dia": 124.0, "pulse": 69.0, "temp_c": 36.2, "spo2": 95.0},
-  "triageguard_verdict": {
-    "triage_level": 2,
-    "source_layer": "screen",
-    "p_emergency": 0.9901,
-    "rationale": "Vague complaint rescued from under-triage by Mondrian screen (p_em=0.9901 >= tau=0.0922)."
-  }
-}
-```
-<!-- slide -->
-```json
-// Case 3: Text-Gaming Attempt Defended at Non-Emergency
-{
-  "patient_id": "P005556", "age": 57, "sex": "F",
-  "original_complaint": "mild jwaram 2 days nund cold mariyu daggu also some body ache",
-  "injected_gaming": "unbearable pain please see me immediately",
-  "cleaned_vitals": {"bp_sys": 119.0, "bp_dia": 61.0, "pulse": 70.0, "temp_c": 37.4, "spo2": 96.7},
-  "true_label": 5,
-  "triageguard_verdict": {
-    "triage_level": 5,
-    "source_layer": "fusion",
-    "red_flags": ["severe_pain"],
-    "rationale": "Red flag detected, but normal vitals defended the patient at Level 5. Gaming prevented."
-  }
-}
-```
-<!-- slide -->
-```json
-// Case 3b: Text-Gaming Provoking Model Discordance -> Nurse Referral
-{
-  "patient_id": "P022989", "age": 54, "sex": "F",
-  "gamed_complaint": "feeling off. emergency please I am extremely sick",
-  "cleaned_vitals": {"bp_sys": 99.0, "bp_dia": 73.0, "pulse": 74.0, "temp_c": 37.0, "spo2": 99.9},
-  "triageguard_verdict": {
-    "triage_level": null,
-    "source_layer": "abstain",
-    "abstain_reason": "model_disagreement",
-    "rationale": "Extreme disparity between stable vitals and hyperbolic text triggers safe nurse referral."
-  }
-}
-```
-<!-- slide -->
-```json
-// Case 4: Sensor Corruption Safely Abstained to Nurse
-{
-  "patient_id": "P000270", "age": 49, "sex": "M",
-  "complaint_text": "medicine marchipoyanu ippudu BP chla you know high nakseer ee roju subah nundi",
-  "cleaned_vitals": {"bp_sys": 198.0, "bp_dia": 85.0, "pulse": 87.0, "temp_c": null, "spo2": null},
-  "triageguard_verdict": {
-    "triage_level": null,
-    "source_layer": "abstain",
-    "abstain_reason": "needs_remeasure",
-    "rationale": "Missing temp and SpO2 (>= 2 invalid vitals) triggers immediate nurse remeasurement."
-  }
-}
-```
-````
+<p align="center">
+  <img src="results/figures/stress_test_comparison.png" width="95%" alt="Stress Testing Suite Comparison Matrix">
+  <br>
+  <em><strong>Figure 4:</strong> Comprehensive stress-test comparison across baseline Argmax, rules-only, and TriageGuard under text gaming, vague reporting, and sensor degradation.</em>
+</p>
 
 ---
 
-## Clinical Web UI & Dashboard
+## Clinical Walkthrough Cases (With Live System Screenshots)
 
-The application includes an interactive clinical operations dashboard:
-- **Intake & Triage Console:** Real-time form entry with instant vital sign plausibility validation, language detection, and step-by-step pipeline execution visualization.
-- **Waiting Room Queue Simulation:** Displays live simulated patient flows stratified by urgency level with dynamic wait-time counters.
-- **Safety Rules & Clinical Evidence Explorer:** Interactive audit table of all 13 vitals rules and 10 red flags with direct links to empirical validation artifacts.
+The following benchmark test encounters from `results/demo_cases.json` illustrate TriageGuard's decision pathways under real hospital edge cases:
 
-UI screenshots captured across desktop ($1440\text{px}$) and mobile ($390\text{px}$) viewports are archived in `results/ui_screens/`.
+### Case 1: True Emergency Forced by Vitals Rule (R001)
+- **Patient Profile:** 5-year-old male, SpO2 $84.3\%$, Pulse $156\text{ bpm}$, Diastolic BP $39\text{ mmHg}$.
+- **Complaint:** *"problem ga feel avutundi"* (Telugu-English transliteration: feeling sick/problem).
+- **Decision:** Level 1 (Resuscitation) in **15.95 ms** via deterministic safety rule `R001` (Critical Hypoxia $SpO_2 < 85\%$).
+
+<p align="center">
+  <img src="results/ui_screens/case1_true_emergency_forced_by_rule_1440.png" width="95%" alt="Case 1: True Emergency Forced by Rule">
+</p>
+
+---
+
+### Case 1b: Honest Safe Over-Escalation Documented
+- **Patient Profile:** 26-year-old male, SpO2 $83.2\%$, BP $150/78\text{ mmHg}$, Pulse $97\text{ bpm}$.
+- **Complaint:** *"persistent cough yellow sputum now cannot walk far since 2 days"*
+- **Decision:** Ground-truth Level 3 Pulmonology patient safely escalated to Level 1 due to critical hypoxia ($SpO_2 = 83.2\%$). Transparently documented as clinical safety over-escalation.
+
+<p align="center">
+  <img src="results/ui_screens/case1b_rule_over_escalation_honest_1440.png" width="95%" alt="Case 1b: Honest Over-Escalation">
+</p>
+
+---
+
+### Case 2: Vague Complaint Rescued by Mondrian Conformal Screen
+- **Patient Profile:** 83-year-old female, BP $195/124\text{ mmHg}$, Pulse $69\text{ bpm}$, SpO2 $95\%$.
+- **Complaint:** *"head pain throbbing"* (subtle/under-reported presentation).
+- **Decision:** Stage 4 Mondrian Emergency Screen triggers with $p_{\text{emergency}} = 0.9901 \ge \tau = 0.0922$, safely rescuing a true Level 2 emergency from dangerous under-triage.
+
+<p align="center">
+  <img src="results/ui_screens/case2_vague_complaint_caught_by_conformal_screen_1440.png" width="95%" alt="Case 2: Vague Complaint Conformal Rescue">
+</p>
+
+---
+
+### Case 3: Text-Gaming Attempt Defended at Non-Emergency
+- **Patient Profile:** 57-year-old female, completely normal vitals (BP $119/61\text{ mmHg}$, Pulse $70\text{ bpm}$, SpO2 $96.7\%$).
+- **Complaint:** *"mild jwaram 2 days nund cold mariyu daggu also some body ache. unbearable pain please see me immediately"*
+- **Decision:** Red-flag detected (*severe_pain*), but non-downgrade floor rules prevent false emergency escalation. Patient held securely at non-urgent Level 5.
+
+<p align="center">
+  <img src="results/ui_screens/case3_gaming_attempt_defended_at_non_emergency_1440.png" width="95%" alt="Case 3: Gaming Attempt Defended at Non-Emergency">
+</p>
+
+---
+
+### Case 3b: Text-Gaming Provoking Model Discordance -> Safe Nurse Referral
+- **Patient Profile:** 54-year-old female, completely normal vitals (BP $99/73\text{ mmHg}$, Pulse $74\text{ bpm}$, SpO2 $99.9\%$).
+- **Complaint:** *"feeling off. emergency please I am extremely sick"*
+- **Decision:** Severe model discordance (Vitals predict L5, Text predicts L1). System refuses to guess and triggers `model_disagreement` safety abstention to an in-person triage nurse.
+
+<p align="center">
+  <img src="results/ui_screens/case3b_gaming_attempt_abstained_honestly_1440.png" width="95%" alt="Case 3b: Model Discordance Abstention">
+</p>
+
+---
+
+### Case 4: Sensor Corruption Safely Abstained to Nurse
+- **Patient Profile:** 49-year-old male, BP $198/85\text{ mmHg}$, Pulse $87\text{ bpm}$, missing Temperature and SpO2.
+- **Complaint:** *"medicine marchipoyanu ippudu BP chla you know high nakseer ee roju subah nundi"*
+- **Decision:** $\ge 2$ invalid/missing vital signs halt automated prediction, triggering an immediate `needs_remeasure` nurse referral.
+
+<p align="center">
+  <img src="results/ui_screens/case4_corrupted_vitals_abstain_1440.png" width="95%" alt="Case 4: Corrupted Vitals Abstain">
+</p>
+
+---
+
+### Case 5: Routine Specialty Care Accurately Routed (Dermatology)
+- **Patient Profile:** 5-year-old male, normal pediatric vitals (BP $107/72\text{ mmHg}$, Pulse $83\text{ bpm}$, SpO2 $97\%$).
+- **Complaint:** *"fce meda gajjulu red bumps since yesterday kal se"* (Telugu-Hindi multilingual code-mixed complaint).
+- **Decision:** Cleanly classified as Level 4 (Less Urgent) and routed directly to Dermatology without emergency false alarms.
+
+<p align="center">
+  <img src="results/ui_screens/case5_benign_case_routed_correctly_1440.png" width="95%" alt="Case 5: Routine Specialty Routed">
+</p>
+
+---
+
+### Case 6: Divergent Clinical Picture Abstained
+- **Patient Profile:** 16-year-old male, normal vitals, complaint *"check karna tha"*.
+- **Decision:** Vitals model (L4) and text model (L2) disagree by 2 acuity levels. Safely abstained to a triage nurse in **12.1 ms**.
+
+<p align="center">
+  <img src="results/ui_screens/case6_model_disagreement_abstain_1440.png" width="95%" alt="Case 6: Model Disagreement Abstain">
+</p>
+
+---
+
+## Clinical Web UI & Dashboard Views
+
+The system includes a production-ready clinical interface designed for high-stress triage environments:
+
+### 1. Dynamic Acuity Waiting Room (Acuity Re-Ordering vs FCFS)
+Re-orders waiting patients in real time based on clinical urgency (resuscitations first, non-urgent encounters deprioritized) rather than naive first-come-first-served arrival order:
+
+<p align="center">
+  <img src="results/ui_screens/waiting_room_1440.png" width="95%" alt="Waiting Room Acuity Queue">
+</p>
+
+### 2. Clinical Rules & Multilingual Red-Flag Lexicon Explorer
+Comprehensive audit view of all 13 deterministic vitals rules and 10 multilingual red flags with typo-tolerant phonetic matching:
+
+<p align="center">
+  <img src="results/ui_screens/rules_1440.png" width="95%" alt="Clinical Rules Audit Table">
+</p>
+
+### 3. Empirical Evidence & Benchmark Explorer
+Live validation dashboard displaying test-set performance metrics, 500-patient stress test suites, and diagnostic curves:
+
+<p align="center">
+  <img src="results/ui_screens/evidence_1440.png" width="95%" alt="Evidence and Benchmark Explorer">
+</p>
+
+### 4. Mobile Responsive Layouts ($390\text{px}$)
+Fully responsive design optimized for mobile triage tablets and handheld nursing devices:
+
+<p align="center">
+  <img src="results/ui_screens/case1_true_emergency_forced_by_rule_mobile_390.png" width="45%" alt="Mobile Case 1">
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="results/ui_screens/case3_gaming_attempt_defended_at_non_emergency_mobile_390.png" width="45%" alt="Mobile Case 3">
+</p>
+<p align="center">
+  <em>Mobile views: (Left) Emergency Level 1 forced resuscitation. (Right) Level 5 non-emergency anti-gaming defense.</em>
+</p>
 
 ---
 

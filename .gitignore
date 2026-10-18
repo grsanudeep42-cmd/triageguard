@@ -9,9 +9,11 @@ models/*.joblib
 models/*.bin
 models/*.pt
 models/*.h5
+models/*.onnx
+models/kokoro/
+models/piper/
 data/*.csv
 data/*.parquet
-results/ui_screens/
 .env
 *.env
 .DS_Store
