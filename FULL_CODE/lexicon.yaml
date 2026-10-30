@@ -1,0 +1,567 @@
+# lexicon.yaml
+# Telugu (written in English letters – Romanised Telugu) and Hindi (written in
+# English letters – Romanised Hindi) complaint phrases for TriageGuard.
+#
+# PURPOSE: A native Telugu or Hindi speaker can review and edit ONLY this file
+# to improve linguistic authenticity without touching any model code.
+#
+# RULES:
+#   - Phrases are colloquial and simple. No invented medical claims.
+#   - All phrases are SYNTHETIC and NOT clinically validated.
+#   - Keys under "archetypes:" must exactly match the "name" field in archetypes.yaml.
+#
+# PLACEHOLDER: All phrase selections and style probabilities are placeholders.
+# A sociolinguist familiar with Andhra/Telangana/Hindi-belt OPD speech should
+# validate before any real deployment.
+
+# ── Generic duration suffixes ──────────────────────────────────────────────
+duration:
+  telugu:
+    - "2 rojulu nundi"
+    - "ninna nundi"
+    - "ee roju subah nundi"
+    - "3 ghantalu nundi"
+    - "oka varam nundi"
+    - "chinna pachchi nundi"
+    - "rendhu rojulu nundi"
+    - "morning nundi"
+  hindi:
+    - "2 din se"
+    - "kal se"
+    - "aaj subah se"
+    - "3 ghante se"
+    - "1 hafte se"
+    - "thodi der se"
+    - "subah se hai"
+    - "2 ghante se"
+  english:
+    - "since yesterday"
+    - "since this morning"
+    - "since 2 days"
+    - "since last night"
+    - "for about 3 hours"
+    - "from morning"
+    - "since 2 days nundi"
+    - "since morning only"
+
+# ── Mild / vague phrases  (used for emergency under-reporting bias) ─────────
+# PLACEHOLDER – must be reviewed so they genuinely sound like under-reporting
+mild_phrases:
+  telugu:
+    - "koddiga uncomfortable ga vundi"
+    - "mild ga noppi unnadi oka sari chudamani vacham"
+    - "thoda uneasiness ga undi emi kaadu anukuntunna"
+    - "chinna samasya ani vachham"
+    - "emi serious kaadu anukuntunna koddiga feel avutundi"
+  hindi:
+    - "thoda dard hai kuch zyada nahi"
+    - "halka sa dard hai check karna tha"
+    - "thodi takleef hai serious nahi lagti"
+    - "kuch theek nahi lag raha bas dekhna tha"
+    - "halki si taklif chal rahi hai"
+  english:
+    - "mild discomfort since morning nothing serious"
+    - "not feeling great just wanted to get checked"
+    - "slight uneasiness nothing major doctor"
+    - "just a small problem wanted to check"
+    - "feeling a bit off not too bad"
+
+# ── Dramatic / exaggerated phrases  (used for mild over-reporting bias) ─────
+# PLACEHOLDER – must be reviewed for authenticity
+dramatic_phrases:
+  telugu:
+    - "chala theevranga noppi vestondi maravaledhu doctor"
+    - "chala bhayam ga vundi oka sari chudandi please"
+    - "chala kashttam ga vundi ee noppi thalapaledu"
+    - "urgent ga chudu doctor ikkade pothanu"
+  hindi:
+    - "bahut zyada dard hai bardasht nahi ho raha doctor sahab"
+    - "bahut bura lag raha main abhi gir jaaunga"
+    - "please jaldi dekhiye bahut takleef hai"
+    - "emergency hai doctor ek pal bhi nahi ruk sakta"
+  english:
+    - "unbearable pain please see me immediately"
+    - "very very severe I cannot take it any more doctor"
+    - "emergency please I am extremely sick"
+    - "please urgent I feel like I will collapse"
+
+# ── Per-archetype phrases ──────────────────────────────────────────────────
+archetypes:
+
+  unconscious_unresponsive:
+    telugu:
+      - "patient padipoyindi pragna ledu letchaledhu"
+      - "unconscious ga unnadu emi cheyyadam ledu"
+      - "kharma padipoyindi letchaledhu"
+      - "ekkadam respond chesaledhu padipoyaru"
+    hindi:
+      - "behosh ho gaya kuch pata nahi chal raha"
+      - "gir pada hosh nahi aa raha"
+      - "unconscious pada hua hai uthta nahi"
+      - "hosh nahi aa raha koi response nahi"
+    code_mixed:
+      - "patient unconscious padipoyadu please help quickly"
+      - "behosh ho gaya doctor saab uthta nahi"
+      - "patient unresponsive emi cheyyalo telusunatha"
+
+  cardiac_arrest_imminent:
+    telugu:
+      - "gundelu noppi chala theevranga unnadi oopiri posta ledu"
+      - "heart lo chala noppi vastondi cheyyi numbness ga vundi"
+      - "gunde adirikipotundi neela neela ga chudataledhu"
+    hindi:
+      - "seene mein bahut tej dard saans nahi aa rahi"
+      - "dil mein dard aur haath mein sunn ho raha"
+      - "seene mein dard tha achanak saans ruk rahi"
+    code_mixed:
+      - "severe chest pain aur saans lena bahut mushkil"
+      - "gundelo noppi and chema vastondi chala undi"
+      - "heart dard aur breathlessness chala severe"
+
+  acs_stemi:
+    telugu:
+      - "gundelo noppi vastondi cheyyi ki velutundi chema vastondi"
+      - "gunde noppi chala theevranga unnadi"
+      - "gundelo adirikipotundi oopiri adatam kashtam ga undi"
+      - "chest lo heavy feeling chemu chema vastondi"
+      - "gunde noppi tho jaw ki velutundi"
+    hindi:
+      - "seene mein dard baya haath mein ja raha"
+      - "chhati mein bahut dard aur pasina aa raha"
+      - "seene mein daba raha hai aur ulti jaisi"
+      - "dil mein dard jaw tak ja raha"
+      - "seene mein bahut dard haath mein bhi"
+    code_mixed:
+      - "chest pain radiating to left haath chala severe"
+      - "gundelo noppi since 1 hour with sweating chema"
+      - "seene mein dard aur left arm mein bhi ja raha"
+      - "severe chest pain tho oopiri adatam kastam"
+
+  stroke_major:
+    telugu:
+      - "tala noppi chala theevranga vachchi vamtulu vastondi"
+      - "cheyyi kallelu pani chesaledhu face ooka vaipu valigipoyindi"
+      - "matladatam raatledhu face twisted ga vundi"
+      - "sudden ga tala noppi vachchi kaleelu pani chesaledhu"
+      - "muka thippiyipoyindi matladatam ledu"
+    hindi:
+      - "sir mein bahut tez dard aur ulti ho rahi"
+      - "haath kaam nahi kar raha aur mooh tedha ho gaya"
+      - "achanak sir dard aur baat karne mein dikkat"
+      - "ek taraf hath paon kaam nahi kar raha"
+      - "chehra ek taraf khich gaya bol nahi pa raha"
+    code_mixed:
+      - "sudden headache vachchi face drooping aindi"
+      - "sir mein dard aur cheyyi pani chesaledhu"
+      - "tala noppi vachchi ooka side kalu pani chesaledhu"
+
+  severe_asthma_attack:
+    telugu:
+      - "oopiri adatam ledu chala kashtam ga vundi inhaler help chesaledhu"
+      - "oopiri rastam ledu wheeze vastondi"
+      - "breath kosam fight chestondi chala bhayam ga vundi"
+      - "oopiri kada ledu complete ga"
+    hindi:
+      - "saans lena nahi ho raha bahut takleef inhaler se fark nahi"
+      - "saans nahi aa rahi dawa se koi asar nahi"
+      - "chest mein khadkhadahat aur saans rukti si"
+      - "ek bhi saans nahi aa rahi please help karo"
+    code_mixed:
+      - "oopiri adatam ledu very severe asthma attack"
+      - "breathing nahi ho rahi inhaler ne kaam nahi kiya"
+      - "saans ki bahut problem oopiri ledu inhaler failed"
+
+  sepsis_severe:
+    telugu:
+      - "chala theevranga jwaram vachchi oopiri rastam ledu weakness"
+      - "jwaram vachchi 3 rojulu aindi ippudu chala worse aindi"
+      - "moshu jwaram vastondi narasam ga anipistundi"
+    hindi:
+      - "bahut tez bukhar aur kapkapana aur kamzori"
+      - "3 din se bukhar hai aaj bahut bura ho gaya"
+      - "tez bukhar aur ulti khari bhi nahi ho sakti"
+    code_mixed:
+      - "high fever 3 days nundi ippudu chala worse BP low"
+      - "bukhar aur oopiri kastam aaj worse ho gaya"
+      - "jwaram chala high BP chala tekkuva weakness"
+
+  major_trauma_bleeding:
+    telugu:
+      - "accident ki guriyai chala blood vastondi"
+      - "pedda injury cheyyi vitigipoyindi kadadatam ledu"
+      - "bhadragiri nundi padipoyadu leg break aindi"
+    hindi:
+      - "accident hua bahut khoon aa raha hai"
+      - "girne se bahut chot lagi haddi toot gayi shayad"
+      - "gaadi se gira bahut khoon beh raha"
+    code_mixed:
+      - "road accident lo blood chala vastondi"
+      - "girpada aur bleeding bahut ho rahi severe injury"
+      - "vehicle accident severe injury leg blood"
+
+  active_seizure:
+    telugu:
+      - "fits vachchi padipoyadu ippatiki oopu vastondi"
+      - "epilepsy fits aindi ninna chala bhayam ga"
+      - "body thata aindi mochhu vastondi padipoyadu"
+    hindi:
+      - "dora padi gayi abhi bhi haath pair hil rahe"
+      - "epilepsy ka daura pada achanak"
+      - "achanak jhatke aane lage gir gaya"
+    code_mixed:
+      - "fits vachchi padipoyadu still shaking"
+      - "seizure aaya body hil raha hai"
+      - "fits aindi padipoyadu mochhu vastondi"
+
+  eclampsia_obstetric:
+    telugu:
+      - "pregnancy lo chala theevranga tala noppi fits vastondi"
+      - "9 months pregnant BP chala high ga vundi fits vachchi"
+      - "laboru pains tho fits vachchi bhayam ga undi"
+    hindi:
+      - "pregnant hoon sir mein bahut dard aur dora"
+      - "9 mahine ki hoon BP bahut high aur aankhein dhundhla"
+      - "garbhavati hoon jhatke aane lage leg soojan"
+    code_mixed:
+      - "pregnant 9 months tala noppi chala severe fits vachchi"
+      - "pregnancy mein fits aaye BP bahut high"
+
+  fever_infant_critical:
+    telugu:
+      - "beby ki chala theevranga jwaram velutundi paalu teegaledhu"
+      - "6 masala beby ki 104 degree fever chala bhayam"
+      - "chinna beby chala hot ga vundi sarigga letchaledhu"
+    hindi:
+      - "baby ko bahut tej bukhar doodh nahi pi raha"
+      - "8 mahine ka bacha 104 degree bukhar hai"
+      - "chota sa bacha bahut garam ho raha kuch nahi kha raha"
+    code_mixed:
+      - "baby chala jwaram 104 degree not drinking milk"
+      - "infant bukhar bahut zyada rona band nahi"
+
+  acute_abdomen:
+    telugu:
+      - "kadupu noppi chala theevranga vundi right side"
+      - "pedda kadupu noppi vachchi kadupu kottukuntundi"
+      - "right side kadupu noppi tho fever vastondi"
+      - "kadupu chala tight ga vundi noppi chala theevranga"
+    hindi:
+      - "pet mein bahut dard seedha right side"
+      - "pait mein bahut dard subah se badan garam"
+      - "neeche dahi taraf bahut dard dabane par bhi"
+      - "pait bahut tight ho gaya dard bahut zyada"
+    code_mixed:
+      - "kadupu noppi chala severe right lower side"
+      - "pet dard bahut since morning bhi bad ho raha"
+
+  dehydration_child_moderate:
+    telugu:
+      - "beby ki loose motions mariyu vaantulu eyes sunken ga unnayee"
+      - "pilladi chala saarlu loose motions fever undi"
+      - "papi ki sarigga neer theegaledhu sunken eyes vunnayee"
+    hindi:
+      - "bachche ko baar baar dast aur ulti ankhen andar"
+      - "10 saal ka bacha loose motion pani nahi pi raha"
+      - "baccha pani nahi pi raha aankhein andar ho gayi"
+    code_mixed:
+      - "child loose motions 10 times today sunken eyes"
+      - "bachche ko diarrhea aur vaantulu eyes sunken"
+
+  fracture_displaced:
+    telugu:
+      - "pedda fall ayaindi kalu kadadatam ledu bone kanipistundi"
+      - "cycle nunchi padipoyadu cheyyi virigipoyindi angle wrong ga"
+      - "accident ki guriyai kalu virigipoyindi nadadatam ledu"
+    hindi:
+      - "girne se haath toot gaya angle ulta lag raha"
+      - "cycle se gira paon mein bahut dard haddi dikhi"
+      - "accident mein tang toot gayi chal nahi sakta"
+    code_mixed:
+      - "pedda fall ayyi kalu broken bone visible"
+      - "haath toot gaya wrong angle chala pain"
+
+  hypertensive_urgency:
+    telugu:
+      - "BP chala high ga vundi tala noppi chala theevranga"
+      - "BP 200 ki vellesindi giddhi mariyu tala noppi"
+      - "medicine marchipoyanu ippudu BP chala high nakseer"
+    hindi:
+      - "BP bahut zyada hai 200 ke upar sir mein dard"
+      - "dawai nahi li BP aaj bahut high ho gaya"
+      - "naak se khoon aur BP bahut zyada"
+    code_mixed:
+      - "BP chala high 200 plus headache chala severe"
+      - "BP bahut high medicine li nahi dizziness"
+
+  hyperglycemia_moderate:
+    telugu:
+      - "sugar chala high ga vundi narasam ga anipistundi"
+      - "diabetic patient sugar 400 plus weakness"
+      - "diabetes sugar chala high ga vachchi brief consciousness loss"
+    hindi:
+      - "sugar bahut zyada 400 ke upar kamzori hai"
+      - "diabetes hai sugar control mein nahi"
+      - "pyas bahut lag rahi bar bar peshab sugar high"
+    code_mixed:
+      - "sugar chala high 400 plus weakness feel avutundi"
+      - "diabetes aur sugar bahut high since 2 days"
+
+  head_injury_moderate:
+    telugu:
+      - "tala ki dibbana telisi kotta kottukundi brief consciousness poyindi"
+      - "pedda fall ayyi tala ki adindi vamtulu vastondi"
+      - "accident tala ki injury consciousness loss aindi"
+    hindi:
+      - "sir mein chot lagi thodi der ke liye hosh gaya"
+      - "sir ki chot accident mein ulti aa rahi"
+      - "gira aur sir thok gaya brief hosh gaya"
+    code_mixed:
+      - "tala ki injury vachchi consciousness loss vamtulu"
+      - "head injury accident mein brief hosh gaya"
+
+  renal_colic:
+    telugu:
+      - "back side nundi chala theevranga noppi kadupu ki vastondi"
+      - "kidney stone noppi chala unbearable koorchovaledhu"
+      - "wadi side nundi noppi vastondi bottom ki velutundi"
+    hindi:
+      - "kamar se neeche tak bahut dard ruk nahi sakta"
+      - "kidney stone hai bahut dard bardasht nahi ho raha"
+      - "peeth mein dard nikaal raha neeche tak"
+    code_mixed:
+      - "back nundi kadupu ki noppi chala severe kidney stone"
+      - "peeth mein dard neeche ki taraf renal stone"
+
+  pneumonia_moderate:
+    telugu:
+      - "daggu jwaram 5 rojulu nundi ippudu oopiri kastam ga vundi"
+      - "chest infection vachchi chala fever mariyu oopiri ledu"
+      - "daggu tho chala yellow sputum vastondi oopiri adatam ledu"
+    hindi:
+      - "khansi bukhar 5 din se aaj saans lena mushkil"
+      - "chest infection tez bukhar aur saans ki takleef"
+      - "bahut khansi balgam peela aa rahi saans rukti"
+    code_mixed:
+      - "daggu 1 week nundi ippudu breathlessness start aindi"
+      - "khansi aur fever aur saans bhi mushkil ho gayi"
+
+  chest_pain_acidity:
+    telugu:
+      - "gundelo mild ga noppi unnadi acidity vaalla untundi"
+      - "tina taruvata burning sensation chest lo unnadi"
+      - "hot food tina taruvata chest discomfort ga unnadi"
+    hindi:
+      - "khaane ke baad seene mein jalan gas ki wajah se"
+      - "seene mein halka dard khana khaane ke baad"
+      - "chest mein jalan acidity jaisi hai"
+    code_mixed:
+      - "chest pain mild ga unnadi after eating spicy food"
+      - "seene mein jalan khaane ke baad acidity lagti"
+
+  breathlessness_anxiety:
+    telugu:
+      - "oopiri adatam ledu bhayam ga anipistundi"
+      - "breath kastam ga vundi mariyu chala anxiety ga vundi"
+      - "oopiri ledu ga anipistundi chala scared"
+    hindi:
+      - "saans nahi aa rahi bahut dar lag raha"
+      - "dum ghut raha jaisa saans rukta hua"
+      - "saans ki dikkat aur bahut ghabrahat"
+    code_mixed:
+      - "oopiri adatam ledu feeling very anxious scared"
+      - "saans ki dikkat aur anxiety bahut hai"
+
+  migraine:
+    telugu:
+      - "tala noppi chala theevranga ooka vaipu throbbing"
+      - "migraine attack vachchi vamtulu vastondi light bothers"
+      - "tala noppi chala severe ooka side since morning"
+    hindi:
+      - "sir mein ek taraf bahut dard thak thak karta"
+      - "migraine hai ulti aur roshni nahi sahi"
+      - "ek taraf ka sir bahut zyada dard"
+    code_mixed:
+      - "tala noppi one side throbbing chala severe migraine"
+      - "sir mein ek taraf dard previous migraines jaisa"
+
+  gastritis_gerd:
+    telugu:
+      - "kadupu noppi acidity since yesterday mild"
+      - "gas problem tho kadupu noppi tina taruvata"
+      - "stomach ache mild gas mariyu bloating"
+    hindi:
+      - "pet mein dard aur gas acidity jaisi"
+      - "pait dard khaane ke baad aur ek baar ulti"
+      - "acidity pet dard aur phulna"
+    code_mixed:
+      - "kadupu noppi mild acidity after eating biryani"
+      - "pet mein dard aur gas mild"
+
+  fever_adult_mild:
+    telugu:
+      - "jwaram 2 rojulu nundi body ache unnadi"
+      - "theevranga jwaram unnadi tala noppi"
+      - "fever body ache since yesterday"
+    hindi:
+      - "bukhar 2 din se hai body mein dard"
+      - "tez bukhar aur sir dard kal se"
+      - "bukhar aur thakaan"
+    code_mixed:
+      - "jwaram 2 days nundi body ache unnadi"
+      - "bukhar 2 din se aur body dard mild"
+
+  uti:
+    telugu:
+      - "urine cheyyadam painful ga vundi burning sensation"
+      - "frequent urine vastaundi burning feeling"
+      - "lower abdomen noppi urine cheyyadam kastam"
+    hindi:
+      - "peshab karte waqt bahut jalan"
+      - "bar bar peshab aur jalan bhi"
+      - "neeche pet mein dard aur peshab mein takleef"
+    code_mixed:
+      - "burning urine cheyyadam kastam aur frequent"
+      - "peshab mein jalan aur lower abdomen noppi"
+
+  sprain_minor:
+    telugu:
+      - "ankle twist aindi walk cheyyadam kastam"
+      - "fall ayyi wrist twist aindi noppi unnadi"
+      - "sports lo knee ki injury swelling unnadi"
+    hindi:
+      - "pair mein moch aayi chal nahi sakta"
+      - "hatth mein moch girne se"
+      - "ghutne mein chot khel mein soojan"
+    code_mixed:
+      - "ankle twist aindi walking kastam ga undi"
+      - "moch aayi aur noppi chala hai swelling"
+
+  ear_complaint:
+    telugu:
+      - "chevi noppi unnadi discharge vastondi"
+      - "child chevi noppi tho fever mariyu ardutundi"
+      - "chevi noppi since yesterday hearing kasta"
+    hindi:
+      - "kaan mein dard aur kuch bah raha"
+      - "bacche ko kaan mein dard aur bukhar"
+      - "kaan mein dard aur sunai kam"
+    code_mixed:
+      - "kannulo noppi discharge vastondi since yesterday"
+      - "kaan mein dard aur ooze ho raha"
+
+  eye_complaint:
+    telugu:
+      - "kallu endu aipoyayi discharge mariyu noppi"
+      - "eye redness mariyu watering chala unnadi"
+      - "rendo kallu red ayi mariyu itching"
+    hindi:
+      - "aankhein lal ho gayi aur keechad aa raha"
+      - "aankh mein dard lal aur paani"
+      - "dono aankhein lal khujli ho rahi"
+    code_mixed:
+      - "kallu endu aipoyayi redness discharge aindi"
+      - "aankhein lal ho gayi aur khujli"
+
+  skin_rash:
+    telugu:
+      - "meda antata rash vastondi chala itching"
+      - "face meda gajjulu red bumps since yesterday"
+      - "skin rash tho burning sensation unnadi"
+    hindi:
+      - "poore body mein rash aur khujli"
+      - "kuch khane ke baad rash aur jalan"
+      - "munh aur gardan par rash khujli"
+    code_mixed:
+      - "skin rash chala body meeda itching since morning"
+      - "rash aa gaya aur khujli bahut hai"
+
+  anxiety_panic:
+    telugu:
+      - "sudden ga bhayam ga anipistundi gunde kostondi"
+      - "anxiety attack cheyyi leru leru anipistundi"
+      - "panic ga anipistundi chala scared"
+    hindi:
+      - "achanak bahut dar laga dil tez dhad dhad"
+      - "panic aa gaya haath pair kaanp rahe"
+      - "darr aur ghabrahat heart racing"
+    code_mixed:
+      - "sudden panic ga anipistundi heart racing"
+      - "dar aur ghabrahat aur palpitations"
+
+  diarrhea_vomiting_adult:
+    telugu:
+      - "loose motions vaantulu since yesterday chala saarlu"
+      - "stomach upset 5 saarlu vaantulu today"
+      - "gastro problem loose stools mariyu nausea"
+    hindi:
+      - "kal se dast aur ulti ho rahi bahut"
+      - "aaj 5 baar ulti aur dast"
+      - "pait kharab loose motion aur matli"
+    code_mixed:
+      - "loose motions vaantulu since morning 5 times"
+      - "ulti aur dast kadupu noppi tho"
+
+  mild_fever_cold:
+    telugu:
+      - "mild jwaram daggu mariyu nasal discharge since 2 days"
+      - "koddiga fever mariyu sardi chala mild"
+      - "daggu tho mild fever throat pain unnadi"
+    hindi:
+      - "halka bukhar aur zukam naak beh rahi"
+      - "khansi bukhar aur thoda gardan mein dard"
+      - "2 din se halka bukhar aur badan dard"
+    code_mixed:
+      - "mild jwaram 2 days nundi cold mariyu daggu"
+      - "halka bukhar aur zukam 2 din se"
+
+  bp_sugar_followup:
+    telugu:
+      - "BP mariyu sugar check kosam vachham routine ga"
+      - "monthly BP check kosam vachham no complaints"
+      - "diabetes monitoring regular visit doctor cheppinatu"
+    hindi:
+      - "BP aur sugar check karne aaya routine mein"
+      - "mahine ki visit BP theek hai bas check karna tha"
+      - "diabetes follow up doctor ne bheja hai"
+    code_mixed:
+      - "BP sugar check kosam vachham monthly routine"
+      - "BP aur sugar follow up regularly aata hoon"
+
+  medicine_refill:
+    telugu:
+      - "medicines ayipoyayi prescription kavaali"
+      - "tablets finish aipoyayi new prescription kavaali"
+      - "regular medicines kosam vachham new complaints levu"
+    hindi:
+      - "dawai khatam ho gayi prescription chahiye"
+      - "tablet ka refill lena tha koi naya dard nahi"
+      - "dawai chahiye regular waali thyroid ki"
+    code_mixed:
+      - "medicines ayipoyayi prescription needed no complaints"
+      - "dawai khatam naya prescription chahiye"
+
+  wound_dressing:
+    telugu:
+      - "wound dressing change kosam vachham cheppinatu"
+      - "surgery taruvata suture removal kosam vachham"
+      - "small cut ki cleaning kosam vachham"
+    hindi:
+      - "zakhm ki patti badalni hai"
+      - "surgery ke baad tanka nikalna tha"
+      - "chot par dressing badalni thi"
+    code_mixed:
+      - "wound dressing change kosam vachham as advised"
+      - "zakhm ki patti badalni aur dekhana tha"
+
+  routine_checkup:
+    telugu:
+      - "annual checkup kosam vachham specific complaints levu"
+      - "routine examination employer cheppinatu"
+      - "blood tests mariyu checkup no complaints"
+    hindi:
+      - "routine checkup karne aaya kuch nahi hai"
+      - "saal ki jaanch company ke liye karvani thi"
+      - "sab theek hai bas checkup karna tha"
+    code_mixed:
+      - "annual checkup kosam vachham no complaints"
+      - "routine examination karne aaya employer ne bheja"
