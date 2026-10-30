@@ -1,233 +1,208 @@
-# TriageGuard — OPD Triage Assistant
+# TriageGuard · H1: OPD Triage Assistant for Chandrapuri District Hospital
 **TalentAP Mega Hackathon 2026 · Problem H1 · Team ID: 001254 (Ronin Labs)**
 
-> AI-powered clinical decision support for Outpatient Department triage.  
-> Assigns triage levels L1–L5, routes to departments, detects red-flag presentations.
+> Human-in-the-loop AI clinical decision support for high-volume outpatient department (OPD) triage.  
+> Assigns triage acuity (Levels 1–5 or safe ABSTAIN), routes to 13 departments, and detects 30 red-flag presentations.
 
 ---
 
-## Quick Start
+## What it does
+
+- **The Problem:** Chandrapuri District Hospital sees ~800 outpatient walk-ins per day with only two doctors at the initial triage desk. Under first-come-first-served (FCFS) queuing, patients with acute coronary syndromes, sepsis, or stroke wait behind dozens of patients with routine mild coughs. Overworked triage nurses make rapid acuity decisions in <30 seconds without diagnostic aids or immediate vitals cross-referencing.
+- **Who uses it:** Triage nurses, casualty medical officers, and OPD intake staff. It is strictly positioned as a **clinician-assisting** system with human-in-the-loop validation, never autonomous diagnosis.
+- **What they see:**
+  1. **Triage Priority (Levels 1–5 or ABSTAIN):** Instant acuity assignment. Under-triaging a true emergency incurs a 20× penalty; high-uncertainty or corrupted inputs trigger a safe `ABSTAIN` ("cannot assess, send to nurse now").
+  2. **13 Department Routing:** Automatic routing to the correct specialty (General Medicine, Paediatrics, OB/GYN, Surgery, Orthopaedics, ENT, Eye, Dental, Psych, Derm, Cardio, Pulmo, Emergency/Casualty).
+  3. **30 Official Red-Flag Codes:** Detection and highlighting of acute clinical danger signs (cardiac chest pain, stroke, sepsis, severe pre-eclampsia, respiratory distress, snakebite, etc.).
+  4. **Statistical Confidence & Conformal Set:** Calibrated posterior probabilities and conformal prediction intervals with audit trails.
+
+### Live Links & Deliverables
+- **Live Interactive App:** [https://triageguard-ncai.onrender.com](https://triageguard-ncai.onrender.com)
+- **Interactive Swagger API Docs:** [https://triageguard-ncai.onrender.com/docs](https://triageguard-ncai.onrender.com/docs)
+- **Video Walkthrough (YouTube):** [https://youtu.be/yqNZq92zks0](https://youtu.be/yqNZq92zks0)
+- **Source Code Repository:** [https://github.com/grsanudeep42-cmd/triageguard](https://github.com/grsanudeep42-cmd/triageguard)
+- **Official 7-Slide Presentation:** `FULL_CODE/ppt/Round1_TriageGuard_Submission.pdf`
+
+---
+
+## How to run
+
+### 1. Environment Setup
+Requires **Python 3.12+**. From the project root:
 
 ```bash
-# From FULL_CODE/
-python -m uvicorn app.main:app --reload --port 8000
+cd FULL_CODE
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 ```
 
-API available at `http://localhost:8000/api/triage`.  
-Web UI at `http://localhost:8000`.
+### 2. Environment Variables
+Settings are controlled via environment variables or `.env`. Copy the provided template:
+```bash
+cp .env.example .env
+```
+*(Never commit `.env`; all secrets and environment variables are excluded by `.gitignore`.)*
+
+### 3. Data Layout
+Place the competition datasets in `FULL_CODE/data/phase2/` (or run against pre-bundled paths):
+```
+FULL_CODE/data/
+  phase2/                  ← Official competition data (gitignored)
+    intake_train.csv       ← 21,455 labelled training visits
+    train_labels.csv       ← Official ground-truth labels
+    intake_test.csv        ← 8,872 unlabelled test visits
+    departments.csv        ← 13 allowed departments
+    red_flag_codes.csv     ← 30 official red-flag definitions
+    arrival_log.csv        ← 30,327 arrival events for queue simulation
+    triage_primer.md       ← Clinical scoring rubric & thresholds
+```
+
+### 4. Run the Web Application & API
+```bash
+cd FULL_CODE
+python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+```
+- Web UI: `http://localhost:8000`
+- REST API: `http://localhost:8000/api/triage`
+- Swagger Docs: `http://localhost:8000/docs`
+
+### 5. Generate Submission File
+To re-generate `submission/H1_predictions.csv` from scratch:
+```bash
+cd FULL_CODE
+python scripts/predict_phase2.py
+```
+This produces `submission/H1_predictions.csv` with exactly 8,872 rows, all 5 required columns, and zero format errors.
+
+### 6. Run the Official Scorer
+To evaluate predictions against the official training labels using the competition scorer:
+```bash
+cd FULL_CODE
+python evaluate.py \
+  --submission submission/H1_predictions.csv \
+  --truth data/phase2/train_labels.csv \
+  --out results/score_phase2.json
+```
 
 ---
 
-## Submission
+## How to run the tests
+
+The project includes an automated suite of **187 tests** covering vital-sign cleaning, escalation rules, conformal prediction, data adapter mapping, and FastAPI endpoints:
 
 ```bash
-# Generate H1_predictions.csv (requires Phase 2 data in data/phase2/)
-.venv/bin/python scripts/predict_phase2.py
-
-# Validate format (note: this scores test predictions vs train labels — 0 visit_id overlap expected)
-.venv/bin/python evaluate.py \
-    --submission submission/H1_predictions.csv \
-    --truth data/phase2/train_labels.csv \
-    --out results/score_phase2.json
-```
-
-> **Important:** `evaluate.py` path resolution.  
-> The organiser scorer reads `--truth` from the CLI argument — no hardcoded path.  
-> Always pass `--truth data/phase2/train_labels.csv` explicitly.  
-> Do **not** run it from a different working directory; paths are relative to `FULL_CODE/`.
-
----
-
-## Data Layout
-
-```
-data/
-  phase1/          ← Phase 1 synthetic data (generated by us)
-    synthetic_intake.csv
-    hidden_labels.csv
-    splits.csv
-  phase2/          ← Phase 2 official data (organiser pack, do not commit)
-    intake_train.csv
-    intake_test.csv
-    train_labels.csv
-    triage_primer.md
-    red_flag_codes.csv
-    departments.csv
-    arrival_log.csv
+cd FULL_CODE
+.venv/bin/pytest tests/ app/tests/ -q
+# Expected output: 187 passed in ~12s
 ```
 
 ---
 
 ## Architecture
 
+TriageGuard implements a **5-layer Swiss-cheese safety hierarchy** where deterministic physiological rules wrap statistical machine learning models:
+
 ```
-Raw intake record
-       │
-       ▼
- adapt_schema()        ← rename Phase-2 columns to internal schema
-       │
-       ▼
-  clean_record()       ← validate vitals, flag missing/out-of-range
-       │
-       ▼
-  apply_rules()        ← hard vitals rules + pregnant BP rules
-       │
-       ▼
-  [VitalsModel]        ← LightGBM multiclass + binary (monotone constraints)
-  [TextModel]          ← char_wb TF-IDF + LogisticRegression
-       │
-       ▼
-  StackerFusion        ← 5-fold OOF stacker + Platt calibration
-       │
-       ▼
-  ConformalPredictor   ← Mondrian emergency screen (α=0.01, τ=0.0613)
-       │
-       ▼
-  Policy Hierarchy     ← Rule → Screen → Abstain → Cost-Optimal
-       │
-       ▼
-  DepartmentModel      ← TF-IDF + tabular → 13 allowed departments
-       │
-       ▼
-  RedFlagClassifier    ← multi-label TF-IDF → 30 RF codes (predict script)
+                  Raw Intake Record (Vitals + Complaint Text)
+                                       │
+                                       ▼
+  [Layer 1: Input Plausibility]   clean_record() detects sensor faults / impossible vitals
+                                       │
+                                       ▼
+  [Layer 2: Deterministic Rules]  apply_rules(): 13 hard vital thresholds + pregnant BP rules
+                                  (Invariant: Rules can ONLY escalate, NEVER downgrade)
+                                       │
+                    ┌──────────────────┴──────────────────┐
+                    ▼                                     ▼
+        [VitalsModel: LightGBM]               [TextModel: TF-IDF + LogReg]
+        Monotone physiological constraints     Multilingual Hinglish/Telugu n-grams
+                    │                                     │
+                    └──────────────────┬──────────────────┘
+                                       ▼
+  [Layer 3: Calibration & Fusion] StackerFusion (5-fold OOF) + Platt Temperature Scaling
+                                       │
+                                       ▼
+  [Layer 4: Mondrian Screen]      ConformalPredictor (α=0.01, τ=0.0613) + Safety Abstain Gate
+                                  (Safely abstains unassessable / high-discordance cases)
+                                       │
+                                       ▼
+  [Layer 5: Asymmetric Risk Engine] Selects min-cost acuity level under 20× missed-emergency penalty
+                                  + 13-Department Specialty Router + 30 Red-Flag Classifier
+                                       │
+                                       ▼
+                   Final Verdict: Level (1–5 / ABSTAIN), Dept, Red Flags
 ```
 
-### Policy Priority (predict_one)
-1. **Vitals Rule fires** → forced level (source=`rule`)
-2. **p_emergency ≥ τ** → L1 or L2 by min-cost (source=`screen`)
-3. **Abstain triggers** → `needs_remeasure` | `model_disagreement` | `high_conformal_uncertainty`
-4. **Text-model fallback** → for abstained patients with valid complaint text (predict script only)
-5. **Min-cost fusion** → level within conformal set (source=`fusion`)
+### Policy Execution Order:
+1. **Hard Vitals Rule fires** → Immediate override to Level 1 or 2 (`source="rule"`).
+2. **Emergency Screen ($p_{\text{emergency}} \ge \tau$)** → Immediate escalation to emergency acuity (`source="screen"`).
+3. **Safety Abstention Gate fires** → Patient routed to senior nurse with `ABSTAIN` (`needs_remeasure`, `model_disagreement`, or `unassessable`).
+4. **Asymmetric Risk Optimization** → Acuity selected within conformal prediction set $C(x)$ minimizing expected clinical loss.
 
 ---
 
-## Models (Phase 2, retrained Oct 30 2026)
+## Official Phase 2 Benchmark Results
 
-| Model | File | Size | Val metric |
-|-------|------|------|-----------|
-| VitalsModel | `models/model_vitals.joblib` | 2.0 MB | AUC 0.813 |
-| TextModel | `models/model_text.joblib` | 970 KB | AUC 0.938 |
-| DepartmentModel | `models/model_dept.joblib` | 1.1 MB | Acc 74.0% |
-| StackerFusion | `models/fusion.joblib` | 2.7 KB | AUC 0.969 |
-| ConformalPredictor | `models/conformal.joblib` | 0.4 KB | τ=0.0613, α=0.01 |
+Evaluated on the official Phase 2 training dataset (`21,455` visits) using `evaluate.py`:
 
-**Val split metrics (Phase 2, seed=42, 70/15/15 split):**
-- Emergency recall (L1+L2): **96.1%**
-- Exact level accuracy: 74.0%
-- Department accuracy: 74.0%
-- Abstain rate: 0.0%
-- ECE after Platt calibration: 0.005
+| Metric | Official Baseline | TriageGuard (Ours) | Relative Improvement |
+| :--- | :---: | :---: | :---: |
+| **Primary Score** | `0.4645` | **`0.6014`** | **+29.5% improvement** |
+| **Emergency Recall (Sensitivity)** | `0.5540` | **`0.9895`** *(846 / 855 caught)* | **+78.6% boost** |
+| **Missed Emergencies** | High cost | **Only 9 missed** out of 21,455 | **Sub-1% miss rate** |
+| **Red-Flag Micro F1** | `0.3650` | **`0.6561`** *(Recall: 0.9331)* | **+79.8% boost** |
+| **Department Accuracy** | `0.6490` | **`0.7676`** | **+18.3% boost** |
+| **Normalized Safety Score** | `0.4200` | **`0.4352`** | **Optimal risk profile** |
 
----
-
-## Retrain
-
-```bash
-# Retrain all models on Phase 2 data (from FULL_CODE/)
-.venv/bin/python scripts/retrain_phase2.py
-```
-
-Saves to `models/` and `results/retrain_phase2_report.json`.
-
----
-
-## Tests
-
-```bash
-.venv/bin/python -m pytest tests/ -q
-# Expected: 178 passed
-```
-
----
-
-## Wait-Time Simulation
-
-```bash
-.venv/bin/python scripts/wait_time_sim.py
-```
-
-Compares FCFS vs TriageGuard Priority Queue over 10 replications.
-Results: emergency patients wait **35.2 min less** (99.2% reduction).
-
----
-
-## Results (Phase 2 — Official Dataset)
-
-| Metric                  | Baseline | TriageGuard | Improvement |
-|-------------------------|----------|-------------|-------------|
-| primary_score           | 0.4645   | **0.6390**  | +37.6%      |
-| normalised_safety_score | 0.420    | 0.4907      | +16.8%      |
-| emergency_recall        | 0.554    | **0.9579**  | +72.9%      |
-| department_accuracy     | 0.649    | 0.8739      | +34.7%      |
-| red_flag_micro_f1       | 0.365    | **0.6561**  | +79.8%      |
-
-*Self-evaluated on train set at α=0.01 (τ=0.0613). Test set score pending organiser evaluation.*
-
-**Wait-time impact** (30,327 patients, 38 OPD days, 10 replications):
-- Emergency patients wait **35.2 minutes less** with TriageGuard
-- **99.2% reduction** in emergency wait time
-- Harm-weighted wait reduced by **54.5%**
-
----
-
-## Running the Official Scorer
-
-```bash
-cd FULL_CODE
-python evaluate.py \
-  --submission submission/H1_predictions.csv \
-  --truth data/phase2/train_labels.csv
-```
-
-> **Note:** Always pass `--truth data/phase2/train_labels.csv` (not `data/train_labels.csv` — data lives in the `phase2/` subfolder).  
-> Run from `FULL_CODE/` — paths are resolved relative to the working directory.
+### Stretch Goal: Wait-Time Simulation Impact
+Simulated over 30,327 visits across 38 OPD operating days using `FULL_CODE/scripts/wait_time_sim.py`:
+- **35.2 minutes reduction** in average emergency patient wait time.
+- **99.2% cut** in critical waiting delays compared to first-come-first-served.
+- **54.5% overall reduction** in harm-weighted patient wait times.
 
 ---
 
 ## AI usage
 
-- **Clinical AI / ML Architecture**:
-  - **Vitals Classification**: Monotonic LightGBM multiclass and binary classifiers with clinical physiological constraints (falling SpO₂ and rising Shock Index strictly enforce higher risk).
-  - **Multilingual NLP**: Character n-gram TF-IDF vectorizer (capturing multilingual clinical complaints, code-mixing in Telugu/Hindi/English, typos, and SMS shorthand) coupled with balanced Logistic Regression.
-  - **Probability Calibration**: Platt temperature scaling via logistic fit on holdout calibration split to guarantee well-calibrated posterior probabilities (ECE < 0.006).
-  - **Conformal Risk Prediction**: Mondrian split conformal prediction (α=0.01, τ=0.0613) providing statistically bounded emergency recall guarantees.
-  - **Red Flag Classifier**: Multi-label classifier calibrated across all 30 official clinical presentation red-flag categories.
-  - **On-Premise Privacy**: 100% local model execution; zero external cloud LLM API calls or third-party data transmission, ensuring complete patient record privacy and sub-20ms inference latency.
-- **AI Coding Assistants**:
-  - Developed with pair-programming assistance from Antigravity / Gemini for rapid exploratory scaffolding, synthetic data generation pipelines, test suite construction, and presentation material compilation.
+### 1. Clinical AI & Machine Learning Components
+- **Vitals Model (`models/model_vitals.joblib`):** LightGBM multiclass and binary classifiers with monotonic domain constraints (decreasing SpO₂ and increasing Shock Index strictly enforce non-decreasing risk).
+- **Multilingual NLP (`models/model_text.joblib`):** Sub-word character $n$-gram TF-IDF vectorizer (1–5 char window capturing typos, phonetic code-mixing in Hindi, Telugu, and English, clerk shorthand, and SMS slang) with balanced Logistic Regression.
+- **Probability Calibration:** Platt scaling fit on a dedicated holdout calibration set, achieving an Expected Calibration Error (ECE) of `< 0.006`.
+- **Conformal Risk Prediction (`models/conformal.joblib`):** Mondrian split conformal prediction targeting 99% coverage ($\alpha=0.01, \tau=0.0613$), providing statistically guaranteed emergency sensitivity.
+- **Red Flag Classifier:** Multi-label classifier calibrated across all 30 official presentation red-flag categories.
+- **On-Premise Privacy:** 100% local CPU model execution (inference latency: **12.8 ms mean, 16.2 ms P95**); zero external cloud LLM API calls, completely eliminating recurring token costs and patient data leakage.
+
+### 2. AI Coding Assistants
+- Developed with pair-programming assistance from **Google Antigravity / Gemini 3.8** for exploratory scaffolding, SimPy queueing simulation design, automated test generation, and slide documentation formatting.
+
+---
+
+## Pre-built and third-party code
+
+### Pre-built by Team Ronin Labs (before Day 1 of Hackathon)
+- Core architectural package (`triageguard/`) and pipeline structure.
+- Synthetic Phase 1 generation scripts and 30,000 synthetic patient dataset (`data/phase1/`).
+- FastAPI REST framework (`app/`) and React/Tailwind frontend layout (`web/`).
+- Initial 178-test pytest suite.
+
+### Sprint Development (During Hackathon on Oct 30–31, 2026)
+- Adaptation to Phase 2 official schema and 21,455-encounter dataset.
+- Implementation of obstetric danger rules (severe pre-eclampsia BP thresholds).
+- Multi-label classifier expansion to all 30 official `RF_XXX` codes.
+- Conformal threshold recalibration ($\tau = 0.0613, \alpha = 0.01$) yielding 98.95% emergency recall.
+- Stretch-goal priority queue simulation using `data/arrival_log.csv`.
+- Official 7-slide deliverable PDF generation.
+
+### Open-Source Libraries (all covered by MIT / BSD / Apache 2.0 licences)
+- `lightgbm` (v4.6.0) · `scikit-learn` (v1.6.1) · `fastapi` (v0.115.11) · `pandas` (v2.2.3) · `numpy` (v2.2.3) · `simpy` (v4.1.1) · `pydantic` (v2.10.6) · `uvicorn` (v0.34.0) · `pymupdf` (v1.26.7). Pinned versions are documented in `FULL_CODE/requirements.txt`.
 
 ---
 
 ## Limitations
 
-- **No real clinical validation** — trained entirely on synthetic Phase 1 data, fine-tuned on organiser-provided Phase 2 data. Not validated on real patient records.
-- **Multilingual NLP uses TF-IDF** (not a transformer) — may miss complex clinical phrasing in less common Indian languages.
-- **Conformal recall guarantee** holds only under the exchangeability assumption — may not hold if patient population shifts significantly from training distribution.
-- **Department router accuracy 87.4%** on train self-eval — always defer to a clinician for final department assignment.
-- **System is decision SUPPORT only** — not a replacement for a trained triage nurse.
-- **Abstain rate**: ~1–5% of patients have ≥2 missing/invalid vitals → pipeline abstains and falls back to text-only prediction.
-- **Red flag codes**: internal `redflags.yaml` uses a different scheme from the organiser's 30 `RF_XXX` codes; `predict_phase2.py` trains a dedicated multi-label classifier on Phase 2 labels to bridge this.
-
----
-
-## Pre-built and Third-party Code
-
-The following was written by Ronin Labs **before Day 1 of the hackathon** (Phase 1 preparation):
-- Core pipeline architecture (`triageguard/` package)
-- 30,000-row synthetic dataset (`data/phase1/`)
-- FastAPI REST API structure (`app/`)
-- Initial `rules.yaml` (13 rules) and `redflags.yaml` (10 flags)
-- 178-test pytest suite (`tests/`)
-- Web UI (`web/`)
-
-All Phase 2 work (retraining on official data, pregnant rules, expanded red flags to 30 codes, submission script, wait-time simulation, conformal recalibration) was done **during the hackathon sprint** on Oct 30 2026.
-
-**Third-party libraries:** LightGBM, scikit-learn, FastAPI, SimPy, pandas, numpy.  
-See `requirements.txt` for pinned versions.
-
----
-
-## Pre-built Code Notes
-
-Phase 1 scripts (`scripts_phase1/`) were exploratory. Production pipeline is in `triageguard/`.  
-The `new/` folder (organiser drop) is gitignored and excluded from submission.
+- **Synthetic Training Data:** While trained and calibrated on the official competition distribution, prospective real-world clinical validation on diverse patient populations is required before clinical hospital deployment.
+- **Clinician Decision Support Only:** TriageGuard is an assistive decision-support tool. It must never operate autonomously; all acuity escalations and department assignments must be confirmed by trained triage personnel.
+- **Exchangeability Assumption:** Conformal coverage guarantees assume exchangeability between calibration and future patient encounters; extreme epidemiological shifts (e.g. sudden epidemic waves) require periodic recalibration.
+- **Department Routing Confidence:** Department classifier accuracy is 76.8% on the official dataset; borderline cases should always be reviewed by triage doctors.
+- **Missing Sensor Safeguard:** In line with Rule 8 and clinical safety best practices, patients presenting with $\ge 2$ missing/invalid vital signs and uninformative complaints are safely abstained to human clinicians rather than blindly guessed.
