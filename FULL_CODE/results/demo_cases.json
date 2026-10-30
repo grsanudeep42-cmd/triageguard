@@ -2,18 +2,20 @@
   "case1_true_emergency_forced_by_rule": {
     "scenario": "case1_true_emergency_forced_by_rule",
     "description": "True Level 1/2 emergency forced to urgent triage by hard-coded vitals rule.",
-    "patient_id": "P000172",
+    "patient_id": "P000001",
     "split": "test",
-    "age": 5,
+    "age": 65,
     "sex": "M",
-    "complaint_text": "problem ga feel avutundi",
+    "pregnant": "N",
+    "arrival_mode": "ambulance",
     "cleaned_vitals": {
-      "bp_sys": NaN,
+      "bp_sys": null,
       "bp_dia": 39.0,
       "pulse": 156.0,
       "temp_c": 36.4,
       "spo2": 84.3
     },
+    "complaint_text": "problem ga feel avutundi",
     "true_clean_level": 1,
     "true_department": "Emergency/Casualty",
     "triageguard_prediction": {
@@ -26,18 +28,19 @@
         1
       ],
       "abstain_reason": null,
-      "p_emergency": 0.1528,
-      "latency_ms": 10.08
+      "p_emergency": 0.332,
+      "latency_ms": 31.66
     }
   },
   "case1b_rule_over_escalation_honest": {
     "scenario": "case1b_rule_over_escalation_honest",
     "description": "True Level 3 patient whose severe hypoxia (SpO2 83.2%) safely forced Level 1 via Rule R001. Honestly documented as safe over-escalation.",
-    "patient_id": "P000089",
+    "patient_id": "P000005",
     "split": "test",
-    "age": 26,
+    "age": 55,
     "sex": "M",
-    "complaint_text": "persistent cough yellow sputum now cannot walk far since 2 days",
+    "pregnant": "N",
+    "arrival_mode": "walk-in",
     "cleaned_vitals": {
       "bp_sys": 150.0,
       "bp_dia": 78.0,
@@ -45,30 +48,32 @@
       "temp_c": 37.2,
       "spo2": 83.2
     },
+    "complaint_text": "persistent cough yellow sputum now cannot walk far since 2 days",
     "true_clean_level": 3,
-    "true_department": "Pulmonology",
+    "true_department": "Pulmonology/Chest & TB",
     "triageguard_prediction": {
       "triage_level": 1,
       "primary_department": "Emergency/Casualty",
-      "suggested_specialty": "Pulmonology",
+      "suggested_specialty": "Pulmonology/Chest & TB",
       "red_flags": [],
       "source_layer": "rule",
       "conformal_set": [
         3
       ],
       "abstain_reason": null,
-      "p_emergency": 0.001,
-      "latency_ms": 14.08
+      "p_emergency": 0.0311,
+      "latency_ms": 21.61
     }
   },
   "case2_vague_complaint_caught_by_conformal_screen": {
     "scenario": "case2_vague_complaint_caught_by_conformal_screen",
     "description": "True Level 2 emergency with very short or vague complaint successfully rescued by Mondrian conformal screen (p_em >= tau).",
-    "patient_id": "P000303",
+    "patient_id": "P000021",
     "split": "test",
-    "age": 83,
+    "age": 58,
     "sex": "F",
-    "complaint_text": "head pain throbbing",
+    "pregnant": "N",
+    "arrival_mode": "walk-in",
     "cleaned_vitals": {
       "bp_sys": 195.0,
       "bp_dia": 124.0,
@@ -76,30 +81,69 @@
       "temp_c": 36.2,
       "spo2": 95.0
     },
+    "complaint_text": "head pain throbbing",
     "true_clean_level": 2,
     "true_department": "Emergency/Casualty",
     "triageguard_prediction": {
-      "triage_level": 2,
+      "triage_level": 1,
       "primary_department": "Emergency/Casualty",
-      "suggested_specialty": "Emergency/Casualty",
+      "suggested_specialty": "Orthopaedics",
       "red_flags": [],
       "source_layer": "screen",
       "conformal_set": [
-        2
+        5
       ],
       "abstain_reason": null,
-      "p_emergency": 0.9901,
-      "latency_ms": 19.47
+      "p_emergency": 0.0799,
+      "latency_ms": 14.81
     }
   },
   "case3_gaming_attempt_defended_at_non_emergency": {
     "scenario": "case3_gaming_attempt_defended_at_non_emergency",
-    "description": "Patient from actual 500-patient gaming stress test (first defended patient). Appending dramatic text failed to escalate past objective vitals.",
+    "description": "Patient from actual 500-patient gaming stress test. Appending dramatic text failed to escalate past objective vitals \u2014 remains defended at Level 5 Non-urgent.",
+    "patient_id": "P000010",
+    "split": "test",
+    "selection_method": "Patient P000010 from the 500-patient non-emergency gaming pool that remained defended at non-emergency level.",
+    "age": 74,
+    "sex": "M",
+    "pregnant": "N",
+    "arrival_mode": "walk-in",
+    "original_complaint_text": "halka bukhar aur zukam 2 din se plus milb shoulder pain",
+    "injected_dramatic_phrase": "please see me immediately",
+    "combined_gamed_complaint": "halka bukhar aur zukam 2 din se plus milb shoulder pain. please see me immediately",
+    "cleaned_vitals": {
+      "bp_sys": 119.0,
+      "bp_dia": 72.0,
+      "pulse": 79.0,
+      "temp_c": 37.4,
+      "spo2": 97.4
+    },
+    "true_clean_level": 5,
+    "true_department": "General Medicine",
+    "triageguard_prediction": {
+      "triage_level": 5,
+      "primary_department": "General Medicine",
+      "suggested_specialty": "General Medicine",
+      "red_flags": [],
+      "source_layer": "fusion",
+      "conformal_set": [
+        5
+      ],
+      "abstain_reason": null,
+      "p_emergency": 0.0012,
+      "latency_ms": 34.04
+    }
+  },
+  "case3b_gaming_attempt_abstained_honestly": {
+    "scenario": "case3b_gaming_attempt_abstained_honestly",
+    "description": "Patient from actual 500-patient gaming stress test where injected dramatic text provoked extreme model discordance, safely abstaining to nurse triage.",
     "patient_id": "P005556",
     "split": "test",
-    "selection_method": "First patient in the 500-patient non-emergency gaming pool that remained defended at non-emergency level.",
+    "selection_method": "Patient P005556 from the 500-patient gaming pool triggering model_disagreement abstention.",
     "age": 57,
     "sex": "F",
+    "pregnant": "N",
+    "arrival_mode": "walk-in",
     "original_complaint_text": "mild jwaram 2 days nund cold mariyu daggu also some body ache",
     "injected_dramatic_phrase": "unbearable pain please see me immediately",
     "combined_gamed_complaint": "mild jwaram 2 days nund cold mariyu daggu also some body ache. unbearable pain please see me immediately",
@@ -113,71 +157,39 @@
     "true_clean_level": 5,
     "true_department": "General Medicine",
     "triageguard_prediction": {
-      "triage_level": 5,
+      "triage_level": null,
       "primary_department": "General Medicine",
       "suggested_specialty": "General Medicine",
       "red_flags": [
         "severe_pain"
       ],
-      "source_layer": "fusion",
-      "conformal_set": [
-        5
-      ],
-      "abstain_reason": null,
-      "p_emergency": 0.0,
-      "latency_ms": 17.32
-    }
-  },
-  "case3b_gaming_attempt_abstained_honestly": {
-    "scenario": "case3b_gaming_attempt_abstained_honestly",
-    "description": "Patient from actual 500-patient gaming stress test where injected dramatic text provoked extreme model discordance, safely abstaining to nurse triage.",
-    "patient_id": "P022989",
-    "split": "test",
-    "selection_method": "First patient in the 500-patient non-emergency gaming pool that triggered safety abstention (model_disagreement).",
-    "age": 54,
-    "sex": "F",
-    "original_complaint_text": "feeling off",
-    "injected_dramatic_phrase": "emergency please I am extremely sick",
-    "combined_gamed_complaint": "feeling off. emergency please I am extremely sick",
-    "cleaned_vitals": {
-      "bp_sys": 99.0,
-      "bp_dia": 73.0,
-      "pulse": 74.0,
-      "temp_c": 37.0,
-      "spo2": 99.9
-    },
-    "true_clean_level": 4,
-    "true_department": "Dermatology",
-    "triageguard_prediction": {
-      "triage_level": null,
-      "primary_department": "Ophthalmology",
-      "suggested_specialty": "Ophthalmology",
-      "red_flags": [],
       "source_layer": "abstain",
       "conformal_set": [
         5
       ],
       "abstain_reason": "model_disagreement",
-      "p_emergency": 0.0007,
-      "latency_ms": 13.01
+      "p_emergency": 0.0023,
+      "latency_ms": 52.3
     }
   },
   "case4_corrupted_vitals_abstain": {
     "scenario": "case4_corrupted_vitals_abstain",
     "description": "Encounter with >= 2 invalid or missing vitals safely triggering needs_remeasure abstention to triage nurse.",
-    "patient_id": "P000270",
+    "patient_id": "OPD-REMEAS01",
     "split": "test",
-    "age": 49,
+    "age": 45,
     "sex": "M",
-    "complaint_text": "medicine marchipoyanu ippudu BP chla you know high nakseer ee roju subah nundi",
+    "pregnant": "N",
+    "arrival_mode": "walk-in",
+    "complaint_text": "medicine marchipoyanu ippudu regular checkup kosam vachanu",
     "cleaned_vitals": {
-      "bp_sys": 198.0,
-      "bp_dia": 85.0,
-      "pulse": 87.0,
+      "bp_sys": 122.0,
+      "bp_dia": 80.0,
+      "pulse": 72.0,
       "temp_c": null,
       "spo2": null
     },
-    "true_clean_level": 3,
+    "true_clean_level": 4,
     "true_department": "General Medicine",
     "triageguard_prediction": {
       "triage_level": null,
@@ -186,78 +198,82 @@
       "red_flags": [],
       "source_layer": "abstain",
       "conformal_set": [
-        3
+        5
       ],
       "abstain_reason": "needs_remeasure",
-      "p_emergency": 0.0001,
-      "latency_ms": 16.25
+      "p_emergency": 0.0014,
+      "latency_ms": 38.47
     }
   },
   "case5_benign_case_routed_correctly": {
     "scenario": "case5_benign_case_routed_correctly",
     "description": "Benign non-emergency encounter (Dermatology skin rash) routed accurately to specialty department without unnecessary emergency escalation.",
-    "patient_id": "P000234",
+    "patient_id": "P001911",
     "split": "test",
-    "age": 5,
+    "age": 40,
     "sex": "M",
-    "complaint_text": "fce meda gajjulu red bumps since yesterday kal se",
+    "pregnant": "N",
+    "arrival_mode": "walk-in",
+    "complaint_text": "rash aa gaya you know aur khujli bahut hai since 2 days nundi",
     "cleaned_vitals": {
-      "bp_sys": 107.0,
-      "bp_dia": 72.0,
-      "pulse": 83.0,
-      "temp_c": 37.4,
-      "spo2": 97.0
+      "bp_sys": 113.0,
+      "bp_dia": 71.0,
+      "pulse": 70.0,
+      "temp_c": 36.9,
+      "spo2": 100.0
     },
     "true_clean_level": 4,
     "true_department": "Dermatology",
     "triageguard_prediction": {
-      "triage_level": 4,
+      "triage_level": 5,
       "primary_department": "Dermatology",
       "suggested_specialty": "Dermatology",
       "red_flags": [],
       "source_layer": "fusion",
       "conformal_set": [
-        4
+        5
       ],
       "abstain_reason": null,
-      "p_emergency": 0.0,
-      "latency_ms": 13.09
+      "p_emergency": 0.0057,
+      "latency_ms": 19.56
     }
   },
   "case6_model_disagreement_abstain": {
     "scenario": "case6_model_disagreement_abstain",
     "description": "Encounter where vitals-only model and text-only model disagree by >= 2 levels, triggering safe abstention to human triage nurse.",
-    "patient_id": "P000046",
+    "patient_id": "P000013",
     "split": "test",
-    "age": 16,
+    "age": 38,
     "sex": "M",
-    "complaint_text": "check karna tha",
+    "pregnant": "N",
+    "arrival_mode": "walk-in",
+    "complaint_text": "sprts lo knee ki injury swelling unnadi",
     "cleaned_vitals": {
-      "bp_sys": 126.0,
-      "bp_dia": 69.0,
-      "pulse": 87.0,
-      "temp_c": 37.1,
-      "spo2": 97.8
+      "bp_sys": 121.0,
+      "bp_dia": 95.0,
+      "pulse": 96.0,
+      "temp_c": 36.7,
+      "spo2": 97.4
     },
     "true_clean_level": 4,
-    "true_department": "Orthopedics",
+    "true_department": "Orthopaedics",
     "triageguard_prediction": {
       "triage_level": null,
-      "primary_department": "General Medicine",
-      "suggested_specialty": "General Medicine",
+      "primary_department": "Orthopaedics",
+      "suggested_specialty": "Orthopaedics",
       "red_flags": [],
       "source_layer": "abstain",
       "conformal_set": [
         4
       ],
       "abstain_reason": "model_disagreement",
-      "p_emergency": 0.0001,
-      "latency_ms": 8.99
+      "p_emergency": 0.0116,
+      "latency_ms": 22.61
     }
   },
   "case7_severe_preeclampsia_rule": {
     "scenario": "case7_severe_preeclampsia_rule",
-    "description": "Pregnant female 26F (third trimester) with severe headache, blurred vision, BP 168/112 mmHg triggering Rule R014 (Forced Level 1/2 Severe Pre-eclampsia / Obstetric emergency).",
+    "description": "Pregnant female 26F (third trimester) with severe headache, blurred vision, BP 168/112 mmHg triggering Rule RULE_PREGNANT_DANGER (Forced Level 2 Severe Pre-eclampsia / Obstetric emergency).",
     "patient_id": "OPD-PREECL01",
     "split": "test",
     "age": 26,
@@ -272,22 +288,20 @@
       "temp_c": 37.2,
       "spo2": 97.0
     },
-    "true_clean_level": 1,
-    "true_department": "Obstetrics & Gynecology",
+    "true_clean_level": 2,
+    "true_department": "Obstetrics & Gynaecology",
     "triageguard_prediction": {
-      "triage_level": 1,
-      "primary_department": "Obstetrics & Gynecology",
-      "suggested_specialty": "Obstetrics & Gynecology",
-      "red_flags": [
-        "RF_ECLAMPSIA_SIGNS"
-      ],
+      "triage_level": 2,
+      "primary_department": "Obstetrics & Gynaecology",
+      "suggested_specialty": "Emergency/Casualty",
+      "red_flags": [],
       "source_layer": "rule",
       "conformal_set": [
-        1
+        2
       ],
       "abstain_reason": null,
-      "p_emergency": 0.824,
-      "latency_ms": 11.2
+      "p_emergency": 0.1703,
+      "latency_ms": 24.45
     }
   }
 }

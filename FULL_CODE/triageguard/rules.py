@@ -405,6 +405,7 @@ def apply_rules(
     age: int = 0,
     rules_config: Optional[Dict] = None,
     redflags_config: Optional[Dict] = None,
+    pregnant: Optional[str] = None,
 ) -> RuleResult:
     """
     Evaluate all escalation rules (FORCED) and red-flag text patterns (SOFT).
@@ -417,6 +418,7 @@ def apply_rules(
     age             : patient age in years (overridden by dict["age"] if present)
     rules_config    : parsed rules.yaml (loaded automatically if None)
     redflags_config : parsed redflags.yaml (loaded automatically if None)
+    pregnant        : pregnancy status ("Y", "N", "unknown")
 
     Returns
     -------
@@ -449,10 +451,10 @@ def apply_rules(
             complaint_text = str(d.get("complaint_text", d.get("chief_complaint", ""))),
             needs_remeasure = False,
         )
-        pregnant_val: str = str(d.get("pregnant", "unknown"))
+        pregnant_val: str = str(pregnant if pregnant is not None else d.get("pregnant", "unknown"))
     else:
         cr = cleaned
-        pregnant_val = "unknown"
+        pregnant_val = str(pregnant if pregnant is not None else getattr(cleaned, "pregnant", "unknown"))
 
     triggered_ids      : List[str]    = []
     reasons            : List[str]    = []

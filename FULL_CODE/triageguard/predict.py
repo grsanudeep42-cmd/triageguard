@@ -139,7 +139,8 @@ class TriagePipeline:
         warnings = list(cr.warnings)
 
         # ── 2. Phase 3 Rules Layer (FORCED vitals rules + SOFT red flags) ──────
-        rr = apply_rules(cr, age=age)
+        pregnant = str(raw_record.get("pregnant", "unknown") or "unknown")
+        rr = apply_rules(cr, age=age, pregnant=pregnant)
         red_flags = list(rr.red_flags_detected)
 
         # ── 3. Base Models Evaluation ─────────────────────────────────────────
@@ -238,7 +239,9 @@ class TriagePipeline:
             source_layer = "fusion"
 
         # Primary department assignment
-        if final_level is not None and final_level in (1, 2):
+        if rr.forced_level is not None and rr.rule_id in ("RULE_PREGNANT_DANGER", "RULE_PREGNANT_AMBER"):
+            primary_dept = "Obstetrics & Gynaecology"
+        elif final_level is not None and final_level in (1, 2):
             primary_dept = "Emergency/Casualty"
         else:
             primary_dept = suggested_specialty

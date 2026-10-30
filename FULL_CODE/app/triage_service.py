@@ -101,7 +101,7 @@ class TriageService:
             name = desc.split("—")[0].split(":")[0].strip() or rule.get("name", rid)
             
             # Format custom condition detail
-            conds = rule.get("conditions", {})
+            conds = rule.get("conditions") or rule.get("pregnant_conditions") or {}
             cond_strs = []
             for k, val in conds.items():
                 if k == "spo2_lt":
@@ -110,6 +110,12 @@ class TriageService:
                 elif k == "bp_sys_lt":
                     actual = f"{cr.bp_sys:.0f}" if cr.bp_sys is not None else "missing"
                     cond_strs.append(f"Systolic BP {actual} is below {val} mmHg")
+                elif k == "bp_sys_ge":
+                    actual = f"{cr.bp_sys:.0f}" if cr.bp_sys is not None else "missing"
+                    cond_strs.append(f"Systolic BP {actual} is ≥ {val} mmHg")
+                elif k == "bp_dia_ge":
+                    actual = f"{cr.bp_dia:.0f}" if cr.bp_dia is not None else "missing"
+                    cond_strs.append(f"Diastolic BP {actual} is ≥ {val} mmHg")
                 elif k == "pulse_gt":
                     actual = f"{cr.pulse:.0f}" if cr.pulse is not None else "missing"
                     cond_strs.append(f"Pulse {actual} is above {val} bpm")
@@ -214,7 +220,7 @@ class TriageService:
         age = int(raw_record["age"])
 
         # 2. Evaluate rules
-        rr = apply_rules(cr, age=age)
+        rr = apply_rules(cr, age=age, pregnant=raw_record.get("pregnant", "N"))
 
         # 3. Two models top-1 levels
         single_df = pd.DataFrame([{

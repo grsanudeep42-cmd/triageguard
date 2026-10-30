@@ -18,8 +18,9 @@ router = APIRouter(prefix="/api", tags=["api"])
 # Module-level cached seed queue
 _cached_seed_queue: Optional[List[Dict[str, Any]]] = None
 
-# Path to the static impact stats file (relative to FULL_CODE/)
+# Path to static files (relative to app/)
 _IMPACT_STATS_PATH = Path(__file__).resolve().parent / "static" / "impact_stats.json"
+_STATIC_SEED_PATH = Path(__file__).resolve().parent / "static" / "seed_queue.json"
 
 
 @router.get("/impact")
@@ -251,6 +252,16 @@ def get_seed_queue(request: Request) -> List[Dict[str, Any]]:
     global _cached_seed_queue
     if _cached_seed_queue is not None:
         return _cached_seed_queue
+
+    # Guaranteed fallback: Load pre-generated high-fidelity seed queue from static asset
+    if _STATIC_SEED_PATH.exists():
+        try:
+            with open(_STATIC_SEED_PATH, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                _cached_seed_queue = data
+                return data
+        except Exception:
+            pass
 
     service = get_triage_service(request)
     splits_path = Path("data/phase1/splits.csv")
