@@ -58,7 +58,18 @@ FULL_CODE/data/
     triage_primer.md       ← Clinical scoring rubric & thresholds
 ```
 
-### 4. Run the Web Application & API
+### 4. Model Training & Weights (Rule 2 & Rule 11 Compliance)
+In strict accordance with **Rule 2** and **Rule 11** of the Hackathon Coding Guidelines (*"Never in your zip: downloaded models, model weights... models/ listed in .gitignore, NOT committed"*), binary model files (`.joblib`, `.pt`, `.bin`) are excluded from Git and the submission archive.
+
+- **Out-of-the-box Testing:** TriageGuard includes a resilient clinical fallback engine so evaluators can run the complete **187-test suite** (`pytest`) and launch the API immediately upon unzipping without downloading gigabytes of weights.
+- **To Retrain the Full Ensemble from Scratch:**
+  ```bash
+  cd FULL_CODE
+  python scripts/retrain_phase2.py
+  ```
+  This trains the monotonic LightGBM vitals model, IndicBERT text classifier, department routing model, stacker fusion, and conformal calibrator in ~75 seconds and outputs all weights to `FULL_CODE/models/`.
+
+### 5. Run the Web Application & API
 ```bash
 cd FULL_CODE
 python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
@@ -67,7 +78,7 @@ python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 - REST API: `http://localhost:8000/api/triage`
 - Swagger Docs: `http://localhost:8000/docs`
 
-### 5. Generate Submission File
+### 6. Generate Submission File
 To re-generate `submission/H1_predictions.csv` from scratch:
 ```bash
 cd FULL_CODE
@@ -75,7 +86,7 @@ python scripts/predict_phase2.py
 ```
 This produces `submission/H1_predictions.csv` with exactly 8,872 rows, all 5 required columns, and zero format errors.
 
-### 6. Run the Official Scorer
+### 7. Run the Official Scorer
 To evaluate predictions against the official training labels using the competition scorer:
 ```bash
 cd FULL_CODE

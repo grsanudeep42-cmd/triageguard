@@ -1,41 +1,45 @@
-# ── Python ────────────────────────────────────────────────────────────────────
+# ── Virtual Environments & Dependencies (Rule 2) ───────────────────────────
+.venv
 .venv/
 FULL_CODE/.venv/
 FULL_CODE/venv/
+node_modules/
+web/node_modules/
+FULL_CODE/web/node_modules/
 __pycache__/
 *.pyc
 *.pyo
 .pytest_cache/
 FULL_CODE/.pytest_cache/
 
-# ── Frontend ──────────────────────────────────────────────────────────────────
-web/node_modules/
-FULL_CODE/web/node_modules/
+# ── Secrets (Rule 3) ──────────────────────────────────────────────────────────
+.env
+*.env
 
-# ── Models (not committed — see README for how to regenerate) ─────────────────
+# ── Data (Rule 2 & Rule 11) ───────────────────────────────────────────────────
+data/
+data/*
+FULL_CODE/data/
+FULL_CODE/data/*
+
+# ── Models & Binary Weights (Rule 2 & Rule 11) ────────────────────────────────
+models/
+models/*
+FULL_CODE/models/
+FULL_CODE/models/*
+*.joblib
 *.pkl
 *.bin
 *.pt
 *.h5
 *.onnx
 *.npy
-models/kokoro/
-models/piper/
-FULL_CODE/models/kokoro/
-FULL_CODE/models/piper/
+*.safetensors
 
-# ── Data (not committed — see README for where to place data files) ───────────
-data/*.csv
-data/*.parquet
-FULL_CODE/data/phase1/
-FULL_CODE/data/phase2/
-
-# ── Secrets ───────────────────────────────────────────────────────────────────
-.env
-*.env
-
-# ── OS ────────────────────────────────────────────────────────────────────────
+# ── OS & Temp Artifacts ───────────────────────────────────────────────────────
 .DS_Store
+*.swp
+*~
 
-# ── Phase 2 organiser drop — NOT our code, not submitted ─────────────────────
+# ── Phase 2 Organiser Drop (Not Submitted) ───────────────────────────────────
 new/
