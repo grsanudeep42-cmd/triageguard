@@ -1,0 +1,124 @@
+@import "@fontsource/public-sans/400.css";
+@import "@fontsource/public-sans/500.css";
+@import "@fontsource/public-sans/600.css";
+@import "@fontsource/public-sans/800.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-paper: #F1F4F3;
+  --color-surface: #FFFFFF;
+  --color-line: #D9E0DF;
+  --color-line-strong: #BCC7C6;
+  --color-ink: #12202B;
+  --color-ink-2: #43535F;
+  --color-ink-3: #6B7B86;
+  --color-brand: #1B3A57;
+  --color-brand-hover: #142E47;
+  --color-brand-tint: #E4ECF3;
+
+  /* Triage (solid / tint / border / text-on-tint) */
+  --color-l1-solid: #B91C1C;
+  --color-l1-tint: #FEE2E2;
+  --color-l1-border: #FCA5A5;
+  --color-l1-text: #7F1D1D;
+
+  --color-l2-solid: #C2410C;
+  --color-l2-tint: #FFEDD5;
+  --color-l2-border: #FDBA74;
+  --color-l2-text: #7C2D12;
+
+  --color-l3-solid: #A16207;
+  --color-l3-tint: #FEF3C7;
+  --color-l3-border: #FCD34D;
+  --color-l3-text: #713F12;
+
+  --color-l4-solid: #15803D;
+  --color-l4-tint: #DCFCE7;
+  --color-l4-border: #86EFAC;
+  --color-l4-text: #14532D;
+
+  --color-l5-solid: #1D4ED8;
+  --color-l5-tint: #DBEAFE;
+  --color-l5-border: #93C5FD;
+  --color-l5-text: #1E3A8A;
+
+  --color-nurse-solid: #6D28D9;
+  --color-nurse-tint: #EDE9FE;
+  --color-nurse-border: #C4B5FD;
+  --color-nurse-text: #4C1D95;
+
+  /* Vital status */
+  --color-vital-normal: #2E7D5B;
+  --color-vital-abnormal: #B45309;
+  --color-vital-critical: #B91C1C;
+  --color-vital-invalid: #6D28D9;
+}
+
+body {
+  margin: 0;
+  font-family: "Public Sans", system-ui, -apple-system, sans-serif;
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Tabular numbers everywhere numbers are displayed */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Interactive element focus ring: 2px brand ring with 2px offset */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-brand);
+}
+
+/* Orchestrated result arrival animation */
+@keyframes verdictSettle {
+  0% {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-verdict {
+  animation: verdictSettle 180ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Pipeline stage staged reveal (60ms apart) */
+.stage-delay-1 {
+  animation-delay: 60ms;
+}
+.stage-delay-2 {
+  animation-delay: 120ms;
+}
+.stage-delay-3 {
+  animation-delay: 180ms;
+}
+.stage-delay-4 {
+  animation-delay: 240ms;
+}
+
+/* prefers-reduced-motion completely disables animations */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
