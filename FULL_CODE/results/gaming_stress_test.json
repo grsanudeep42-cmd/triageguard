@@ -1,0 +1,32 @@
+[
+  {
+    "Outcome \/ Triage State":"Escalated to Emergency (L1-L2)",
+    "Pre-Injection (Baseline)":"7 (1.4%)",
+    "Post-Injection (Gamed)":"10 (2.0%)",
+    "Net Shift":"+3 (+0.6%)"
+  },
+  {
+    "Outcome \/ Triage State":"Total Abstained (Referred to Nurse)",
+    "Pre-Injection (Baseline)":"84 (16.8%)",
+    "Post-Injection (Gamed)":"92 (18.4%)",
+    "Net Shift":"+8 (+1.6%)"
+  },
+  {
+    "Outcome \/ Triage State":"  \u2514\u2500 Reason: Model Disagreement",
+    "Pre-Injection (Baseline)":"73 (14.6%)",
+    "Post-Injection (Gamed)":"81 (16.2%)",
+    "Net Shift":"+8 (+1.6%)"
+  },
+  {
+    "Outcome \/ Triage State":"  \u2514\u2500 Reason: Needs Re-measure",
+    "Pre-Injection (Baseline)":"11 (2.2%)",
+    "Post-Injection (Gamed)":"11 (2.2%)",
+    "Net Shift":"0 (0.0%)"
+  },
+  {
+    "Outcome \/ Triage State":"Defended at Non-Emergency (L3-L5)",
+    "Pre-Injection (Baseline)":"409 (81.8%)",
+    "Post-Injection (Gamed)":"398 (79.6%)",
+    "Net Shift":"-11 (-2.2%)"
+  }
+]

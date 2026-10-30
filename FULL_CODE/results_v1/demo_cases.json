@@ -1,0 +1,178 @@
+{
+  "case1_vitals_rule_forces_emergency": {
+    "scenario": "case1_vitals_rule_forces_emergency",
+    "patient_id": "P000089",
+    "age": 26,
+    "sex": "M",
+    "complaint_text": "persistent cough yellow sputum now cannot walk far since 2 days",
+    "cleaned_vitals": {
+      "bp_sys": 150.0,
+      "bp_dia": 78.0,
+      "pulse": 97.0,
+      "temp_c": 37.2,
+      "spo2": 83.2
+    },
+    "true_clean_level": 3,
+    "true_department": "Pulmonology",
+    "triageguard_prediction": {
+      "triage_level": 1,
+      "primary_department": "Emergency/Casualty",
+      "suggested_specialty": "Pulmonology",
+      "red_flags": [
+        "slurred_speech"
+      ],
+      "source_layer": "rule",
+      "conformal_set": [
+        3
+      ],
+      "abstain_reason": null,
+      "p_emergency": 0.0022,
+      "latency_ms": 15.98
+    }
+  },
+  "case2_hidden_emergency_conformal_screen": {
+    "scenario": "case2_hidden_emergency_conformal_screen",
+    "patient_id": "P001121",
+    "age": 28,
+    "sex": "F",
+    "complaint_text": "9 months pregnant high BP blurred vision aur peeth mein bhi thoda",
+    "cleaned_vitals": {
+      "bp_sys": 182.0,
+      "bp_dia": 93.0,
+      "pulse": 117.0,
+      "temp_c": 37.1,
+      "spo2": 100.0
+    },
+    "true_clean_level": 2,
+    "true_department": "Obstetrics & Gynecology",
+    "triageguard_prediction": {
+      "triage_level": 2,
+      "primary_department": "Emergency/Casualty",
+      "suggested_specialty": "Obstetrics & Gynecology",
+      "red_flags": [],
+      "source_layer": "screen",
+      "conformal_set": [
+        2
+      ],
+      "abstain_reason": null,
+      "p_emergency": 0.9953,
+      "latency_ms": 16.36
+    }
+  },
+  "case3_gaming_attempt_defended": {
+    "scenario": "case3_gaming_attempt_defended",
+    "patient_id": "P000001",
+    "age": 61,
+    "sex": "F",
+    "complaint_text": "kannulo noppi discharge vastondi since yesterday from morning also body pan mpld",
+    "cleaned_vitals": {
+      "bp_sys": 113.0,
+      "bp_dia": 56.0,
+      "pulse": 70.0,
+      "temp_c": 37.6,
+      "spo2": 98.3
+    },
+    "true_clean_level": 4,
+    "true_department": "ENT",
+    "triageguard_prediction": {
+      "triage_level": 4,
+      "primary_department": "ENT",
+      "suggested_specialty": "ENT",
+      "red_flags": [],
+      "source_layer": "fusion",
+      "conformal_set": [
+        4
+      ],
+      "abstain_reason": null,
+      "p_emergency": 0.0001,
+      "latency_ms": 29.06
+    }
+  },
+  "case4_corrupted_vitals_abstain": {
+    "scenario": "case4_corrupted_vitals_abstain",
+    "patient_id": "P000270",
+    "age": 49,
+    "sex": "M",
+    "complaint_text": "medicine marchipoyanu ippudu BP chla you know high nakseer ee roju subah nundi",
+    "cleaned_vitals": {
+      "bp_sys": 198.0,
+      "bp_dia": 85.0,
+      "pulse": 87.0,
+      "temp_c": NaN,
+      "spo2": NaN
+    },
+    "true_clean_level": 3,
+    "true_department": "General Medicine",
+    "triageguard_prediction": {
+      "triage_level": null,
+      "primary_department": "General Medicine",
+      "suggested_specialty": "General Medicine",
+      "red_flags": [],
+      "source_layer": "abstain",
+      "conformal_set": [
+        3
+      ],
+      "abstain_reason": "needs_remeasure",
+      "p_emergency": 0.0001,
+      "latency_ms": 18.69
+    }
+  },
+  "case5_benign_case_routed_correctly": {
+    "scenario": "case5_benign_case_routed_correctly",
+    "patient_id": "P000001",
+    "age": 61,
+    "sex": "F",
+    "complaint_text": "kannulo noppi discharge vastondi since yesterday from morning also body pan mpld",
+    "cleaned_vitals": {
+      "bp_sys": 113.0,
+      "bp_dia": 56.0,
+      "pulse": 70.0,
+      "temp_c": 37.6,
+      "spo2": 98.3
+    },
+    "true_clean_level": 4,
+    "true_department": "ENT",
+    "triageguard_prediction": {
+      "triage_level": 4,
+      "primary_department": "ENT",
+      "suggested_specialty": "ENT",
+      "red_flags": [],
+      "source_layer": "fusion",
+      "conformal_set": [
+        4
+      ],
+      "abstain_reason": null,
+      "p_emergency": 0.0001,
+      "latency_ms": 29.06
+    }
+  },
+  "case6_model_disagreement_abstain": {
+    "scenario": "case6_model_disagreement_abstain",
+    "patient_id": "P000046",
+    "age": 16,
+    "sex": "M",
+    "complaint_text": "check karna tha",
+    "cleaned_vitals": {
+      "bp_sys": 126.0,
+      "bp_dia": 69.0,
+      "pulse": 87.0,
+      "temp_c": 37.1,
+      "spo2": 97.8
+    },
+    "true_clean_level": 4,
+    "true_department": "Orthopedics",
+    "triageguard_prediction": {
+      "triage_level": null,
+      "primary_department": "General Medicine",
+      "suggested_specialty": "General Medicine",
+      "red_flags": [],
+      "source_layer": "abstain",
+      "conformal_set": [
+        4
+      ],
+      "abstain_reason": "model_disagreement",
+      "p_emergency": 0.0001,
+      "latency_ms": 9.21
+    }
+  }
+}

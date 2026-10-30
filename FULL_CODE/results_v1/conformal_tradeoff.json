@@ -1,0 +1,42 @@
+[
+  {
+    "alpha":0.005,
+    "tau":"0.0000",
+    "Status":"Infeasible",
+    "Emergency Recall":"100.0%",
+    "Non-Emergency Escalation":"100.0%",
+    "L3 Escalated":"100.0%",
+    "L4 Escalated":"100.0%",
+    "L5 Escalated":"100.0%"
+  },
+  {
+    "alpha":0.01,
+    "tau":"0.0018",
+    "Status":"Feasible",
+    "Emergency Recall":"100.0%",
+    "Non-Emergency Escalation":"11.1%",
+    "L3 Escalated":"8.2%",
+    "L4 Escalated":"20.4%",
+    "L5 Escalated":"1.1%"
+  },
+  {
+    "alpha":0.02,
+    "tau":"0.0039",
+    "Status":"Feasible",
+    "Emergency Recall":"98.3%",
+    "Non-Emergency Escalation":"7.4%",
+    "L3 Escalated":"5.3%",
+    "L4 Escalated":"13.7%",
+    "L5 Escalated":"0.7%"
+  },
+  {
+    "alpha":0.05,
+    "tau":"0.0922",
+    "Status":"Feasible",
+    "Emergency Recall":"92.8%",
+    "Non-Emergency Escalation":"0.9%",
+    "L3 Escalated":"0.7%",
+    "L4 Escalated":"1.6%",
+    "L5 Escalated":"0.0%"
+  }
+]

@@ -1,0 +1,36 @@
+{
+  "timestamp": "2026-10-30T07:49:32.407093+00:00",
+  "data_source": "data/phase2/intake_train.csv + train_labels.csv",
+  "n_total": 21455,
+  "n_train": 15018,
+  "n_calib": 3218,
+  "n_val": 3219,
+  "seed": 42,
+  "emergency_recall_val": 0.9609,
+  "exact_level_accuracy_val": 0.7403,
+  "department_accuracy_val": 0.7403,
+  "abstain_rate_val": 0.0,
+  "ece": 0.005184,
+  "auc_vitals_calib": 0.8134,
+  "auc_text_calib": 0.9377,
+  "auc_fused_val": 0.9685,
+  "ece_before_calibration": 0.128645,
+  "ece_after_calibration": 0.005184,
+  "conformal_alpha": 0.05,
+  "conformal_tau": 0.010841427801009542,
+  "recall_floor_used": 0.9,
+  "level_distribution_train": {
+    "1": 62,
+    "2": 536,
+    "3": 2771,
+    "4": 6774,
+    "5": 4875
+  },
+  "models_saved": [
+    "model_vitals.joblib",
+    "model_text.joblib",
+    "model_dept.joblib",
+    "fusion.joblib",
+    "conformal.joblib"
+  ]
+}

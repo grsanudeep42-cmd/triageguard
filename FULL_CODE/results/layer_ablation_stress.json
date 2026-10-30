@@ -1,0 +1,98 @@
+[
+  {
+    "Stress Condition":"Clean Test",
+    "Layer Configuration":"Full TriageGuard",
+    "Emergency Recall (L1-L2)":"92.8% (167\/180)",
+    "Silent Misses (L3-L5)":"2.8% (5\/180)",
+    "Non-Emergency Escalation":"4.4% (192\/4320)",
+    "Abstain Rate (Nurse Handoff)":"17.0% (763\/4500)"
+  },
+  {
+    "Stress Condition":"Clean Test",
+    "Layer Configuration":"Rules Disabled",
+    "Emergency Recall (L1-L2)":"92.8% (167\/180)",
+    "Silent Misses (L3-L5)":"2.8% (5\/180)",
+    "Non-Emergency Escalation":"1.1% (49\/4320)",
+    "Abstain Rate (Nurse Handoff)":"17.3% (777\/4500)"
+  },
+  {
+    "Stress Condition":"Clean Test",
+    "Layer Configuration":"Screen Disabled",
+    "Emergency Recall (L1-L2)":"83.9% (151\/180)",
+    "Silent Misses (L3-L5)":"3.3% (6\/180)",
+    "Non-Emergency Escalation":"4.2% (180\/4320)",
+    "Abstain Rate (Nurse Handoff)":"17.5% (789\/4500)"
+  },
+  {
+    "Stress Condition":"Clean Test",
+    "Layer Configuration":"Fusion Only",
+    "Emergency Recall (L1-L2)":"100.0% (180\/180)",
+    "Silent Misses (L3-L5)":"0.0% (0\/180)",
+    "Non-Emergency Escalation":"9.7% (420\/4320)",
+    "Abstain Rate (Nurse Handoff)":"0.0% (0\/4500)"
+  },
+  {
+    "Stress Condition":"Vague-Complaint Stress",
+    "Layer Configuration":"Full TriageGuard",
+    "Emergency Recall (L1-L2)":"76.7% (138\/180)",
+    "Silent Misses (L3-L5)":"10.6% (19\/180)",
+    "Non-Emergency Escalation":"4.4% (192\/4320)",
+    "Abstain Rate (Nurse Handoff)":"17.3% (778\/4500)"
+  },
+  {
+    "Stress Condition":"Vague-Complaint Stress",
+    "Layer Configuration":"Rules Disabled",
+    "Emergency Recall (L1-L2)":"68.9% (124\/180)",
+    "Silent Misses (L3-L5)":"12.2% (22\/180)",
+    "Non-Emergency Escalation":"1.1% (49\/4320)",
+    "Abstain Rate (Nurse Handoff)":"17.8% (803\/4500)"
+  },
+  {
+    "Stress Condition":"Vague-Complaint Stress",
+    "Layer Configuration":"Screen Disabled",
+    "Emergency Recall (L1-L2)":"75.0% (135\/180)",
+    "Silent Misses (L3-L5)":"10.6% (19\/180)",
+    "Non-Emergency Escalation":"4.2% (180\/4320)",
+    "Abstain Rate (Nurse Handoff)":"17.6% (792\/4500)"
+  },
+  {
+    "Stress Condition":"Vague-Complaint Stress",
+    "Layer Configuration":"Fusion Only",
+    "Emergency Recall (L1-L2)":"92.2% (166\/180)",
+    "Silent Misses (L3-L5)":"7.8% (14\/180)",
+    "Non-Emergency Escalation":"9.7% (420\/4320)",
+    "Abstain Rate (Nurse Handoff)":"0.0% (0\/4500)"
+  },
+  {
+    "Stress Condition":"20% Vital Corruption",
+    "Layer Configuration":"Full TriageGuard",
+    "Emergency Recall (L1-L2)":"92.2% (166\/180)",
+    "Silent Misses (L3-L5)":"2.2% (4\/180)",
+    "Non-Emergency Escalation":"5.5% (236\/4320)",
+    "Abstain Rate (Nurse Handoff)":"37.1% (1670\/4500)"
+  },
+  {
+    "Stress Condition":"20% Vital Corruption",
+    "Layer Configuration":"Rules Disabled",
+    "Emergency Recall (L1-L2)":"92.2% (166\/180)",
+    "Silent Misses (L3-L5)":"2.2% (4\/180)",
+    "Non-Emergency Escalation":"2.8% (121\/4320)",
+    "Abstain Rate (Nurse Handoff)":"37.7% (1697\/4500)"
+  },
+  {
+    "Stress Condition":"20% Vital Corruption",
+    "Layer Configuration":"Screen Disabled",
+    "Emergency Recall (L1-L2)":"70.6% (127\/180)",
+    "Silent Misses (L3-L5)":"2.2% (4\/180)",
+    "Non-Emergency Escalation":"3.2% (139\/4320)",
+    "Abstain Rate (Nurse Handoff)":"40.1% (1803\/4500)"
+  },
+  {
+    "Stress Condition":"20% Vital Corruption",
+    "Layer Configuration":"Fusion Only",
+    "Emergency Recall (L1-L2)":"99.4% (179\/180)",
+    "Silent Misses (L3-L5)":"0.6% (1\/180)",
+    "Non-Emergency Escalation":"15.8% (684\/4320)",
+    "Abstain Rate (Nurse Handoff)":"0.0% (0\/4500)"
+  }
+]

@@ -1,0 +1,32 @@
+{
+  "timestamp": "2026-10-30T09:16:29.760532+00:00",
+  "n_predictions": 8872,
+  "abstain_count": 58,
+  "abstain_rate": 0.0065,
+  "rf_flagged": 513,
+  "rf_flagged_rate": 0.0578,
+  "level_distribution": {
+    "4": 2267,
+    "5": 3797,
+    "1": 774,
+    "3": 752,
+    "2": 1224,
+    "ABSTAIN": 58
+  },
+  "dept_distribution": {
+    "General Surgery": 692,
+    "General Medicine": 2912,
+    "Emergency/Casualty": 2017,
+    "Orthopaedics": 591,
+    "Obstetrics & Gynaecology": 433,
+    "Dermatology": 276,
+    "Pulmonology/Chest & TB": 261,
+    "Paediatrics": 671,
+    "Ophthalmology": 315,
+    "ENT": 280,
+    "Dental": 302,
+    "Psychiatry": 78,
+    "Cardiology": 44
+  },
+  "elapsed_sec": 254.85
+}

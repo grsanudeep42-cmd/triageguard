@@ -1,0 +1,17 @@
+[
+  {
+    "Violation Category":"Total Decreased Urgency Violations",
+    "Count":57,
+    "Rate":"5.7%"
+  },
+  {
+    "Violation Category":"(a) Answered -> Answered with Less Urgent Level",
+    "Count":4,
+    "Rate":"0.4%"
+  },
+  {
+    "Violation Category":"(b) Answered -> Abstain (Referred to Nurse)",
+    "Count":53,
+    "Rate":"5.3%"
+  }
+]

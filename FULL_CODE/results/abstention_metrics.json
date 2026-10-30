@@ -1,0 +1,26 @@
+[
+  {
+    "Metric":"Total Cases",
+    "Value":"4,500"
+  },
+  {
+    "Metric":"Answered Cases",
+    "Value":"3,737 (83.0%)"
+  },
+  {
+    "Metric":"Abstained Cases",
+    "Value":"763 (17.0%)"
+  },
+  {
+    "Metric":"Top-1 Level Accuracy on Answered Cases",
+    "Value":"91.0%"
+  },
+  {
+    "Metric":"Mean Cost on Answered Cases",
+    "Value":"0.192"
+  },
+  {
+    "Metric":"Mean Cost on Abstained Cases",
+    "Value":"3.000"
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "Corruption Rate":"0%",
+    "Emergency Recall":"92.8%",
+    "Abstention Rate":"17.0%",
+    "Mean Cost per Patient":"0.668"
+  },
+  {
+    "Corruption Rate":"5%",
+    "Emergency Recall":"92.8%",
+    "Abstention Rate":"19.6%",
+    "Mean Cost per Patient":"0.739"
+  },
+  {
+    "Corruption Rate":"10%",
+    "Emergency Recall":"93.3%",
+    "Abstention Rate":"23.5%",
+    "Mean Cost per Patient":"0.883"
+  },
+  {
+    "Corruption Rate":"20%",
+    "Emergency Recall":"93.9%",
+    "Abstention Rate":"36.7%",
+    "Mean Cost per Patient":"1.283"
+  }
+]

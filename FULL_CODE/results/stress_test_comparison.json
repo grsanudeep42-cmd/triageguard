@@ -1,0 +1,42 @@
+[
+  {
+    "Corruption Rate":"0%",
+    "Full System Recall":"92.8%",
+    "Argmax Recall":"93.9%",
+    "Rules Recall":"54.4%",
+    "Full System Abstain Rate":"17.0%",
+    "Full System Mean Cost":"0.668",
+    "Argmax Mean Cost":"0.144",
+    "Rules Mean Cost":"2.020"
+  },
+  {
+    "Corruption Rate":"5%",
+    "Full System Recall":"92.8%",
+    "Argmax Recall":"92.8%",
+    "Rules Recall":"53.3%",
+    "Full System Abstain Rate":"19.6%",
+    "Full System Mean Cost":"0.739",
+    "Argmax Mean Cost":"0.165",
+    "Rules Mean Cost":"2.048"
+  },
+  {
+    "Corruption Rate":"10%",
+    "Full System Recall":"93.3%",
+    "Argmax Recall":"92.2%",
+    "Rules Recall":"48.9%",
+    "Full System Abstain Rate":"23.5%",
+    "Full System Mean Cost":"0.883",
+    "Argmax Mean Cost":"0.190",
+    "Rules Mean Cost":"2.158"
+  },
+  {
+    "Corruption Rate":"20%",
+    "Full System Recall":"93.9%",
+    "Argmax Recall":"92.2%",
+    "Rules Recall":"48.9%",
+    "Full System Abstain Rate":"36.7%",
+    "Full System Mean Cost":"1.283",
+    "Argmax Mean Cost":"0.221",
+    "Rules Mean Cost":"2.178"
+  }
+]
