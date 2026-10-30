@@ -1,5 +1,5 @@
 # TriageGuard — OPD Triage Assistant
-**TalentAP Mega Hackathon 2026 (H1) · Team Ronin Labs**
+**TalentAP Mega Hackathon 2026 · Problem H1 · Team ID: 001254 (Ronin Labs)**
 
 > AI-powered clinical decision support for Outpatient Department triage.  
 > Assigns triage levels L1–L5, routes to departments, detects red-flag presentations.
