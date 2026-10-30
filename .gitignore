@@ -1,19 +1,40 @@
+# ── Python ────────────────────────────────────────────────────────────────────
 .venv/
+FULL_CODE/.venv/
+FULL_CODE/venv/
 __pycache__/
 *.pyc
 *.pyo
 .pytest_cache/
+FULL_CODE/.pytest_cache/
+
+# ── Frontend ──────────────────────────────────────────────────────────────────
 web/node_modules/
-models/*.pkl
-models/*.joblib
-models/*.bin
-models/*.pt
-models/*.h5
-models/*.onnx
+FULL_CODE/web/node_modules/
+
+# ── Models (not committed — see README for how to regenerate) ─────────────────
+*.joblib
+*.pkl
+*.bin
+*.pt
+*.h5
+*.onnx
 models/kokoro/
 models/piper/
+FULL_CODE/models/
+
+# ── Data (not committed — see README for where to place data files) ───────────
 data/*.csv
 data/*.parquet
+FULL_CODE/data/phase1/
+FULL_CODE/data/phase2/
+
+# ── Secrets ───────────────────────────────────────────────────────────────────
 .env
 *.env
+
+# ── OS ────────────────────────────────────────────────────────────────────────
 .DS_Store
+
+# ── Phase 2 organiser drop — NOT our code, not submitted ─────────────────────
+new/
