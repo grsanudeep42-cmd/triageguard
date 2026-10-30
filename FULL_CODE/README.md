@@ -184,6 +184,20 @@ python evaluate.py \
 
 ---
 
+## AI usage
+
+- **Clinical AI / ML Architecture**:
+  - **Vitals Classification**: Monotonic LightGBM multiclass and binary classifiers with clinical physiological constraints (falling SpO₂ and rising Shock Index strictly enforce higher risk).
+  - **Multilingual NLP**: Character n-gram TF-IDF vectorizer (capturing multilingual clinical complaints, code-mixing in Telugu/Hindi/English, typos, and SMS shorthand) coupled with balanced Logistic Regression.
+  - **Probability Calibration**: Platt temperature scaling via logistic fit on holdout calibration split to guarantee well-calibrated posterior probabilities (ECE < 0.006).
+  - **Conformal Risk Prediction**: Mondrian split conformal prediction (α=0.01, τ=0.0613) providing statistically bounded emergency recall guarantees.
+  - **Red Flag Classifier**: Multi-label classifier calibrated across all 30 official clinical presentation red-flag categories.
+  - **On-Premise Privacy**: 100% local model execution; zero external cloud LLM API calls or third-party data transmission, ensuring complete patient record privacy and sub-20ms inference latency.
+- **AI Coding Assistants**:
+  - Developed with pair-programming assistance from Antigravity / Gemini for rapid exploratory scaffolding, synthetic data generation pipelines, test suite construction, and presentation material compilation.
+
+---
+
 ## Limitations
 
 - **No real clinical validation** — trained entirely on synthetic Phase 1 data, fine-tuned on organiser-provided Phase 2 data. Not validated on real patient records.

@@ -100,6 +100,8 @@ def test_triage_demo_cases_match(client: TestClient):
             "patient_id": c.get("patient_id"),
             "age": c.get("age"),
             "sex": c.get("sex"),
+            "pregnant": c.get("pregnant"),
+            "arrival_mode": c.get("arrival_mode"),
             "complaint_text": c.get("combined_gamed_complaint") or c.get("complaint_text"),
             "bp_sys": None if v.get("bp_sys") is not None and math.isnan(v.get("bp_sys")) else v.get("bp_sys"),
             "bp_dia": None if v.get("bp_dia") is not None and math.isnan(v.get("bp_dia")) else v.get("bp_dia"),

@@ -18,7 +18,8 @@ router = APIRouter(prefix="/api", tags=["api"])
 # Module-level cached seed queue
 _cached_seed_queue: Optional[List[Dict[str, Any]]] = None
 
-# Path to static files (relative to app/)
+# Path to static files and repo root
+_APP_ROOT = Path(__file__).resolve().parent.parent
 _IMPACT_STATS_PATH = Path(__file__).resolve().parent / "static" / "impact_stats.json"
 _STATIC_SEED_PATH = Path(__file__).resolve().parent / "static" / "seed_queue.json"
 
@@ -61,7 +62,9 @@ def triage_patient(req: TriageRequest, request: Request) -> TriageResponse:
 
 @router.get("/demo-cases")
 def get_demo_cases() -> List[Dict[str, Any]]:
-    demo_path = Path("results/demo_cases.json")
+    demo_path = _APP_ROOT / "results" / "demo_cases.json"
+    if not demo_path.exists():
+        demo_path = Path("results/demo_cases.json")
     if not demo_path.exists():
         return []
 
@@ -120,8 +123,8 @@ def get_demo_cases() -> List[Dict[str, Any]]:
 
 @router.get("/rules")
 def get_rules() -> Dict[str, Any]:
-    rules_path = Path("rules.yaml")
-    redflags_path = Path("redflags.yaml")
+    rules_path = _APP_ROOT / "rules.yaml" if (_APP_ROOT / "rules.yaml").exists() else Path("rules.yaml")
+    redflags_path = _APP_ROOT / "redflags.yaml" if (_APP_ROOT / "redflags.yaml").exists() else Path("redflags.yaml")
 
     rules_data = []
     if rules_path.exists():
@@ -168,7 +171,7 @@ def get_rules() -> Dict[str, Any]:
                 })
 
     redflags_data = []
-    official_rf_csv = Path("data/phase2/red_flag_codes.csv")
+    official_rf_csv = _APP_ROOT / "data/phase2/red_flag_codes.csv" if (_APP_ROOT / "data/phase2/red_flag_codes.csv").exists() else Path("data/phase2/red_flag_codes.csv")
     if official_rf_csv.exists():
         import csv
         with open(official_rf_csv, "r", encoding="utf-8") as f:
@@ -214,7 +217,7 @@ def get_rules() -> Dict[str, Any]:
 
     # Read aggregate firing stats from results JSON if present
     firing_stats = {}
-    layer_decomp_path = Path("results/layer_escalation_decomposition.json")
+    layer_decomp_path = _APP_ROOT / "results/layer_escalation_decomposition.json" if (_APP_ROOT / "results/layer_escalation_decomposition.json").exists() else Path("results/layer_escalation_decomposition.json")
     if layer_decomp_path.exists():
         try:
             with open(layer_decomp_path, "r", encoding="utf-8") as f:
@@ -231,7 +234,7 @@ def get_rules() -> Dict[str, Any]:
 
 @router.get("/results")
 def get_results() -> Dict[str, Any]:
-    results_dir = Path("results")
+    results_dir = _APP_ROOT / "results" if (_APP_ROOT / "results").exists() else Path("results")
     if not results_dir.exists():
         return {}
 

@@ -231,15 +231,15 @@ def build_final_pdf():
             "rect": pymupdf.Rect(365.2, 345.0, 515.2, 392.0),
             "bg": (0.94, 0.96, 1.0), "border": (0.15, 0.39, 0.92),
             "title": "[DEPLOY] Live App",
-            "sub": "https://web-production-bb683.up.railway.app",
-            "uri": "https://web-production-bb683.up.railway.app"
+            "sub": "https://triageguard-ncai.onrender.com",
+            "uri": "https://triageguard-ncai.onrender.com"
         },
         {
             "rect": pymupdf.Rect(526.2, 345.0, 676.2, 392.0),
             "bg": (0.98, 0.96, 1.0), "border": (0.49, 0.23, 0.93),
             "title": "[DOCS] Swagger API",
-            "sub": "https://web-production-bb683.up.railway.app/docs",
-            "uri": "https://web-production-bb683.up.railway.app/docs"
+            "sub": "https://triageguard-ncai.onrender.com/docs",
+            "uri": "https://triageguard-ncai.onrender.com/docs"
         }
     ]
 

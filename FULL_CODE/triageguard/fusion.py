@@ -252,7 +252,12 @@ class StackerFusion:
 
         skf = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=self.random_state)
         X_vit = extract_vitals_features(df_train_cleaned)
-        texts = df_train_cleaned.get("complaint_clean", df_train_cleaned.get("complaint_text", ""))
+        texts_raw = df_train_cleaned.get("complaint_clean", df_train_cleaned.get("complaint_text", ""))
+        id_col = "patient_id" if "patient_id" in df_train_cleaned.columns else ("visit_id" if "visit_id" in df_train_cleaned.columns else None)
+        if id_col is not None:
+            texts = pd.Series(texts_raw.values, index=df_train_cleaned[id_col].astype(str).values)
+        else:
+            texts = texts_raw
 
         for fold, (train_idx, val_idx) in enumerate(skf.split(X_vit, y_level)):
             # Clone and fit fold models

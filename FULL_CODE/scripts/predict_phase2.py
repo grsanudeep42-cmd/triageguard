@@ -135,9 +135,9 @@ class RedFlagClassifier:
                 random_state=random_state,
                 class_weight="balanced",
             ),
-            n_jobs=-1,
+            n_jobs=4,
         )
-        self.thresholds: Dict[str, float] = {code: 0.3 for code in RED_FLAG_CODES}
+        self.thresholds: Dict[str, float] = {code: 0.80 for code in RED_FLAG_CODES}
         self._fitted = False
 
     def _build_text(self, df: pd.DataFrame) -> pd.Series:
@@ -180,9 +180,10 @@ class RedFlagClassifier:
         for i, code in enumerate(RED_FLAG_CODES):
             y_true_col = Y_val[:, i]
             if y_true_col.sum() == 0:
+                self.thresholds[code] = 0.80
                 continue  # no positives in val → keep default
-            best_f1, best_thr = 0.0, 0.3
-            for thr in np.arange(0.05, 0.95, 0.05):
+            best_f1, best_thr = 0.0, 0.80
+            for thr in np.arange(0.70, 0.98, 0.02):
                 preds = (proba_val[:, i] >= thr).astype(int)
                 tp = int((preds * y_true_col).sum())
                 fp = int((preds * (1 - y_true_col)).sum())
@@ -192,7 +193,7 @@ class RedFlagClassifier:
                 f1   = 2 * prec * rec / (prec + rec + 1e-9)
                 if f1 > best_f1:
                     best_f1, best_thr = f1, float(thr)
-            self.thresholds[code] = best_thr
+            self.thresholds[code] = max(0.80, best_thr)
 
         self._fitted = True
         print(f"  RedFlagClassifier: trained on {n_train} rows, tuned on {len(merged)-n_train} rows")
@@ -233,137 +234,151 @@ def load_pipeline():
 # SECTION 3 — Main prediction loop
 # ─────────────────────────────────────────────────────────────────────────────
 
-def main() -> None:
-    t_start = time.perf_counter()
-
-    # ── Step 0: Load test data ───────────────────────────────────────────────
-    sep("STEP 0 — LOAD TEST DATA")
-    test_path = _PHASE2_DIR / "intake_test.csv"
-    if not test_path.exists():
-        print(f"ERROR: {test_path} not found", file=sys.stderr)
-        sys.exit(1)
-
-    test_df = pd.read_csv(test_path)
-    print(f"  intake_test.csv : {len(test_df):,} rows × {len(test_df.columns)} cols")
-    print(f"  Columns         : {test_df.columns.tolist()}")
-
-    # Keep original visit_ids for output — do NOT let adapt_schema rename them in output
-    visit_ids = test_df["visit_id"].tolist()
-    print(f"  visit_id sample : {visit_ids[:3]}")
-
-    # ── Step 1: Train RedFlagClassifier on Phase 2 training data ────────────
-    sep("STEP 1 — TRAIN RED-FLAG CLASSIFIER ON PHASE 2 LABELS")
-    train_intake = pd.read_csv(_PHASE2_DIR / "intake_train.csv")
-    train_labels = pd.read_csv(_PHASE2_DIR / "train_labels.csv")
-
-    rf_clf = RedFlagClassifier(random_state=42)
-    rf_clf.fit(train_intake, train_labels)
-
-    # ── Step 2: Load main triage pipeline ───────────────────────────────────
-    sep("STEP 2 — LOAD TRIAGE PIPELINE")
-    pipeline = load_pipeline()
-
-    # ── Step 3: Run predictions in batch ────────────────────────────────────
-    sep("STEP 3 — GENERATE PREDICTIONS")
-    print(f"  Predicting {len(test_df):,} patients …")
-
-    # CRITICAL: predict_one() expects INTERNAL column names (bp_sys, pulse, spo2 …)
-    # but intake_test.csv uses Phase 2 names (bp_systolic, pulse_bpm, spo2_pct …).
-    # Run adapt_schema on the full DataFrame BEFORE passing rows to predict_batch.
-    # This mirrors how retrain_phase2.py pre-adapts data before cleaning.
+def predict_dataframe(
+    df: pd.DataFrame,
+    pipeline,
+    rf_clf: RedFlagClassifier,
+    text_model,
+) -> Tuple[pd.DataFrame, Dict]:
+    """
+    Run the unified prediction pipeline with all competition optimizations:
+    1. Base pipeline evaluation with calibrated tau.
+    2. Smart abstention on truly unassessable records.
+    3. Emergency keyword escalation to Level 2.
+    4. Confirmed red flag escalation to Level 2.
+    5. Aggressive L2 bump for high-risk vitals (cardiac / shock / low SpO2).
+    6. Shift routine over-predicted Level 5 to Level 4.
+    """
     from triageguard.data_adapter import adapt_schema
-    print("  Running adapt_schema on test DataFrame …", end=" ", flush=True)
-    adapted_test_df = adapt_schema(test_df.copy())
-    print(f"done  (cols: {adapted_test_df.columns.tolist()[:6]} …)")
+    visit_ids = df["visit_id"].tolist()
+    adapted_df = adapt_schema(df.copy())
 
-    # Predict triage levels / departments via TriagePipeline
-    t_pred_start = time.perf_counter()
-    preds = pipeline.predict_batch(adapted_test_df)
-    t_pred_sec = time.perf_counter() - t_pred_start
-    print(f"  Triage predictions done: {t_pred_sec:.1f}s  ({t_pred_sec/len(test_df)*1000:.2f} ms/patient)")
+    t_start = time.perf_counter()
+    preds = pipeline.predict_batch(adapted_df)
+    t_pred = time.perf_counter() - t_start
 
-    # Predict red flags via our supervised classifier
-    rf_preds = rf_clf.predict(test_df)
-    print(f"  Red-flag predictions done.")
+    rf_preds = rf_clf.predict(df)
 
-    # ── Step 4: Assemble submission ─────────────────────────────────────────
-    sep("STEP 4 — ASSEMBLE SUBMISSION")
-
-    # Text-model fallback for abstain patients: use TextModel directly when
-    # needs_remeasure fires (≥2 missing/invalid vitals) but complaint text exists.
-    # The text model was trained on Phase 2 labels and has AUC=0.94 for emergency.
-    from triageguard.model_text import TextModel
-    from triageguard.fusion import build_cost_matrix, select_min_cost_level
-    import joblib as jb
-
-    _text_model = TextModel.load(_MODEL_DIR / "model_text.joblib")
-    _cost_matrix = build_cost_matrix(pipeline.cfg)
-
-    # Build a lookup: visit_id → abstain_reason
-    abstain_lookup = {
-        vid: p for vid, p in zip(visit_ids, preds) if p.triage_level is None
+    cardiac_set = {
+        "RF_CHEST_PAIN_CARDIAC", "RF_RESP_DISTRESS",
+        "RF_ALTERED_SENSORIUM", "RF_STROKE_SIGNS",
+        "RF_SEPSIS_SIGNS", "RF_ANAPHYLAXIS", "RF_DKA_SIGNS",
     }
 
-    fallback_count = 0
+    boilerplate = {
+        "?", "na", "-", "check", "same", "opd", "dikhana hai", "opd ticket",
+        "pt lang not understood", "dr ko dikhana hai", "....", "doctor se milna hai",
+        "xx", "--", "patient not able to explain", "nil", "none", "n/a", "blank",
+        "ticket", "parchi", "follow up", "dikhao", "check up", "normal", "theek hai",
+        ".", "---", "..", "??",
+    }
+
+    emerg_keywords = [
+        "insecticide", "poison", "zehar", "visham", "scorpion", "bichhu",
+        "snake", "saanp", "paambu", "kalai kaat", "suicid", "khudkushi",
+        "jaan dena", "jaan nahi", "lakwa", "paralysis", "vision loss",
+        "roshni chali gayi", "proshrab kom", "peshab kam",
+    ]
 
     records = []
     level_counts: Dict[str, int] = defaultdict(int)
-    dept_counts:  Dict[str, int] = defaultdict(int)
+    dept_counts: Dict[str, int] = defaultdict(int)
     abstain_count = 0
-    rf_flagged    = 0
+    fallback_count = 0
+    rf_flagged = 0
 
-    for vid, pred, rfs, adapted_row in zip(visit_ids, preds, rf_preds, adapted_test_df.itertuples(index=False)):
-        level = pred.triage_level   # None = ABSTAIN
-        dept  = pred.primary_department
-        p_em  = pred.p_emergency
+    for vid, pred, rfs, adapted_row in zip(visit_ids, preds, rf_preds, adapted_df.itertuples(index=False)):
+        level = pred.triage_level
+        dept = pred.primary_department
+        p_em = pred.p_emergency
 
-        # Text-model fallback: if abstained AND complaint text exists, predict level
-        # from text model alone rather than leaving as ABSTAIN.
-        if level is None:
-            complaint = str(getattr(adapted_row, "complaint_text", "") or "").strip()
-            if len(complaint) > 5:
+        raw_complaint = str(getattr(adapted_row, "complaint_text", "") or "").strip()
+        cc_lower = raw_complaint.lower()
+
+        # Count missing/invalid vitals
+        v_missing = 0
+        for attr in ["bp_sys", "bp_dia", "pulse", "temp_c", "spo2"]:
+            val = getattr(adapted_row, attr, None)
+            if val is None or pd.isna(val) or val <= 0:
+                v_missing += 1
+
+        is_boilerplate = (
+            cc_lower in boilerplate
+            or len(cc_lower) <= 2
+            or any(kw in cc_lower for kw in ["not able to explain", "not understood", "doctor se milna", "dr ko dikhana"])
+        )
+
+        # Smart abstention on truly unassessable
+        is_unassessable = (v_missing >= 3 and is_boilerplate)
+        if is_unassessable:
+            level = None
+
+        # Text-model fallback for other abstains
+        if level is None and not is_unassessable:
+            if len(raw_complaint) > 5:
                 try:
-                    txt_proba = _text_model.predict_proba(pd.DataFrame([{"complaint_text": complaint}]))[0]
-                    txt_em    = _text_model.predict_emergency_proba(pd.DataFrame([{"complaint_text": complaint}]))[0]
-                    # Use argmax (NOT cost matrix) — cost matrix always picks L2 when vitals missing
-                    # because the 20× emergency penalty dominates. Argmax gives realistic L3/L4/L5
-                    # for most patients; text em-probability still escalates true emergencies.
+                    df_fallback = pd.DataFrame([{"patient_id": vid, "visit_id": vid, "complaint_text": raw_complaint}])
+                    txt_proba = text_model.predict_proba(df_fallback)[0]
+                    txt_em = text_model.predict_emergency_proba(df_fallback)[0]
                     if float(txt_em) >= 0.40:
-                        # Strong emergency signal in text → escalate
-                        fallback_level = 2
+                        level = 2
                     else:
-                        # Use multiclass argmax — classes are [1,2,3,4,5]
-                        fallback_level = int(np.argmax(txt_proba)) + 1
-                    level = fallback_level
-                    p_em  = float(txt_em)
-                    # Re-derive department: L1/L2 → Emergency/Casualty, else use dept model
+                        level = int(np.argmax(txt_proba)) + 1
+                    p_em = float(txt_em)
                     if level in (1, 2):
                         dept = "Emergency/Casualty"
-                    # else keep existing dept from pipeline (specialty prediction was still done)
                     fallback_count += 1
                 except Exception:
-                    pass   # keep as ABSTAIN on error
+                    pass
+
+        # Clinical emergency keywords -> Level 2
+        has_emerg_kw = any(kw in cc_lower for kw in emerg_keywords)
+        if has_emerg_kw and (level is None or level > 2):
+            level = 2
+            dept = "Emergency/Casualty"
+
+        # Valid red flags -> Level 2
+        valid_rfs = [rf for rf in rfs if rf in _RF_SET]
+        if valid_rfs and (level is not None and level > 2):
+            level = 2
+            dept = "Emergency/Casualty"
+
+        # Change 3: Aggressive L2 bump post-processing
+        if level == 3 and pred.source_layer != "rule":
+            pulse_v = getattr(adapted_row, "pulse", 0) or 0
+            bp_sys_v = getattr(adapted_row, "bp_sys", 0) or 0
+            spo2_v = getattr(adapted_row, "spo2", 100) or 100
+            shock_index = (pulse_v / bp_sys_v) if (pulse_v > 0 and bp_sys_v > 0) else 0
+
+            conf_val = round(float(p_em if level in (1, 2) else 1.0 - p_em), 4)
+            if conf_val < 0.65:
+                has_cardiac_flag = bool(set(valid_rfs) & cardiac_set)
+                if has_cardiac_flag or shock_index > 0.9 or spo2_v < 95:
+                    level = 2
+                    dept = "Emergency/Casualty"
+
+        # Shift routine over-predicted Level 5s to Level 4
+        if level == 5:
+            level = 4
 
         # Validate department against allowed list
         if dept not in _DEPT_SET:
-            dept = "General Medicine"   # safe fallback
+            dept = "General Medicine"
 
-        # Level: None → "ABSTAIN" (evaluate.py requires this exact string)
+        # Format level
         if level is None:
             abstain_count += 1
             level_str = "ABSTAIN"
         else:
             level_str = str(int(level))
 
-        # Red flags: validate against allowed set; semicolon-join or NaN
-        valid_rfs = [rf for rf in rfs if rf in _RF_SET]
+        # Format red flags
         if valid_rfs:
             rf_flagged += 1
             rf_str = ";".join(valid_rfs)
         else:
-            rf_str = np.nan   # NaN = no red flags (matches sample_submission.csv)
+            rf_str = np.nan
 
-        # Confidence: use p_emergency as proxy for L1/L2; else 1 - p_emergency
         conf = round(float(p_em if level in (1, 2) else 1.0 - p_em), 4)
         conf = max(0.0, min(1.0, conf))
 
@@ -371,33 +386,39 @@ def main() -> None:
         dept_counts[dept] += 1
 
         records.append({
-            "visit_id":     vid,
+            "visit_id": vid,
             "triage_level": level_str,
-            "department":   dept,
-            "red_flags":    rf_str,
-            "confidence":   conf,
+            "department": dept,
+            "red_flags": rf_str,
+            "confidence": conf,
         })
 
     sub_df = pd.DataFrame(records, columns=["visit_id", "triage_level", "department", "red_flags", "confidence"])
+    stats = {
+        "total": len(sub_df),
+        "abstain_count": abstain_count,
+        "fallback_count": fallback_count,
+        "rf_flagged": rf_flagged,
+        "level_counts": level_counts,
+        "dept_counts": dept_counts,
+        "t_pred": t_pred,
+    }
+    return sub_df, stats
 
-    # ── Step 5: Validate submission ─────────────────────────────────────────
-    sep("STEP 5 — VALIDATE SUBMISSION")
+
+def validate_submission_df(sub_df: pd.DataFrame, orig_df: pd.DataFrame) -> None:
     errors = []
+    if len(sub_df) != len(orig_df):
+        errors.append(f"Row count mismatch: {len(sub_df)} vs {len(orig_df)}")
 
-    # visit_id completeness
-    if len(sub_df) != len(test_df):
-        errors.append(f"Row count mismatch: {len(sub_df)} vs {len(test_df)}")
-
-    missing_vids = set(visit_ids) - set(sub_df["visit_id"])
+    missing_vids = set(orig_df["visit_id"]) - set(sub_df["visit_id"])
     if missing_vids:
         errors.append(f"Missing visit_ids: {list(missing_vids)[:5]}")
 
-    # department validation
     bad_depts = sub_df[sub_df["department"].notna() & ~sub_df["department"].isin(_DEPT_SET)]
     if len(bad_depts):
-        errors.append(f"{len(bad_depts)} rows have invalid departments: {bad_depts['department'].unique()[:3].tolist()}")
+        errors.append(f"{len(bad_depts)} rows have invalid departments")
 
-    # red flag validation
     for _, r in sub_df.iterrows():
         rfs = _parse_flags(r["red_flags"])
         bad = [rf for rf in rfs if rf not in _RF_SET]
@@ -405,7 +426,6 @@ def main() -> None:
             errors.append(f"visit_id {r['visit_id']}: invalid RF codes: {bad}")
             break
 
-    # confidence validation
     bad_conf = sub_df[sub_df["confidence"].notna() & ((sub_df["confidence"] < 0) | (sub_df["confidence"] > 1))]
     if len(bad_conf):
         errors.append(f"{len(bad_conf)} rows have confidence out of [0,1]")
@@ -418,68 +438,94 @@ def main() -> None:
     else:
         print("  ✓ All validation checks passed")
 
-    # ── Step 6: Print summary stats ─────────────────────────────────────────
-    sep("STEP 6 — SUMMARY")
-    total = len(sub_df)
-    print(f"  Total predictions : {total:,}")
-    print(f"  Abstain (ABSTAIN) : {abstain_count:,}  ({abstain_count/total*100:.1f}%)")
-    print(f"  Text fallbacks    : {fallback_count:,}  ({fallback_count/total*100:.1f}%  — abstains resolved via text model)")
-    print(f"  Patients flagged  : {rf_flagged:,}  ({rf_flagged/total*100:.1f}%)")
-    print()
-    print("  Level distribution:")
-    for lvl in ["1", "2", "3", "4", "5", "ABSTAIN"]:
-        cnt = level_counts.get(lvl, 0)
-        if cnt:
-            print(f"    L{lvl}: {cnt:5,}  ({cnt/total*100:.1f}%)")
-    print()
-    print("  Top departments:")
-    for dept, cnt in sorted(dept_counts.items(), key=lambda x: -x[1])[:8]:
-        print(f"    {dept:<35s}: {cnt:5,}  ({cnt/total*100:.1f}%)")
 
-    # ── Step 7: Save ─────────────────────────────────────────────────────────
-    sep("STEP 7 — SAVE")
+def main() -> None:
+    t_start = time.perf_counter()
+
+    sep("STEP 0 — LOAD PHASE 2 DATA")
+    test_path = _PHASE2_DIR / "intake_test.csv"
+    train_path = _PHASE2_DIR / "intake_train.csv"
+    labels_path = _PHASE2_DIR / "train_labels.csv"
+
+    if not test_path.exists():
+        print(f"ERROR: {test_path} not found", file=sys.stderr)
+        sys.exit(1)
+
+    test_df = pd.read_csv(test_path)
+    train_df = pd.read_csv(train_path)
+    train_labels = pd.read_csv(labels_path)
+    print(f"  intake_test.csv  : {len(test_df):,} rows")
+    print(f"  intake_train.csv : {len(train_df):,} rows")
+
+    sep("STEP 1 — TRAIN RED-FLAG CLASSIFIER (PRECISION FLOOR 0.80)")
+    rf_clf = RedFlagClassifier(random_state=42)
+    rf_clf.fit(train_df, train_labels)
+
+    sep("STEP 2 — LOAD TRIAGE PIPELINE & TEXT MODEL")
+    pipeline = load_pipeline()
+    from triageguard.model_text import TextModel
+    text_model = TextModel.load(_MODEL_DIR / "model_text.joblib")
+
+    sep("STEP 3 — GENERATE PREDICTIONS FOR TEST SET (8,872 rows)")
+    test_sub, test_stats = predict_dataframe(test_df, pipeline, rf_clf, text_model)
+    validate_submission_df(test_sub, test_df)
+
+    # Save test submission
     out_path = _SUB_DIR / "H1_predictions.csv"
-    sub_df.to_csv(out_path, index=False)
-    print(f"  ✓ Saved {out_path}  ({out_path.stat().st_size / 1024:.1f} KB)")
+    test_sub.to_csv(out_path, index=False)
+    # Also save to root submission
+    root_sub = _ROOT.parent / "submission" / "H1_predictions.csv" if (_ROOT.name == "FULL_CODE") else (_ROOT / "submission" / "H1_predictions.csv")
+    if root_sub.parent.exists():
+        test_sub.to_csv(root_sub, index=False)
+    print(f"  ✓ Saved {out_path} ({out_path.stat().st_size / 1024:.1f} KB)")
+    if root_sub.exists():
+        print(f"  ✓ Synced {root_sub}")
 
-    # Save report
+    sep("STEP 4 — GENERATE PREDICTIONS FOR TRAIN SELF-CHECK (21,455 rows)")
+    train_sub, train_stats = predict_dataframe(train_df, pipeline, rf_clf, text_model)
+    validate_submission_df(train_sub, train_df)
+
+    train_out_path = _SUB_DIR / "H1_train_check.csv"
+    train_sub.to_csv(train_out_path, index=False)
+    root_train_sub = _ROOT.parent / "submission" / "H1_train_check.csv" if (_ROOT.name == "FULL_CODE") else (_ROOT / "submission" / "H1_train_check.csv")
+    if root_train_sub.parent.exists():
+        train_sub.to_csv(root_train_sub, index=False)
+    print(f"  ✓ Saved {train_out_path} ({train_out_path.stat().st_size / 1024:.1f} KB)")
+    if root_train_sub.exists():
+        print(f"  ✓ Synced {root_train_sub}")
+
+    # Summary
+    sep("STEP 5 — PREDICTION SUMMARY")
+    print(f"  TEST SET (8,872 rows):")
+    print(f"    Abstains: {test_stats['abstain_count']:,} | Flagged: {test_stats['rf_flagged']:,}")
+    print(f"    Levels: {dict(test_stats['level_counts'])}")
+    print(f"  TRAIN SET (21,455 rows):")
+    print(f"    Abstains: {train_stats['abstain_count']:,} | Flagged: {train_stats['rf_flagged']:,}")
+    print(f"    Levels: {dict(train_stats['level_counts'])}")
+
+    sep("STEP 6 — OFFICIAL EVALUATION ON TRAIN SELF-CHECK")
+    from evaluate import load_submission, load_truth, score
+    sub_eval = load_submission(train_out_path)
+    truth_eval = load_truth(labels_path)
+    res = score(sub_eval, truth_eval)
+
+    print()
+    print("═" * 70)
+    print("  EVALUATION RESULTS (TRAIN SELF-CHECK)")
+    print("═" * 70)
+    print(f"  PRIMARY SCORE:           {res['primary_score']:.6f}   (Baseline: 0.6014)")
+    print(f"  Emergency Recall:        {res['emergency_recall']:.6f}   (Baseline: 0.9895)")
+    print(f"  Normalised Safety:       {res['normalised_safety_score']:.6f}   (Baseline: 0.4352)")
+    print(f"  Department Accuracy:     {res['department_accuracy']:.6f}   (Baseline: 0.7676)")
+    print(f"  Red-Flag Micro F1:       {res['red_flag_micro_f1']:.6f}   (Baseline: 0.6561)")
+    print(f"  Red-Flag Precision:      {res['red_flag_precision']:.6f}   (Baseline: 0.5059)")
+    print(f"  Red-Flag Recall:         {res['red_flag_recall']:.6f}   (Baseline: 0.9331)")
+    print(f"  Missed Emergencies:      {res['n_missed_emergencies']}            (Baseline: 9)")
+    print(f"  Team Safety Cost:        {res['team_cost']:.1f}       (Baseline: 18064.5)")
+    print("═" * 70)
+
     elapsed = time.perf_counter() - t_start
-    report = {
-        "timestamp":         pd.Timestamp.utcnow().isoformat(),
-        "n_predictions":     total,
-        "abstain_count":     abstain_count,
-        "abstain_rate":      round(abstain_count / total, 4),
-        "rf_flagged":        rf_flagged,
-        "rf_flagged_rate":   round(rf_flagged / total, 4),
-        "level_distribution": level_counts,
-        "dept_distribution":  dept_counts,
-        "elapsed_sec":       round(elapsed, 2),
-    }
-    report_path = _RESULTS_DIR / "predict_phase2_report.json"
-    with open(report_path, "w") as f:
-        json.dump(report, f, indent=2)
-    print(f"  ✓ Saved {report_path}")
-    print(f"\n  Total elapsed: {elapsed:.1f}s")
-
-    # ── Step 8: Score on train labels (to estimate submission score) ─────────
-    sep("STEP 8 — SCORE ON TRAIN LABELS (OPTIONAL ESTIMATE)")
-    # We can't score test labels, but we score on the val-equivalent
-    # by running evaluate.py --submission against train_labels.
-    # This tests the scorer format only; the score is NOT the test score.
-    print("  Run the following to get your estimated score:")
-    print()
-    print("  .venv/bin/python evaluate.py \\")
-    print("      --submission submission/H1_predictions.csv \\")
-    print("      --truth data/phase2/train_labels.csv \\")
-    print("      --out results/score_phase2.json")
-    print()
-    print("  ⚠  This scores predictions for 8,872 TEST patients against 21,455 TRAIN labels.")
-    print("     Matched rows (~8,872) contribute; unmatched rows get worst-case score.")
-    print("     True test score comes from organiser evaluation on hidden test labels.")
-    print()
-    print("═" * 70)
-    print("  PREDICTION COMPLETE")
-    print("═" * 70)
+    print(f"\n  Pipeline completed in {elapsed:.1f}s")
 
 
 if __name__ == "__main__":

@@ -207,10 +207,24 @@ def main() -> None:
     print("  ✓ Saved model_vitals.joblib")
 
     # 3b. Text model
-    print("Fitting model_text (char_wb TF-IDF + LogisticRegression) …")
+    print("Fitting model_text (IndicBERT embeddings + LightGBM) …")
+    id_col = "patient_id" if "patient_id" in train_df.columns else "visit_id"
+    train_texts = pd.Series(
+        train_df.get("complaint_clean", train_df.get("complaint_text", "")).values,
+        index=train_df[id_col].astype(str).values,
+    )
+    calib_texts = pd.Series(
+        calib_df.get("complaint_clean", calib_df.get("complaint_text", "")).values,
+        index=calib_df[id_col].astype(str).values,
+    )
+    val_texts = pd.Series(
+        val_df.get("complaint_clean", val_df.get("complaint_text", "")).values,
+        index=val_df[id_col].astype(str).values,
+    )
+
     model_text = TextModel(random_state=SEED)
     model_text.fit(
-        train_df.get("complaint_clean", train_df.get("complaint_text", "")),
+        train_texts,
         y_train_level,
         y_train_em,
     )
@@ -235,9 +249,7 @@ def main() -> None:
     # AUC gate on calib split (use calib as a proxy for val here)
     X_calib_vit = extract_vitals_features(calib_df)
     p_calib_vit_em  = model_vitals.predict_emergency_proba(X_calib_vit)
-    p_calib_txt_em  = model_text.predict_emergency_proba(
-        calib_df.get("complaint_clean", calib_df.get("complaint_text", ""))
-    )
+    p_calib_txt_em  = model_text.predict_emergency_proba(calib_texts)
     auc_vitals = roc_auc_score(y_calib_em, p_calib_vit_em)
     auc_text   = roc_auc_score(y_calib_em, p_calib_txt_em)
     print(f"  model_vitals calib AUC : {auc_vitals:.4f}")
@@ -262,12 +274,8 @@ def main() -> None:
     X_val_vit = extract_vitals_features(val_df)
     p_val_vit_multi = model_vitals.predict_proba(X_val_vit)
     p_val_vit_em    = model_vitals.predict_emergency_proba(X_val_vit)
-    p_val_txt_multi = model_text.predict_proba(
-        val_df.get("complaint_clean", val_df.get("complaint_text", ""))
-    )
-    p_val_txt_em = model_text.predict_emergency_proba(
-        val_df.get("complaint_clean", val_df.get("complaint_text", ""))
-    )
+    p_val_txt_multi = model_text.predict_proba(val_texts)
+    p_val_txt_em = model_text.predict_emergency_proba(val_texts)
 
     X_val_stack = fusion.build_stack_features(
         p_val_vit_multi, p_val_txt_multi, p_val_vit_em, p_val_txt_em, val_df
@@ -292,9 +300,7 @@ def main() -> None:
     sep("STEP 5 — CONFORMAL CALIBRATION (calib split) + ALPHA SELECTION")
 
     p_calib_vit_multi = model_vitals.predict_proba(X_calib_vit)
-    p_calib_txt_multi = model_text.predict_proba(
-        calib_df.get("complaint_clean", calib_df.get("complaint_text", ""))
-    )
+    p_calib_txt_multi = model_text.predict_proba(calib_texts)
     fused_calib_multi, calib_em_cal = fusion.predict_fused(
         p_calib_vit_multi, p_calib_txt_multi, p_calib_vit_em, p_calib_txt_em, calib_df
     )

@@ -162,6 +162,9 @@ class TriagePipeline:
             "n_missing_vitals": cr.n_missing_vitals,
             "data_quality_score": cr.data_quality_score,
             "complaint_clean": cr.complaint_text,
+            "complaint_text": cr.complaint_text,
+            "patient_id": patient_id,
+            "visit_id": patient_id,
             "n_red_flags": len(red_flags),
         }])
 
@@ -169,9 +172,8 @@ class TriagePipeline:
         p_vit_multi = self.model_vitals.predict_proba(X_vit)
         p_vit_em = self.model_vitals.predict_emergency_proba(X_vit)
 
-        texts = [cr.complaint_text]
-        p_txt_multi = self.model_text.predict_proba(texts)
-        p_txt_em = self.model_text.predict_emergency_proba(texts)
+        p_txt_multi = self.model_text.predict_proba(single_df)
+        p_txt_em = self.model_text.predict_emergency_proba(single_df)
 
         # ── 4. Phase 5 Fusion & Calibration ───────────────────────────────────
         fused_multi, calib_p_em = self.fusion.predict_fused(
@@ -223,6 +225,19 @@ class TriagePipeline:
             final_level = None
             source_layer = "abstain"
             abstain_reason = "high_conformal_uncertainty"
+        elif (
+            p_em >= 0.25
+            and p_em < self.conformal.state.operating_tau
+            and len(red_flags) > 0
+            and abs(float(p_vit_em[0]) - float(p_txt_em[0])) > 0.15
+        ):
+            final_level = None
+            source_layer = "abstain"
+            abstain_reason = "uncertain_with_flag"
+        elif cr.n_missing_vitals >= 4 and len(str(cr.complaint_text or "").strip()) < 8:
+            final_level = None
+            source_layer = "abstain"
+            abstain_reason = "truly_unassessable"
 
         # Policy Step 5: Min-expected-cost level within conformal set
         else:

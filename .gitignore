@@ -18,6 +18,7 @@ FULL_CODE/web/node_modules/
 *.pt
 *.h5
 *.onnx
+*.npy
 models/kokoro/
 models/piper/
 FULL_CODE/models/kokoro/
