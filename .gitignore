@@ -13,7 +13,6 @@ web/node_modules/
 FULL_CODE/web/node_modules/
 
 # ── Models (not committed — see README for how to regenerate) ─────────────────
-*.joblib
 *.pkl
 *.bin
 *.pt
@@ -21,7 +20,8 @@ FULL_CODE/web/node_modules/
 *.onnx
 models/kokoro/
 models/piper/
-FULL_CODE/models/
+FULL_CODE/models/kokoro/
+FULL_CODE/models/piper/
 
 # ── Data (not committed — see README for where to place data files) ───────────
 data/*.csv
