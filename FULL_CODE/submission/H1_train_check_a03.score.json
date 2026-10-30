@@ -1,0 +1,90 @@
+{
+  "primary_score": 0.638424,
+  "primary_score_range": "[-0.6, 1.0], higher is better",
+  "emergency_recall": 0.945029,
+  "n_true_emergencies": 855,
+  "n_missed_emergencies": 47,
+  "missed_emergency_examples": [
+    "OPD-027TK3ZP",
+    "OPD-044F9ZBS",
+    "OPD-0WDN8WRY",
+    "OPD-294Q017U",
+    "OPD-2JKTX6DS",
+    "OPD-3GJ56008",
+    "OPD-3V7412NE",
+    "OPD-4HAR50V2",
+    "OPD-5MWREJFG",
+    "OPD-5SJ903MY"
+  ],
+  "normalised_safety_score": 0.492042,
+  "team_cost": 16245.5,
+  "reference_cost_all_level4": 31982.0,
+  "mean_cost_per_case": 0.757189,
+  "department_accuracy": 0.885877,
+  "red_flag_micro_f1": 0.656055,
+  "red_flag_precision": 0.50587,
+  "red_flag_recall": 0.933071,
+  "exact_level_accuracy_non_abstained": 0.673718,
+  "n_scored": 21455,
+  "n_missing_predictions": 0,
+  "missing_prediction_examples": [],
+  "n_abstain": 323,
+  "n_abstain_on_unassessable": 232,
+  "n_unassessable_in_truth": 413,
+  "n_under_triage_non_emergency": 4845,
+  "n_over_triage": 1961,
+  "cost_breakdown": {
+    "missed_emergencies": 940.0,
+    "under_triage_non_emergency": 12532.0,
+    "over_triage": 2640.0,
+    "abstain": 133.5
+  },
+  "confusion_true_by_pred": {
+    "1": {
+      "1": 47,
+      "2": 42,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "ABSTAIN": 0
+    },
+    "2": {
+      "1": 520,
+      "2": 191,
+      "3": 8,
+      "4": 5,
+      "5": 34,
+      "ABSTAIN": 8
+    },
+    "3": {
+      "1": 148,
+      "2": 177,
+      "3": 2079,
+      "4": 67,
+      "5": 1421,
+      "ABSTAIN": 67
+    },
+    "4": {
+      "1": 197,
+      "2": 152,
+      "3": 413,
+      "4": 5426,
+      "5": 3357,
+      "ABSTAIN": 132
+    },
+    "5": {
+      "1": 116,
+      "2": 65,
+      "3": 27,
+      "4": 146,
+      "5": 6494,
+      "ABSTAIN": 116
+    }
+  },
+  "weights": {
+    "safety": 0.6,
+    "emergency_recall": 0.2,
+    "department_accuracy": 0.1,
+    "red_flag_f1": 0.1
+  }
+}
