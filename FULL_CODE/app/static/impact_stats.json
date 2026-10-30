@@ -1,0 +1,26 @@
+{
+  "simulation": {
+    "n_patients": 30327,
+    "n_opd_days": 38,
+    "n_replications": 10,
+    "n_doctors": 2
+  },
+  "fcfs": {
+    "emergency_avg_wait_min": 35.5,
+    "emergency_p95_wait_min": 119.6,
+    "harm_weighted_wait": 35.9,
+    "overall_avg_wait_min": 36.1
+  },
+  "triageguard": {
+    "emergency_avg_wait_min": 0.3,
+    "emergency_p95_wait_min": 0.8,
+    "harm_weighted_wait": 16.4,
+    "overall_avg_wait_min": 36.3
+  },
+  "headline": {
+    "emergency_wait_reduction_min": 35.2,
+    "emergency_wait_reduction_pct": 99.2,
+    "harm_weighted_reduction_pct": 54.5,
+    "one_liner": "TriageGuard reduces emergency patient wait time by 35.2 minutes — a 99.2% reduction"
+  }
+}
