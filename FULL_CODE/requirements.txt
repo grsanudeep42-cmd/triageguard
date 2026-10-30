@@ -12,8 +12,6 @@ cloudpickle==3.1.2
 contourpy==1.4.0
 cycler==0.12.1
 dlinfo==2.0.0
-edge-tts==7.3.1
-espeakng-loader==0.2.4
 fastapi==0.144.0
 flatbuffers==25.12.19
 fonttools==4.67.0
@@ -26,7 +24,6 @@ idna==3.20
 iniconfig==2.3.1
 joblib==1.6.0
 kiwisolver==1.5.1
-kokoro-onnx==0.6.1
 lightgbm==4.7.0
 matplotlib==3.11.2
 multidict==7.1.0
@@ -37,9 +34,7 @@ opentelemetry-api==1.45.1
 packaging==26.3
 pandas==3.0.6
 pathvalidate==3.3.1
-phonemizer==3.4.0
 pillow==13.0.0
-piper-tts==1.8.0
 pluggy==1.7.0
 propcache==0.5.4
 protobuf==7.36.2
@@ -57,7 +52,6 @@ scikit-learn==1.9.1
 scipy==1.18.1
 simpy==4.1.2
 six==1.17.0
-soundfile==0.14.0
 starlette==1.8.0
 tabulate==0.10.0
 threadpoolctl==3.7.0
