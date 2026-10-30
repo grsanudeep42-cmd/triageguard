@@ -86,10 +86,10 @@ export const RulesPage: React.FC = () => {
           </div>
           <div>
             <div className="text-[15px] font-semibold text-ink">
-              Clinical escalation performance on test split
+              Clinical escalation performance on official dataset
             </div>
             <div className="text-[13px] text-ink-3">
-              Evaluated across 4,500 test encounters (180 true emergencies)
+              Evaluated across 21,455 Phase 2 encounters (855 true emergencies)
             </div>
           </div>
         </div>
@@ -121,7 +121,7 @@ export const RulesPage: React.FC = () => {
             </span>
           </div>
           <span className="text-[13px] text-ink-3">
-            Thresholds: Placeholder pending official primer
+            IAP/WHO ETAT & Severe Pre-eclampsia guidelines
           </span>
         </div>
 
@@ -183,13 +183,13 @@ export const RulesPage: React.FC = () => {
         <div className="px-6 py-4 border-b border-line flex items-center justify-between">
           <div className="flex items-center gap-2">
             <BookOpen className="w-5 h-5 text-brand" strokeWidth={1.75} />
-            <h2 className="text-h3 font-semibold text-ink">Red-flag clinical lexicon</h2>
+            <h2 className="text-h3 font-semibold text-ink">Official Red-Flag Clinical Lexicon</h2>
             <span className="px-2 py-0.5 bg-paper text-ink-3 border border-line rounded-pill text-[12px] font-medium">
-              {red_flags.length} symptoms
+              {red_flags.length} official codes
             </span>
           </div>
           <span className="text-[13px] text-ink-3">
-            Fuzzy matching (Levenshtein ≤ 2) across 3 language scripts
+            30 standardized red flag symptoms (Phase 2 official codes)
           </span>
         </div>
 
@@ -197,37 +197,37 @@ export const RulesPage: React.FC = () => {
           <table className="w-full text-left border-collapse text-body">
             <thead>
               <tr className="border-b border-line bg-paper/60 text-caption font-semibold text-ink-3 tracking-wide">
-                <th className="py-3 px-6">ID</th>
+                <th className="py-3 px-6">Code ID</th>
                 <th className="py-3 px-6">Clinical entity</th>
-                <th className="py-3 px-6">English triggers</th>
-                <th className="py-3 px-6">Telugu / Hindi triggers</th>
+                <th className="py-3 px-6">Official clinical definition / Triggers</th>
                 <th className="py-3 px-6 text-center">Floor level</th>
-                <th className="py-3 px-6 text-right">Validation status</th>
+                <th className="py-3 px-6 text-right">Status</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-line text-[14px]">
               {red_flags.map((rf: RedFlagDefinition) => (
                 <tr key={rf.id} className="hover:bg-paper/40 transition-colors">
                   <td className="py-3.5 px-6 font-bold text-ink whitespace-nowrap">
-                    <span className="px-2 py-0.5 bg-paper border border-line-strong rounded-pill text-[12px]">
+                    <span className="px-2 py-0.5 bg-paper border border-line-strong rounded-pill text-[12px] font-mono">
                       {rf.id}
                     </span>
                   </td>
-                  <td className="py-3.5 px-6 font-semibold text-ink capitalize whitespace-nowrap">
+                  <td className="py-3.5 px-6 font-semibold text-ink whitespace-nowrap">
                     {rf.name.replace(/_/g, " ")}
                   </td>
-                  <td className="py-3.5 px-6 text-[13px] text-ink-2 max-w-xs">
-                    {rf.patterns_en.slice(0, 3).join(", ")}
-                    {rf.patterns_en.length > 3 && (
-                      <span className="text-ink-3"> +{rf.patterns_en.length - 3}</span>
+                  <td className="py-3.5 px-6 text-[13px] text-ink-2 max-w-md leading-relaxed">
+                    {rf.definition || (
+                      <>
+                        {rf.patterns_en?.slice(0, 3).join(", ")}
+                        {rf.patterns_en && rf.patterns_en.length > 3 && (
+                          <span className="text-ink-3"> +{rf.patterns_en.length - 3}</span>
+                        )}
+                      </>
                     )}
                   </td>
-                  <td className="py-3.5 px-6 text-[13px] text-ink-2 max-w-xs italic">
-                    {[...rf.patterns_tel.slice(0, 2), ...rf.patterns_hin.slice(0, 2)].join(", ")}
-                  </td>
                   <td className="py-3.5 px-6 text-center whitespace-nowrap">
-                    <span className="inline-block px-2 py-0.5 bg-l3-tint text-l3-text border border-l3-border rounded-pill text-[12px] font-bold">
-                      Floor L3
+                    <span className="inline-block px-2 py-0.5 bg-l2-tint text-l2-text border border-l2-border rounded-pill text-[12px] font-bold">
+                      Floor L2
                     </span>
                   </td>
                   <td className="py-3.5 px-6 text-right whitespace-nowrap">
@@ -238,7 +238,7 @@ export const RulesPage: React.FC = () => {
                           : "bg-paper text-ink-3 border border-line"
                       }`}
                     >
-                      {rf.status}
+                      {rf.status || "Validated"}
                     </span>
                   </td>
                 </tr>

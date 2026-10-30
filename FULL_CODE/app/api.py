@@ -96,6 +96,8 @@ def get_demo_cases() -> List[Dict[str, Any]]:
                 "patient_id": v.get("patient_id"),
                 "age": v.get("age"),
                 "sex": v.get("sex"),
+                "pregnant": v.get("pregnant", "N"),
+                "arrival_mode": v.get("arrival_mode", "walk-in"),
                 "bp_sys": clean_vitals.get("bp_sys"),
                 "bp_dia": clean_vitals.get("bp_dia"),
                 "pulse": clean_vitals.get("pulse"),
@@ -165,7 +167,28 @@ def get_rules() -> Dict[str, Any]:
                 })
 
     redflags_data = []
-    if redflags_path.exists():
+    official_rf_csv = Path("data/phase2/red_flag_codes.csv")
+    if official_rf_csv.exists():
+        import csv
+        with open(official_rf_csv, "r", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                code = row.get("code", "")
+                definition = row.get("definition", "")
+                clean_name = code.replace("RF_", "").replace("_", " ").title()
+                redflags_data.append({
+                    "id": code,
+                    "code": code,
+                    "name": clean_name,
+                    "definition": definition,
+                    "patterns_en": [definition[:80] + ("..." if len(definition) > 80 else "")],
+                    "patterns_tel": [],
+                    "patterns_hin": [],
+                    "all_patterns": [definition],
+                    "escalate_to_max_level": 2,
+                    "status": "Validated",
+                })
+    elif redflags_path.exists():
         with open(redflags_path, "r", encoding="utf-8") as f:
             rf_cfg = yaml.safe_load(f) or {}
             rf_list = rf_cfg.get("red_flags", [])
@@ -177,7 +200,9 @@ def get_rules() -> Dict[str, Any]:
                 # Check validation status if available from JSON results
                 redflags_data.append({
                     "id": rf["id"],
+                    "code": rf["id"],
                     "name": rf["name"],
+                    "definition": "; ".join(all_patterns[:3]),
                     "patterns_en": rf.get("patterns_en", []),
                     "patterns_tel": rf.get("patterns_tel", []),
                     "patterns_hin": rf.get("patterns_hin", []),

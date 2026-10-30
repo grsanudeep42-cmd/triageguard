@@ -168,6 +168,67 @@ export const IntakePanel: React.FC<IntakePanelProps> = ({
               </div>
             </div>
           </div>
+
+          {/* Phase 2: Pregnancy selector for females */}
+          {intake.sex === "F" && (
+            <div className="pt-1.5 animate-fade-in">
+              <div className="flex items-center justify-between mb-1">
+                <label className="text-caption font-medium text-ink-2 flex items-center gap-1.5">
+                  <span>Pregnant status</span>
+                  <span className="text-[11px] text-brand font-medium">BP ≥ 160/110 severe rule</span>
+                </label>
+              </div>
+              <div className="grid grid-cols-3 h-8 bg-paper p-0.5 rounded-input border border-line">
+                {[
+                  { val: "N", label: "No (N)" },
+                  { val: "Y", label: "Yes (Y)" },
+                  { val: "unknown", label: "Unknown" },
+                ].map((opt) => (
+                  <button
+                    key={opt.val}
+                    type="button"
+                    onClick={() => onChange({ ...intake, pregnant: opt.val })}
+                    className={`h-full text-[12px] font-medium rounded-[5px] transition-all ${
+                      (intake.pregnant || "N") === opt.val
+                        ? opt.val === "Y"
+                          ? "bg-l1-tint text-l1-text font-bold shadow-sm border border-l1-border"
+                          : "bg-surface text-ink font-semibold shadow-sm border border-line-strong/30"
+                        : "text-ink-2 hover:text-ink"
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Arrival mode */}
+          <div className="pt-1.5">
+            <label className="block text-caption font-medium text-ink-2 mb-1">
+              Arrival mode
+            </label>
+            <div className="grid grid-cols-3 h-8 bg-paper p-0.5 rounded-input border border-line">
+              {[
+                { val: "walk-in", label: "Walk-in" },
+                { val: "brought by family", label: "Family" },
+                { val: "ambulance-referred", label: "Ambulance" },
+              ].map((opt) => (
+                <button
+                  key={opt.val}
+                  type="button"
+                  onClick={() => onChange({ ...intake, arrival_mode: opt.val })}
+                  className={`h-full text-[11px] font-medium rounded-[4px] transition-all ${
+                    (intake.arrival_mode || "walk-in") === opt.val
+                      ? "bg-surface text-ink font-semibold shadow-sm border border-line-strong/30"
+                      : "text-ink-3 hover:text-ink-2"
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Section 2: Vitals */}

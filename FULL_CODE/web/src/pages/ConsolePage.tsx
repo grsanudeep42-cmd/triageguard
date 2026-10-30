@@ -130,7 +130,7 @@ export const ConsolePage: React.FC<ConsolePageProps> = ({
                     onClick={onOpenDemoCases}
                     className="inline-flex items-center gap-1.5 px-4 py-2 bg-brand-tint text-brand hover:bg-brand-tint/80 rounded-btn text-[13px] font-semibold transition-colors"
                   >
-                    <span>Or pick from 8 benchmark demo cases</span>
+                    <span>Or pick from 9 benchmark demo cases</span>
                     <ArrowUpRight className="w-4 h-4" />
                   </button>
                 </div>

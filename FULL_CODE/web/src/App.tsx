@@ -11,6 +11,8 @@ const DEFAULT_INTAKE: PatientIntake = {
   patient_id: "",
   age: null,
   sex: "",
+  pregnant: "N",
+  arrival_mode: "walk-in",
   bp_sys: null,
   bp_dia: null,
   pulse: null,

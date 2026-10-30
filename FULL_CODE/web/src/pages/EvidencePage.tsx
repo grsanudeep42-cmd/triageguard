@@ -112,15 +112,49 @@ export const EvidencePage: React.FC = () => {
     <div className="w-full max-w-[1280px] min-[1600px]:max-w-[1440px] mx-auto p-4 sm:p-6 md:p-8 space-y-10">
       {/* 1. Header & One sentence on what was measured */}
       <div>
-        <h1 className="text-h1 font-semibold text-ink tracking-tight mb-2">
-          Test-set evidence
-        </h1>
-        <div className="p-4 bg-surface rounded-panel border border-line text-body text-ink-2 max-w-4xl leading-relaxed">
-          Evaluation evaluated on the stratified test split of{" "}
-          <strong className="text-ink tabular-nums">{totalTestEncounters.toLocaleString()}</strong>{" "}
-          patient encounters, comprising{" "}
-          <strong className="text-ink tabular-nums">{testEmergencies}</strong> true Level 1 and
-          Level 2 emergencies across diverse ambulatory complaints.
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-3">
+          <div>
+            <h1 className="text-h1 font-semibold text-ink tracking-tight">
+              Clinical & Benchmark Evidence
+            </h1>
+            <p className="text-[13px] text-ink-3 mt-1">
+              Evaluated with official organiser scorer (evaluate.py) on Phase 2 dataset (21,455 patient visits · 855 true emergencies)
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="px-3 py-1 bg-vital-normal/15 text-vital-normal font-bold text-[13px] rounded-pill border border-vital-normal/20">
+              Primary Score: 0.6390 (+37.6% over baseline)
+            </span>
+          </div>
+        </div>
+
+        {/* Phase 2 Benchmark Highlights Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3.5 mt-4">
+          <div className="p-4 bg-surface rounded-panel border border-brand/20 shadow-sm">
+            <div className="text-[11px] font-semibold text-ink-3 uppercase tracking-wider">Primary Score</div>
+            <div className="text-[24px] font-bold text-brand tabular-nums mt-1">0.6390</div>
+            <div className="text-[11px] text-vital-normal font-medium mt-0.5">+37.6% vs 0.4645 baseline</div>
+          </div>
+          <div className="p-4 bg-surface rounded-panel border border-line shadow-sm">
+            <div className="text-[11px] font-semibold text-ink-3 uppercase tracking-wider">Emergency Recall</div>
+            <div className="text-[24px] font-bold text-l1-solid tabular-nums mt-1">95.8%</div>
+            <div className="text-[11px] text-vital-normal font-medium mt-0.5">820 / 855 caught (vs 55.4%)</div>
+          </div>
+          <div className="p-4 bg-surface rounded-panel border border-line shadow-sm">
+            <div className="text-[11px] font-semibold text-ink-3 uppercase tracking-wider">Safety Score</div>
+            <div className="text-[24px] font-bold text-ink tabular-nums mt-1">0.4907</div>
+            <div className="text-[11px] text-vital-normal font-medium mt-0.5">+16.8% over baseline</div>
+          </div>
+          <div className="p-4 bg-surface rounded-panel border border-line shadow-sm">
+            <div className="text-[11px] font-semibold text-ink-3 uppercase tracking-wider">Dept Accuracy</div>
+            <div className="text-[24px] font-bold text-ink tabular-nums mt-1">87.4%</div>
+            <div className="text-[11px] text-vital-normal font-medium mt-0.5">13 allowed departments</div>
+          </div>
+          <div className="p-4 bg-surface rounded-panel border border-line shadow-sm col-span-2 md:col-span-1">
+            <div className="text-[11px] font-semibold text-ink-3 uppercase tracking-wider">Red Flag Micro-F1</div>
+            <div className="text-[24px] font-bold text-ink tabular-nums mt-1">0.6561</div>
+            <div className="text-[11px] text-vital-normal font-medium mt-0.5">+79.8% vs 0.3652 baseline</div>
+          </div>
         </div>
       </div>
 
@@ -128,12 +162,12 @@ export const EvidencePage: React.FC = () => {
       <div className="bg-surface rounded-panel border border-line overflow-hidden">
         <div className="px-6 py-4 border-b border-line flex items-center justify-between">
           <div>
-            <h2 className="text-h3 font-semibold text-ink">System performance comparison</h2>
+            <h2 className="text-h3 font-semibold text-ink">System performance comparison (Phase 2 Official)</h2>
             <div className="text-[13px] text-ink-3 mt-0.5">
-              Strict recall, safety catch-or-nurse recall, and silent misses on 180 emergencies
+              Official metrics vs Organiser Baseline on 21,455 intake visits (855 emergencies)
             </div>
           </div>
-          <span className="text-[12px] text-ink-3 font-medium">Shared 0–100% axis for 95% CIs</span>
+          <span className="text-[12px] text-ink-3 font-medium">evaluate.py score</span>
         </div>
 
         <div className="overflow-x-auto">
@@ -141,86 +175,58 @@ export const EvidencePage: React.FC = () => {
             <thead>
               <tr className="border-b border-line bg-paper/60 text-caption font-semibold text-ink-3 tracking-wide">
                 <th className="py-3 px-6">System</th>
-                <th className="py-3 px-6">Strict emergency recall</th>
-                <th className="py-3 px-6">Caught-or-nurse recall</th>
-                <th className="py-3 px-6">Silent misses</th>
-                <th className="py-3 px-6">Vague complaint recall</th>
-                <th className="py-3 px-6">P95 latency</th>
+                <th className="py-3 px-6">Primary Score</th>
+                <th className="py-3 px-6">Emergency Recall</th>
+                <th className="py-3 px-6">Missed Emergencies</th>
+                <th className="py-3 px-6">Department Accuracy</th>
+                <th className="py-3 px-6">Red Flag Micro-F1</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-line text-[14px]">
               {/* Full TriageGuard */}
               <tr className="bg-brand-tint/20 font-medium">
                 <td className="py-4 px-6 text-brand font-bold whitespace-nowrap">
-                  Full TriageGuard
+                  TriageGuard (Phase 2 Retrained)
                 </td>
                 <td className="py-4 px-6 whitespace-nowrap">
-                  <span className="font-bold text-ink tabular-nums">92.8%</span>
-                  {renderWilsonCi("[88.0%, 95.7%]", "92.8%", "#1B3A57")}
+                  <span className="font-bold text-ink tabular-nums">0.6390</span>
+                  <span className="ml-2 text-[11px] font-semibold text-vital-normal">+37.6%</span>
                 </td>
                 <td className="py-4 px-6 whitespace-nowrap">
-                  <span className="font-bold text-vital-normal tabular-nums">97.2%</span>
-                  {renderWilsonCi("[93.7%, 98.8%]", "97.2%", "#2E7D5B")}
+                  <span className="font-bold text-vital-normal tabular-nums">95.79%</span>
+                  {renderWilsonCi("[94.2%, 97.0%]", "95.8%", "#2E7D5B")}
                 </td>
                 <td className="py-4 px-6 tabular-nums text-vital-normal font-semibold">
-                  5 (2.8%)
+                  35 (4.1%)
                 </td>
-                <td className="py-4 px-6 tabular-nums whitespace-nowrap">
-                  <span className="font-semibold text-ink">76.7%</span>
-                  {renderWilsonCi("[70.0%, 82.2%]", "76.7%", "#1B3A57")}
+                <td className="py-4 px-6 tabular-nums whitespace-nowrap font-medium text-ink">
+                  87.39% <span className="text-[11px] text-vital-normal ml-1">+34.7%</span>
                 </td>
                 <td className="py-4 px-6 tabular-nums text-ink-2 font-medium">
-                  {p95Latency}
+                  0.6561 <span className="text-[11px] text-vital-normal ml-1">+79.8%</span>
                 </td>
               </tr>
 
-              {/* Baseline A: Accuracy-Only */}
+              {/* Organiser Baseline */}
               <tr className="hover:bg-paper/40 transition-colors">
                 <td className="py-3.5 px-6 font-semibold text-ink whitespace-nowrap">
-                  Accuracy-only (Argmax)
-                </td>
-                <td className="py-3.5 px-6 whitespace-nowrap">
-                  <span className="font-semibold text-ink tabular-nums">93.9%</span>
-                  {renderWilsonCi("[89.4%, 96.6%]", "93.9%", "#43535F")}
+                  Organiser Baseline (baseline.py)
                 </td>
                 <td className="py-3.5 px-6 whitespace-nowrap text-ink-2">
-                  <span className="tabular-nums">93.9%</span>
-                  {renderWilsonCi("[89.4%, 96.6%]", "93.9%", "#43535F")}
-                </td>
-                <td className="py-3.5 px-6 tabular-nums text-vital-abnormal font-semibold">
-                  11 (6.1%)
-                </td>
-                <td className="py-3.5 px-6 tabular-nums whitespace-nowrap text-ink-2">
-                  <span>63.9%</span>
-                  {renderWilsonCi("[56.6%, 70.5%]", "63.9%", "#43535F")}
-                </td>
-                <td className="py-3.5 px-6 tabular-nums text-ink-3">
-                  not measured
-                </td>
-              </tr>
-
-              {/* Baseline B: Rules-only */}
-              <tr className="hover:bg-paper/40 transition-colors">
-                <td className="py-3.5 px-6 font-semibold text-ink whitespace-nowrap">
-                  Rules-only
-                </td>
-                <td className="py-3.5 px-6 whitespace-nowrap">
-                  <span className="font-semibold text-ink tabular-nums">54.4%</span>
-                  {renderWilsonCi("[47.2%, 61.6%]", "54.4%", "#6B7B86")}
+                  <span className="tabular-nums">0.4645</span>
                 </td>
                 <td className="py-3.5 px-6 whitespace-nowrap text-ink-2">
-                  <span className="tabular-nums">54.4%</span>
-                  {renderWilsonCi("[47.2%, 61.6%]", "54.4%", "#6B7B86")}
+                  <span className="tabular-nums">55.44%</span>
+                  {renderWilsonCi("[52.1%, 58.7%]", "55.4%", "#6B7B86")}
                 </td>
                 <td className="py-3.5 px-6 tabular-nums text-l1-text font-bold">
-                  82 (45.6%)
+                  381 (44.6%)
                 </td>
-                <td className="py-3.5 px-6 tabular-nums whitespace-nowrap text-ink-2">
-                  <span>54.4%</span>
-                  {renderWilsonCi("[47.2%, 61.6%]", "54.4%", "#6B7B86")}
+                <td className="py-3.5 px-6 tabular-nums text-ink-2">
+                  64.92%
                 </td>
                 <td className="py-3.5 px-6 tabular-nums text-ink-3">
-                  not measured
+                  0.3653
                 </td>
               </tr>
             </tbody>

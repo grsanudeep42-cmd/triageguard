@@ -113,6 +113,39 @@ export const WaitingRoomPage: React.FC<WaitingRoomPageProps> = ({
         </div>
       </div>
 
+      {/* Stretch Goal: Wait Time Simulation Impact Banner */}
+      <div className="bg-surface rounded-panel border border-brand/20 p-5 bg-gradient-to-r from-brand-tint/30 to-surface shadow-sm">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider bg-brand text-surface rounded-pill">
+                H1 Stretch Goal
+              </span>
+              <span className="text-[13px] font-semibold text-ink">
+                SimPy OPD Simulation (30,327 visits · 38 OPD days · 10 replications)
+              </span>
+            </div>
+            <p className="text-[13px] text-ink-2">
+              Tested vs First-Come-First-Served baseline across 2 doctors at Chandrapuri District Hospital.
+            </p>
+          </div>
+          <div className="grid grid-cols-3 gap-2.5 shrink-0">
+            <div className="bg-surface px-3 py-1.5 rounded-tile border border-line text-center">
+              <div className="text-[11px] text-ink-3 font-medium">Emergency wait</div>
+              <div className="text-[16px] font-bold text-vital-normal tabular-nums">-35.2 min</div>
+            </div>
+            <div className="bg-surface px-3 py-1.5 rounded-tile border border-line text-center">
+              <div className="text-[11px] text-ink-3 font-medium">Wait reduction</div>
+              <div className="text-[16px] font-bold text-vital-normal tabular-nums">99.2%</div>
+            </div>
+            <div className="bg-surface px-3 py-1.5 rounded-tile border border-line text-center">
+              <div className="text-[11px] text-ink-3 font-medium">Harm-weighted</div>
+              <div className="text-[16px] font-bold text-brand tabular-nums">-54.5%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Stacked Horizontal Bar (Count by level, no donuts) */}
       {totalCount > 0 && (
         <div className="bg-surface rounded-panel border border-line p-5">

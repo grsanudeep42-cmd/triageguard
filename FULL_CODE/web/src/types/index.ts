@@ -56,6 +56,8 @@ export interface PatientIntake {
   patient_id?: string;
   age: number | null;
   sex: string;
+  pregnant?: string; // "Y" | "N" | "unknown"
+  arrival_mode?: string; // "walk-in" | "brought by family" | "ambulance-referred"
   bp_sys: number | null;
   bp_dia: number | null;
   pulse: number | null;
@@ -106,12 +108,14 @@ export interface RuleDefinition {
 export interface RedFlagDefinition {
   id: string;
   name: string;
-  patterns_en: string[];
-  patterns_tel: string[];
-  patterns_hin: string[];
-  all_patterns: string[];
-  escalate_to_max_level: number;
-  status: "Validated" | "Not validated";
+  code?: string;
+  definition?: string;
+  patterns_en?: string[];
+  patterns_tel?: string[];
+  patterns_hin?: string[];
+  all_patterns?: string[];
+  escalate_to_max_level?: number;
+  status?: "Validated" | "Not validated";
 }
 
 export interface RulesResponse {

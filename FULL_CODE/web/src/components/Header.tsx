@@ -44,9 +44,19 @@ export const Header: React.FC<HeaderProps> = ({
               strokeLinejoin="round"
             />
           </svg>
-          <span className="font-semibold text-[18px] tracking-tight text-ink">
-            TriageGuard
-          </span>
+          <div className="flex flex-col">
+            <div className="flex items-center gap-2">
+              <span className="font-semibold text-[17px] tracking-tight text-ink leading-tight">
+                TriageGuard
+              </span>
+              <span className="hidden lg:inline-block px-2 py-0.2 text-[11px] font-semibold bg-brand-tint text-brand rounded-pill border border-brand/20">
+                Team 001254 · H1
+              </span>
+            </div>
+            <span className="hidden sm:inline-block text-[11px] text-ink-3 tracking-normal leading-none mt-0.5">
+              Chandrapuri District Hospital · OPD
+            </span>
+          </div>
         </div>
 
         {/* Navigation tabs with 2px brand underline */}

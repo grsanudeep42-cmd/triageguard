@@ -254,5 +254,40 @@
       "p_emergency": 0.0001,
       "latency_ms": 8.99
     }
+  },
+  "case7_severe_preeclampsia_rule": {
+    "scenario": "case7_severe_preeclampsia_rule",
+    "description": "Pregnant female 26F (third trimester) with severe headache, blurred vision, BP 168/112 mmHg triggering Rule R014 (Forced Level 1/2 Severe Pre-eclampsia / Obstetric emergency).",
+    "patient_id": "OPD-PREECL01",
+    "split": "test",
+    "age": 26,
+    "sex": "F",
+    "pregnant": "Y",
+    "arrival_mode": "brought by family",
+    "complaint_text": "pregnant 7 months, severe thala noppi (headache) and blurred vision with swelling in hands and feet since morning",
+    "cleaned_vitals": {
+      "bp_sys": 168.0,
+      "bp_dia": 112.0,
+      "pulse": 104.0,
+      "temp_c": 37.2,
+      "spo2": 97.0
+    },
+    "true_clean_level": 1,
+    "true_department": "Obstetrics & Gynecology",
+    "triageguard_prediction": {
+      "triage_level": 1,
+      "primary_department": "Obstetrics & Gynecology",
+      "suggested_specialty": "Obstetrics & Gynecology",
+      "red_flags": [
+        "RF_ECLAMPSIA_SIGNS"
+      ],
+      "source_layer": "rule",
+      "conformal_set": [
+        1
+      ],
+      "abstain_reason": null,
+      "p_emergency": 0.824,
+      "latency_ms": 11.2
+    }
   }
 }
